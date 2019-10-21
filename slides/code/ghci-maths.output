@@ -1,0 +1,9 @@
+$ ghci
+GHCi, version 8.6.5: http://www.haskell.org/ghc/
+Prelude> :l Maths.hs 
+[1 of 1] Compiling Maths ( Maths.hs, interpreted )
+Ok, one module loaded.
+*Maths> tau
+6.283185307179586
+*Maths> :t tau
+tau :: Double

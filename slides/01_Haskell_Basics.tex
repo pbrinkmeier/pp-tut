@@ -1,0 +1,280 @@
+\documentclass{beamer}
+\usetheme{metropolis}
+
+\usepackage[ngerman]{babel}
+\usepackage[autostyle=true,german=quotes]{csquotes}
+\usepackage[linewidth=1pt]{mdframed}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{pifont}
+\usepackage{tikz}
+\usetikzlibrary{positioning, calc, arrows, fit, decorations.pathreplacing, shapes, shapes.multipart, snakes}
+\usepackage{verbatim}
+\usepackage{textcomp}
+%\usepackage{pdfpages}
+
+\batchmode
+
+\hypersetup{
+	colorlinks,
+	urlcolor=blue,
+	linkcolor=black % for ToC
+}
+\newenvironment{qaa}[1]{
+	#1
+
+	\begin{mdframed}
+		\small
+}{
+	\end{mdframed}
+}
+
+\newcommand{\true}{\ding{51}}
+\newcommand{\false}{\ding{55}}
+\newcommand{\code}[1]{
+	\begin{mdframed}
+		\verbatiminput{#1}
+	\end{mdframed}
+}
+
+\title{Tutorium 01: Haskell Basics}
+% \subtitle{}
+\author{Paul Brinkmeier}
+\institute{Tutorium Programmierparadigmen am KIT}
+\date{21. Oktober 2019}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\section{Heutiges Programm}
+\begin{frame}{Programm}
+	\begin{itemize}
+		\item Haskell installieren
+		\item Wiederholung der Vorlesung
+		\item Aufgaben zu Haskell
+	\end{itemize}
+\end{frame}
+
+\section{Organisatorisches}
+
+\begin{frame}{Organisatorisches}
+	\begin{itemize}
+		\item \texttt{paul.brinkmeier@fsmi.uni-karlsruhe.de}
+		\begin{itemize}
+			\item Feedback
+			\item Fragen zur Orga
+		\end{itemize}
+		\item \url{https://github.com/pbrinkmeier/pp-tut}
+		\begin{itemize}
+			\item Folien
+			\item Codebeispiele
+		\end{itemize}
+		\item Bitte Laptop o.Ä. mitbringen
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Übungsbetrieb}
+	\begin{itemize}
+		\item ProPa hat keinen Übungsschein
+		\item $\leadsto$ ÜBs zur eigenen Übung!
+		\item Abgabe per Praktomat
+		\item \url{https://praktomat.cs.kit.edu/pp_2019_WS/tasks}
+		\item Nicht-Code-Abgaben:
+		\begin{itemize}
+			\item Briefkasten im Infobau-UG
+			\item Oder per Praktomat
+			\item Zur Not per Mail
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Klausur}
+	\begin{itemize}
+		\item 24.03.2020, 11:00 bis 13:00
+		\item Papier-Materialien dürfen mitgebracht werden!
+		\item $\leadsto$ Skript, Mitschriebe, \enquote{Formelsammlung}
+	\end{itemize}
+\end{frame}
+
+\section{Haskell}
+
+\begin{frame}{GHCi}
+	\code{code/ghci.output}
+
+	\begin{itemize}
+		\item Populärster, von der VL verwendeter Haskell-Compiler: GHC
+		\item Interaktive Haskell-Shell: \texttt{ghci}
+		\item Installation:
+		\begin{itemize}
+			\item Windows: Installer von Haskell-Website
+			\item Linux: Je nach Distro \texttt{haskell-platform} oder \texttt{ghc} installieren
+			\item macOS: \texttt{ghcup}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Module}
+	\code{demos/Maths.hs}
+
+	\begin{itemize}
+		\item Ein Haskell-Programm ist eine Folge von Funktionsdefinitionen
+		\item Funktionen müssen keine Argumente haben
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{REPL}
+	\code{code/ghci-maths.output}
+
+	\begin{itemize}
+		\item \texttt{ghci} ist ein sog. \enquote{Read-Eval-Print-Loop}
+		\item \texttt{:l} --- Modul aus Datei laden
+		\item \texttt{:t} --- Typ eines Audrucks abfragen
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Funktionen}
+	\code{demos/Maths.hs}
+
+	\begin{itemize}
+		\item Unterschied zu C-ähnlichen: Keine Klammern/Kommata, \texttt{=}
+		\item Funktionsaufruf: Selbe Syntax
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Basistypen}
+	\begin{tabular}{ l | c | c }
+		Wert & Typ in Java & Typ in Haskell \\
+		\hline
+		\texttt{"Hello, World!"} & \texttt{String} & \pause \texttt{String} \\
+		\texttt{'x'} & \texttt{char} & \pause \texttt{Char} \\
+		5 & \texttt{int} & \pause \texttt{Int} \\
+		9999999999999999999999999 & \texttt{BigInteger} & \pause \texttt{Integer} \\
+		3.1415927 & \texttt{float} & \pause \texttt{Float} \\
+		3.141592653589793 & \texttt{double} & \pause \texttt{Double} \\
+		\texttt{[Tt]rue}, \texttt{[Ff]alse} & \texttt{boolean} & \pause \texttt{Bool} \\
+		$\frac{1}{3}$ & \false & \pause \texttt{Fractional a => a} \\
+	\end{tabular}
+\end{frame}
+
+\begin{frame}{Basistypen}
+	\code{demos/Maths.hs}
+
+	\begin{itemize}
+		\item Schreibt ein Modul \texttt{FirstSteps} mit folgenden Funktionen:
+		\begin{itemize}
+			\item \texttt{double x} --- verdoppelt \texttt{x}
+			\item \texttt{dSum x y} --- verdoppelt \texttt{x} und \texttt{y} und summiert die Ergebnisse
+			\item \texttt{area r} --- Fläche eines Kreises mit Radius \texttt{r}
+			\item \texttt{sum3 a b c} --- Summiert \texttt{a}, \texttt{b} und \texttt{c}
+			\item \texttt{sum4 a b c d} --- Summiert \texttt{a}, \texttt{b}, \texttt{c} und \texttt{d}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Listen}
+	\begin{itemize}
+		\item \texttt{sum3}, \texttt{sum4}, \texttt{sumX} zu schreiben ist irgendwie doof
+		\pause
+		\item Lösung des Problems: Listen
+		\item \texttt{[ a ]} ist der Typ einer Liste, deren Elemente von Typ \texttt{a} sind
+		\item $\leadsto$ Listen sind homogen, nur eine Art von Element
+	\end{itemize}
+
+	\code{demos/Lists.hs}
+
+	\begin{itemize}
+		\item Ein Ausdruck des Typs \texttt{[ a ]} hat genau einen von zwei Werten:
+		\begin{itemize}
+			\item \texttt{[]} --- die leere Liste
+			\item \texttt{(h : t)} --- Erstes El. + Rest, mit \texttt{h :: a} und \texttt{t :: [ a ]}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Funktionstypen}
+	\begin{itemize}
+		\item \textbf{Funktionen sind Werte}
+		\item $\leadsto$ Funktionen haben einen Typ
+		\item Allgemeine Form: \texttt{x -> y}
+		\item Beispiel: \texttt{length :: [ a ] -> Int}
+		\begin{itemize}
+			\item Java: \texttt{Function<List<A>, Integer> length;}
+			\item C: \texttt{int (*strlen)(char *str)};
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Funktionstypen, mehrere Argumente}
+	\code{demos/Maths.hs}
+
+	\begin{itemize}
+		\item Funktionen sind vom Typ \texttt{x -> y}
+		\item Welchen Typ hat denn dann \texttt{add}? \\
+		\pause
+		$\leadsto$ \texttt{Num a => a -> a -> a}
+		\item \texttt{->} ist rechtsassoz. \\
+		$\leadsto$ \texttt{a -> a -> a} $\Leftrightarrow$ \texttt{a -> (a -> a)}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Unterversorgung}
+	\begin{itemize}
+		\item Haskell-Funktionen sind \enquote{ge-Curry-d}
+		\item D.h.: Jede Funktion hat exakt ein Argument
+		\item Funktionen mit (logisch gesehen) mehreren Argumenten geben solange Funktionen zurück, bis sie ausreichend \enquote{versorgt} sind
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Typklassen}
+	\code{code/ghci-typeclass.output}
+
+	\begin{itemize}
+		\item Typklassen übernehmen ähnliche Aufgaben wie Generics in Java
+		\item Bspw. enthält \texttt{Ord a} alle Typen \texttt{a}, auf denen eine Ordnung definiert ist
+		\begin{itemize}
+			\item Java: \pause \texttt{Comparable<A>}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Fallunterscheidung: if-then-else}
+	\code{demos/MaxIf.hs}
+
+	\begin{itemize}
+		\item Einfachste Form der Fallunterscheidung
+		\item \texttt{if <Bedingung> then <WertA> else <WertB>}
+		\pause
+		\item Das ist nichts anderes als der ternäre Operator in den C-ähnlichen
+		\begin{itemize}
+			\item \texttt{<Bedingung> ? <WertA> : <WertB>}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Fallunterscheidung: Guard-Notation}
+	\code{demos/MaxGuard.hs}
+
+	\begin{itemize}
+		\item \enquote{Guard}-Notation
+		\item Wird einfach von oben nach unten abgearbeitet
+		\item Oft kürzer als \texttt{if a then x else if b then y else z}
+		\pause
+		\item \texttt{otherwise == True}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Fallunterscheidung: Pattern Matching}
+	\code{demos/Bool.hs}
+
+	\begin{itemize}
+		\item Statt Variablen einfach Werte in den Funktionskopf setzen
+		\item Mehrere Funktionsdefinitionen möglich
+		\item Funktioniert nicht immer (bspw. bei \texttt{max})
+		\item Hier nützlich: \texttt{\textunderscore} ignoriert Argument
+	\end{itemize}
+\end{frame}
+
+\end{document}

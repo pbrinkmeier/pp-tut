@@ -277,4 +277,84 @@
 	\end{itemize}
 \end{frame}
 
+\begin{frame}{Eingebaute Funktionen}
+	\begin{itemize}
+		\item Für \texttt{Num a}:
+		\begin{itemize}
+			\item \texttt{(+)}, \texttt{(-)}, \texttt{(*)}, \texttt{(\textasciicircum)}
+		\end{itemize}
+		\item Für \texttt{Integral a}:
+		\begin{itemize}
+			\item \texttt{div}, \texttt{mod}
+		\end{itemize}
+		\item Für \texttt{Floating a}:
+		\begin{itemize}
+			\item \texttt{(/)}
+		\end{itemize}
+		\item Für \texttt{Bool}:
+		\begin{itemize}
+			\item \texttt{(\&\&)}, \texttt{(||)}
+		\end{itemize}
+		\item Für \texttt{Eq a}:
+		\begin{itemize}
+			\item \texttt{(==)}, \texttt{(/=)}
+		\end{itemize}
+		\item Für \texttt{Ord a}:
+		\begin{itemize}
+			\item \texttt{(<)}, \texttt{(<=)}, \texttt{(>)}, \texttt{(>=)}, \texttt{min}, \texttt{max}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Eingebaute Funktionen}
+	\begin{itemize}
+		\item Für \texttt{[ a ]}:
+		\begin{itemize}
+			\item \texttt{(++) :: [ a ] -> [ a ] -> [ a ]}
+			\item \texttt{(!!) :: [ a ] -> Int -> a}
+			\item \texttt{head, last :: [ a ] -> a}
+			\item \texttt{null :: [ a ] -> Bool}
+			\item \texttt{take, drop :: Int -> [ a ] -> [ a ]}
+			\item \texttt{length :: [ a ] -> Int}
+			\item \texttt{reverse :: [ a ] -> [ a ]}
+			\item \texttt{elem :: a -> [ a ] -> Bool}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Eingebaute Funktionen: Funktionen höherer Ordnung}
+	\begin{itemize}
+		\item Für \texttt{[ a ]}:
+		\begin{itemize}
+			\item \texttt{map :: (a -> b) -> [ a ] -> [ b ]}
+			\pause
+			\item \texttt{filter :: (a -> Bool) -> [ a ] -> [ a ]}
+			\pause
+			\item \texttt{foldl :: (b -> a -> b) -> b -> [ a ] -> b}
+		\end{itemize}
+		\pause
+		\item Für Funktionen:
+		\begin{itemize}
+			\item \texttt{(.) :: (a -> b) -> (b -> c) -> (a -> c)}
+			\item \texttt{(\$) :: (a -> b) -> a -> b}
+			\item \texttt{flip :: (a -> b -> c) -> (b -> a -> c)
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Aufgaben}
+	Schreibt ein Modul \texttt{Tut01} mit:
+
+	\begin{itemize}
+		\item \texttt{fac n} --- Berechnet Fakultät von \texttt{n}
+		\item \texttt{fib n} --- Berechnet \texttt{n}-te Fibonacci-Zahl
+		\item \texttt{fibs n} --- Liste der ersten \texttt{n} Fibonacci-Zahlen
+		\item \texttt{fibsTo n} --- Liste der Fibonacci-Zahlen bis \texttt{n}
+		\item \texttt{productL l} --- Berechnet das Produkt aller Einträge von \texttt{l}
+		\item \texttt{odds} --- (Unendliche) Liste aller ungeraden natürlichen Zahlen
+		\item \texttt{evens} --- (Unendliche) Liste aller geraden natürlichen Zahlen
+		\item \texttt{squares l} --- Liste der Quadrate aller Einträge von \texttt{l}
+	\end{itemize}
+\end{frame}
+
 \end{document}

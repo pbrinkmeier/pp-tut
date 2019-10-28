@@ -327,8 +327,10 @@
 		\item Für \texttt{[ a ]}:
 		\begin{itemize}
 			\item \texttt{map :: (a -> b) -> [ a ] -> [ b ]}
-			\pause
 			\item \texttt{filter :: (a -> Bool) -> [ a ] -> [ a ]}
+			\pause
+			\item \texttt{all :: (a -> Bool) -> [ a ] -> Bool}
+			\item \texttt{any :: (a -> Bool) -> [ a ] -> Bool}
 			\pause
 			\item \texttt{foldl :: (b -> a -> b) -> b -> [ a ] -> b}
 		\end{itemize}
@@ -337,7 +339,7 @@
 		\begin{itemize}
 			\item \texttt{(.) :: (a -> b) -> (b -> c) -> (a -> c)}
 			\item \texttt{(\$) :: (a -> b) -> a -> b}
-			\item \texttt{flip :: (a -> b -> c) -> (b -> a -> c)
+			\item \texttt{flip :: (a -> b -> c) -> (b -> a -> c)}
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -354,6 +356,15 @@
 		\item \texttt{odds} --- (Unendliche) Liste aller ungeraden natürlichen Zahlen
 		\item \texttt{evens} --- (Unendliche) Liste aller geraden natürlichen Zahlen
 		\item \texttt{squares l} --- Liste der Quadrate aller Einträge von \texttt{l}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Hangman}
+	\begin{itemize}
+		\item \url{//pbrinkmeier.de/Hangman.hs}
+		\item \texttt{showHangman} --- Zeigt aktuellen Spielstand als \texttt{String}
+		\item \texttt{initHangman} --- Anfangszustand, leere Liste
+		\item \texttt{updateHangman} --- Bildet Usereingabe (als \texttt{String}) und alten Zustand auf neuen Zustand ab
 	\end{itemize}
 \end{frame}
 

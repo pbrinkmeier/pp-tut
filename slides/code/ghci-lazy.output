@@ -1,0 +1,5 @@
+$ ghci
+GHCi, version 8.6.5: http://www.haskell.org/ghc/
+Prelude> x = 42 `div` 0
+Prelude> putStrLn (show x)
+*** Exception: divide by zero

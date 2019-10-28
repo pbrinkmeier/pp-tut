@@ -3,8 +3,8 @@ module Arithmetik4 where
 import Arithmetik3 (pow3)
 
 root exp r
-  | exp <= 0  = error "Exponent muss positiv sein"
-  | r < 0     = error "Wurzel darf nicht komplex sein"
+  | exp <= 0  = error "Exponent negativ"
+  | r < 0     = error "Wurzel komplex"
   | otherwise = searchRoot 0 (r + 1)
   where
     searchRoot lower upper

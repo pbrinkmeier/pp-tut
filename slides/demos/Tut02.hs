@@ -19,6 +19,8 @@ odd x = not $ even x
 evens = filter even [0..]
 odds = filter odd [0..]
 
+odds' = [ x | x <- [0..], odd x]
+
 foldl f acc []       = acc
 foldl f acc (x : xs) = foldl f (f acc x) xs
 

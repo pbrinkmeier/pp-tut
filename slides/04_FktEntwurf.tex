@@ -53,7 +53,6 @@
 \begin{frame}{Programm}
 	\begin{itemize}
 		\item Übungsblatt 3
-		\item Implementierung einer Queue
 		\item Software-Entwurf in Haskell
 	\end{itemize}
 \end{frame}
@@ -65,7 +64,7 @@
 
 	\begin{itemize}
 		\item Schön kompakt
-		\item \texttt{zipWith} ist endrekursiv $\Rightarrow$ konstanter Speicher
+		\item \texttt{zipWith} ist endrekursiv $\Rightarrow$ linearer Speicher 
 		\item \texttt{fibs !! n} $\in O($\pause$n)$
 		\begin{itemize}
 			\item (wenn Addition konstant)
@@ -173,7 +172,7 @@
 	\code{demos/PlayingCards2.hs}
 
 	\begin{itemize}
-		\item Unnötige Schreibarbeit $\leadsto$ kann i.d.R. vom Compiler übernommen werden
+		\item Selbstimplementierung ist unnötige Schreibarbeit $\leadsto$ kann i.d.R. vom Compiler übernommen werden
 		\item \texttt{deriving} funktioniert nur für \texttt{Eq}, \texttt{Ord}, \texttt{Enum}, \texttt{Enum}, \texttt{Bounded}, \texttt{Show} und \texttt{Read}
 		\item Über Umwege kann man auch eigene Typklassen \texttt{derive}n, ist aber viel Aufwand
 	\end{itemize}

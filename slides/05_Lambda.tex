@@ -94,6 +94,26 @@
 	\end{itemize}
 \end{frame}
 
+\begin{frame}{3.1 --- \texttt{ropeLength}}
+	\code{demos/RopeLength.hs}
+\end{frame}
+
+\begin{frame}{3.2 --- \texttt{ropeConcat}}
+	\code{demos/RopeConcat.hs}
+\end{frame}
+
+\begin{frame}{3.3 --- \texttt{ropeSplitAt}}
+	\code{demos/RopeSplitAt.hs}
+\end{frame}
+
+\begin{frame}{3.4 --- \texttt{ropeInsert}}
+	\code{demos/RopeInsert.hs}
+\end{frame}
+
+\begin{frame}{3.5 --- \texttt{ropeDelete}}
+	\code{demos/RopeDelete.hs}
+\end{frame}
+
 \section{Wiederholung}
 
 \begin{frame}{Algebraische Datentypen}
@@ -203,11 +223,14 @@
 		\item $fv(t)$ bezeichnet die frei vorkommenden Variablen im Term $t$
 		\item Frei vorkommend $\approx$ nicht durch ein $\lambda$ gebunden
 		\begin{itemize}
-			\item $fv(x) = {x}$, wenn $x$ Variable
+			\item $fv(x) = \{x\}$, wenn $x$ Variable
 			\item $fv(f$ $x) = fv(f) \cup fv(x)$
-			\item $fv(\lambda{}p.b) = fv(b) \setminus p$
+			\item $fv(\lambda{}p.b) = fv(b) \setminus \{p\}$
+		\end{itemize}
+		\item Beispiele:
+		\begin{itemize}
 			\item $fv(\lambda{}x.x) = \emptyset$
-			\item $fv(\lambda{}x.y) = {y}$
+			\item $fv(\lambda{}x.y) = \{y\}$
 		\end{itemize}
 		\pause
 		\item Implementiert \texttt{fv :: LambdaTerm -> Set String}
@@ -226,6 +249,7 @@
 			\item $a\left[a \to b\right] = b$
 			\item $a\left[b \to c\right] = a$
 			\item $(f$ $x)\left[f \to g\right]\left[x \to y\right] = g$ $y$
+			\pause
 			\item $(\lambda{}x.f$ $x)\left[x \to y\right] = \lambda{}x.f$ $x$ ($x$ ist nicht frei)
 			\item $(\lambda{}x.f$ $x)\left[f \to g\right] = \lambda{}x.g$ $x$ ($f$ ist frei)
 		\end{itemize}
@@ -244,15 +268,12 @@
 \begin{frame}{$\alpha$-Äquivalenz}
 	\begin{itemize}
 		\item $t_1 \aeq t_2$ --- Strukturelle Äquivalenz der Terme $t_1$ und $t_2$
-		\item Umformung von $t_1$ in $t_2$ allein durch (konsistente!) Substitution der Variablen möglich
-		\begin{itemize}
-			\item Es gilt für Variablen $a$ und $b$: $a \aeq a\left[a \to b\right] = b$
-		\end{itemize}
+		\item Umformung von $t_1$ in $t_2$ allein durch Substitution der (gebundenen) Variablen möglich
 		\pause
 		\item Bspw.:
 		\begin{itemize}
-			\item $x \aeq y$, denn $x \aeq x\left[x \to y\right] = y$
-			\item $\lambda{}x.x \aeq \lambda{}y.y$
+			\item $x \naeq y$, da $x$ und $y$ frei sind
+			\item $\lambda{}x.x \aeq \lambda{}y.y$, durch Umbenennen von $x$ zu $y$
 			\item $f$ $(\lambda{}x.y) \aeq f$ $(\lambda{}p.y)$
 			\item $\lambda{}x.y \naeq \lambda{}x.z$
 		\end{itemize}
@@ -267,7 +288,7 @@
 \begin{frame}{$\eta$-Äquivalenz}
 	\begin{itemize}
 		\item $\lambda{}x.f$ $x \eeq f$, wenn $x \notin fv(f)$
-		\item Wie bei Haskell:\\
+		\item Wie bei Haskell:\
 			\texttt{all list = foldl (\&\&) True list} $\Leftrightarrow$\\
 			\texttt{all = \textbackslash{}list -> foldl (\&\&) True list} $\Leftrightarrow$\\
 			\texttt{all = foldl (\&\&) True}
@@ -310,7 +331,8 @@
 	\begin{itemize}
 		\item \textbf{Volle $\beta$-Reduktion} --- Beliebiger Redex
 		\item \textbf{Normalreihenfolge} --- \enquote{Linkester} Redex
-		\item \textbf{Call-by-Name} --- \emph{Nur} \enquote{Linkester Redex}
+		\pause
+		\item \textbf{Call-by-Name} --- \emph{Nur äußerster} \enquote{linkester Redex}
 		\item \textbf{Call-by-Value} --- \enquote{Linkester Redex}, der eine Normalform als Argument hat
 	\end{itemize}
 \end{frame}
@@ -320,7 +342,7 @@
 	\begin{itemize}
 		\item Implementiert\\
 		      \texttt{normalBeta :: LambdaTerm -> LambdaTerm}
-		\item Führt einen $\beta$-Reduktionsschritt in Normalreihenfolge aus
+	        \item Führt einen $\beta$-Reduktionsschritt in Normalreihenfolge (linkester Redex) aus
 		\item Wenn kein Redex vorkommt, wird derselbe Term zurückgegeben
 		\item Bindet \texttt{LambdaShow} ein für \texttt{instance Show LambdaTerm}
 	\end{itemize}

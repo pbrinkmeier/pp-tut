@@ -1,0 +1,156 @@
+\documentclass{beamer}
+\usetheme{metropolis}
+
+\usepackage[ngerman]{babel}
+\usepackage[autostyle=true,german=quotes]{csquotes}
+\usepackage[linewidth=1pt]{mdframed}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{pifont}
+\usepackage{tikz}
+\usetikzlibrary{positioning, calc, arrows, fit, decorations.pathreplacing, shapes, shapes.multipart, snakes}
+\usepackage{verbatim}
+\usepackage{tabularx}
+\usepackage{textcomp}
+%\usepackage{pdfpages}
+
+\batchmode
+
+\hypersetup{
+	colorlinks,
+	urlcolor=blue,
+	linkcolor=black % for ToC
+}
+\newenvironment{qaa}[1]{
+	#1
+
+	\begin{mdframed}
+		\small
+}{
+	\end{mdframed}
+}
+
+\newcommand{\true}{\ding{51}}
+\newcommand{\false}{\ding{55}}
+\newcommand{\code}[1]{
+	\begin{mdframed}
+		\verbatiminput{#1}
+	\end{mdframed}
+}
+
+\title{Tutorium 05: $\lambda$-Kalkül}
+% \subtitle{}
+\author{Paul Brinkmeier}
+\institute{Tutorium Programmierparadigmen am KIT}
+\date{18. November 2019}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\section{Heutiges Programm}
+\begin{frame}{Programm}
+	\begin{itemize}
+		\item Übungsblatt 4
+		\item $\lambda$-Kalkül: Basics + Church-Zahlen
+		\pause
+		\item $\lambda$-Kalkül in Haskell
+	\end{itemize}
+\end{frame}
+
+\section{Übungsblatt 4}
+
+\begin{frame}{2.1, 2.3 --- AST: Datenstruktur}
+	\code{demos/AstType.hs}
+
+	\begin{itemize}
+		\item \texttt{t} ist Typvariable, um bspw. \texttt{Int}s als Namen zuzulassen
+		\item Das kommt bspw. bei Compiler-Optimierungen zum Einsatz
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{2.2 --- AST: Auswertung}
+	\code{demos/AstEval.hs}
+\end{frame}
+
+\begin{frame}{2.3 --- AST: Boolsche Ausdrücke}
+	\code{demos/AstEval2.hs}
+
+	\begin{itemize}
+		\item Aufgabe sorgfältig lesen, nur 0 ist \enquote{falsey} in C
+		\item $\leadsto$ kann einem in der Klausur in den Arsch beißen
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{2.4 --- AST: \texttt{Show}}
+	\code{demos/AstShow.hs}
+
+	\begin{itemize}
+		\item \texttt{Show t => Show (Exp t)} $\Leftrightarrow$ \enquote{Wenn man \texttt{t}s anzeigen kann, kann man auch \texttt{Exp t}s anzeigen}
+	\end{itemize}
+\end{frame}
+
+\section{Wiederholung}
+
+\begin{frame}{Algebraische Datentypen}
+	\code{demos/DataExamples.hs}
+
+	\begin{itemize}
+		\item Keyword \text{data} definiert \emph{neuen} Typ
+		\item \enquote{\texttt{enum} auf Meth}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Typklassen}
+	\code{demos/TypeClassExamples.hs}
+
+	\begin{itemize}
+		\item Typklassen stellen globale Operationen für Typen bereit
+		\item Bspw. \texttt{Eq} und \texttt{Ord} für Vergleiche, \texttt{Enum} für Aufzählbarkeit
+	\end{itemize}
+\end{frame}
+
+\section{$\lambda$-Kalkül}
+
+\begin{frame}{$\lambda$-Terme}
+	Ein Term im $\lambda$-Kalkül hat eine der drei folgenden Formen:
+
+	\vspace{0.5cm}
+
+	\begin{tabularx}{\textwidth}{ X | X | X }
+		\textbf{Notation} & \textbf{Besteht aus}                      & \textbf{Bezeichnung} \\
+		\hline
+		$x$               & $x$ : Variablenname                       & Variable             \\
+		\hline
+		$\lambda{}p.b$    &
+			\begin{tabular}[t]{@{}c@{}}$p$ : Variablenname\\$b$ : $\lambda$-Term\end{tabular}
+									      & Abstraktion          \\
+		\hline
+		$f$ $a$           & $f$, $a$ : $\lambda$-Terme                & Funktionsanwendung   \\
+	\end{tabularx}
+
+	\vspace{0.5cm}
+
+	\begin{itemize}
+		\item \enquote{$\lambda$-Term}: rekursive Datenstruktur
+		\item Semantik definieren wir später
+		\pause
+		\item Jetzt: Ergänzt das Modul \texttt{Lambda} um die fehlenden Typen
+		\begin{itemize}
+			\item +Fragen zur ÜB-Korrektur
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{$\lambda$-Terme in Haskell}
+	\code{demos/Lambda.hs}
+
+	\begin{itemize}
+		\item \url{//github.com/pbrinkmeier/pp-tut}
+		\item Modul \texttt{x} liegt in \texttt{slides/demos/x.hs}
+	\end{itemize}
+\end{frame}
+
+\end{document}

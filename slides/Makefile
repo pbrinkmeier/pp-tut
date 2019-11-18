@@ -8,4 +8,4 @@ NAME = 01_Haskell_Basics
 	cp build/$@ $@
 
 clean:
-	rm -rf build
+	rm -rf build *.pdf

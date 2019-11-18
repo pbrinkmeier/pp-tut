@@ -12,6 +12,8 @@
 \usepackage{verbatim}
 \usepackage{tabularx}
 \usepackage{textcomp}
+\usepackage{centernot}
+\usepackage{amsmath}
 %\usepackage{pdfpages}
 
 \batchmode
@@ -114,6 +116,21 @@
 
 \section{$\lambda$-Kalkül}
 
+\begin{frame}{$\lambda$-Kalkül}
+	\begin{itemize}
+		\item Funktionales Gegenstück zur Turingmaschine
+		\item Entsprechend theoretisch
+		\item Wurde u.a. genutzt um Unlösbarkeit des Halteproblems zu zeigen
+		\item Gibt saftig Punkte in der Klausur
+		\begin{itemize}
+			\item 13P. im 19SS
+			\item 10P. (+15P.) im 18WS
+			\item 20P. (+15P.) im 18SS
+		\end{itemize}
+		\item Nicht kompliziert aber \enquote{schwierig} (wie bspw. Go oder Schach)
+	\end{itemize}
+\end{frame}
+
 \begin{frame}{$\lambda$-Terme}
 	Ein Term im $\lambda$-Kalkül hat eine der drei folgenden Formen:
 
@@ -150,6 +167,196 @@
 	\begin{itemize}
 		\item \url{//github.com/pbrinkmeier/pp-tut}
 		\item Modul \texttt{x} liegt in \texttt{slides/demos/x.hs}
+	\end{itemize}
+\end{frame}
+
+\newcommand{\aeq}{\stackrel{\alpha}{=}}
+\newcommand{\naeq}{\stackrel{\alpha}{\neq}}
+\newcommand{\eeq}{\stackrel{\eta}{=}}
+
+\newcolumntype{s}{>{\hsize=.8\hsize}X}
+
+\begin{frame}{Begriffe im $\lambda$-Kalkül}
+	\fontsize{9pt}{13}\selectfont
+
+	\begin{tabularx}{\textwidth}{ s | X | X }
+		\textbf{Begriff} & \textbf{Formel} & \textbf{Bedeutung} \\
+		\hline
+		$\alpha$-Äquivalenz & $t_1 \aeq t_2$ & $t_1$, $t_2$ sind gleicher Struktur \\
+		\hline
+		$\eta$-Äquivalenz & $\lambda{}x.f$ $x \eeq f$ & \enquote{Unterversorgung} \\
+		\hline
+		Freie Variablen & $fv(\lambda{}p.b) = { b }$ & Menge der nicht durch $\lambda$s gebundenen Variablen \\
+		\hline
+		Substitution & $(\lambda{}p.b)\left[b\rightarrow{}c\right]=\lambda{}p.c$ & Ersetzung nicht-freier Variablen \\
+		\hline
+		Redex & $(\lambda{}p.b)$ $t$ & \enquote{Reducible expression} \\
+		\hline
+		$\beta$-Reduktion & $(\lambda{}p.b)$ $t \Rightarrow b\left[p\rightarrow{}t\right]$ & \enquote{Funktionsanwendung} \\
+	\end{tabularx}
+\end{frame}
+
+\subsection{Substitution, Freie Variablen}
+
+\begin{frame}{Freie Variablen}
+	\begin{itemize}
+		\item $fv(t)$ bezeichnet die frei vorkommenden Variablen im Term $t$
+		\item Frei vorkommend $\approx$ nicht durch ein $\lambda$ gebunden
+		\begin{itemize}
+			\item $fv(x) = {x}$, wenn $x$ Variable
+			\item $fv(f$ $x) = fv(f) \cup fv(x)$
+			\item $fv(\lambda{}p.b) = fv(b) \setminus p$
+			\item $fv(\lambda{}x.x) = \emptyset$
+			\item $fv(\lambda{}x.y) = {y}$
+		\end{itemize}
+		\pause
+		\item Implementiert \texttt{fv :: LambdaTerm -> Set String}
+		\begin{itemize}
+			\item Benutzt \texttt{Set}, \texttt{union}, \texttt{delete} und \texttt{fromList} aus \texttt{Data.Set}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Substitution}
+	\begin{itemize}
+		\item Substitution ersetzt alle \emph{freien} Variablen in einem Term
+		\item $t\left[a \to b\right]$ --- Ersetze $a$ durch $b$ in $t$
+		\item Beispiele:
+		\begin{itemize}
+			\item $a\left[a \to b\right] = b$
+			\item $a\left[b \to c\right] = a$
+			\item $(f$ $x)\left[f \to g\right]\left[x \to y\right] = g$ $y$
+			\item $(\lambda{}x.f$ $x)\left[x \to y\right] = \lambda{}x.f$ $x$ ($x$ ist nicht frei)
+			\item $(\lambda{}x.f$ $x)\left[f \to g\right] = \lambda{}x.g$ $x$ ($f$ ist frei)
+		\end{itemize}
+		\pause
+		\item Implementiert\\
+		      \texttt{substitute :: (String, Term) -> Term -> Term}
+		\begin{itemize}
+			\item \texttt{type Term = LambdaTerm}
+			\item \texttt{fv} braucht ihr dafür nicht
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\subsection{Äquivalenz}
+
+\begin{frame}{$\alpha$-Äquivalenz}
+	\begin{itemize}
+		\item $t_1 \aeq t_2$ --- Strukturelle Äquivalenz der Terme $t_1$ und $t_2$
+		\item Umformung von $t_1$ in $t_2$ allein durch (konsistente!) Substitution der Variablen möglich
+		\begin{itemize}
+			\item Es gilt für Variablen $a$ und $b$: $a \aeq a\left[a \to b\right] = b$
+		\end{itemize}
+		\pause
+		\item Bspw.:
+		\begin{itemize}
+			\item $x \aeq y$, denn $x \aeq x\left[x \to y\right] = y$
+			\item $\lambda{}x.x \aeq \lambda{}y.y$
+			\item $f$ $(\lambda{}x.y) \aeq f$ $(\lambda{}p.y)$
+			\item $\lambda{}x.y \naeq \lambda{}x.z$
+		\end{itemize}
+		\pause
+		\item Aufgabe: Implementiert \texttt{instance Eq Term} als $\alpha$-Äquivalenz
+		\begin{itemize}
+			\item Benutzt \texttt{substitute}!
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{$\eta$-Äquivalenz}
+	\begin{itemize}
+		\item $\lambda{}x.f$ $x \eeq f$, wenn $x \notin fv(f)$
+		\item Wie bei Haskell:\\
+			\texttt{all list = foldl (\&\&) True list} $\Leftrightarrow$\\
+			\texttt{all = \textbackslash{}list -> foldl (\&\&) True list} $\Leftrightarrow$\\
+			\texttt{all = foldl (\&\&) True}
+		\item Also:
+		\begin{itemize}
+			\item $\eta$-Äquivalenz: eher Umformungsschritt als Gleichheitskriterium
+			\item Formelle Definition von Unterversorgung
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\subsection{Redex, $\beta$-Reduktion}
+
+\begin{frame}{$\beta$-Reduktion}
+	\begin{itemize}
+		\item Bisher: $\lambda$-Terme als (seltsame) Datenstruktur\\
+		      Jetzt: Ausführungssemantik
+		\pause
+		\item RedEx: \enquote{Reducible expression} $\Leftrightarrow$\\
+		      Funktionsanwendung ($f$ $a$), mit $f = \lambda{}p.b$
+	      \item $(\lambda{}p.b)$ $a\pause \implies b\left[p \to a\right]$
+		\pause
+		\item \enquote{Ausführung} (besser: Auswertung) von $\lambda$-Termen: Anwenden der $\beta$-Reduktion, bis Term \enquote{konvergiert}
+		\item Term konvergiert $\approx$ Normalform $\approx$ enthält keinen Redex mehr
+		\begin{itemize}
+			\item Notation: $t \centernot\implies$
+		\end{itemize}
+		\pause
+		\item $id$ $a = (\lambda{}x.x)$ $a \implies x\left[x \to a\right] = a \centernot\implies$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Auswertungsstrategien}
+	\begin{itemize}
+		\item Welcher Redex soll zuerst ausgewertet werden?
+		\item $\leadsto$ verschiedene Auswertungsstrategien
+	\end{itemize}
+	\pause
+	\vspace{1cm}
+	\begin{itemize}
+		\item \textbf{Volle $\beta$-Reduktion} --- Beliebiger Redex
+		\item \textbf{Normalreihenfolge} --- \enquote{Linkester} Redex
+		\item \textbf{Call-by-Name} --- \emph{Nur} \enquote{Linkester Redex}
+		\item \textbf{Call-by-Value} --- \enquote{Linkester Redex}, der eine Normalform als Argument hat
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Normalreihenfolge}
+	\code{demos/LambdaN.hs}
+	\begin{itemize}
+		\item Implementiert\\
+		      \texttt{normalBeta :: LambdaTerm -> LambdaTerm}
+		\item Führt einen $\beta$-Reduktionsschritt in Normalreihenfolge aus
+		\item Wenn kein Redex vorkommt, wird derselbe Term zurückgegeben
+		\item Bindet \texttt{LambdaShow} ein für \texttt{instance Show LambdaTerm}
+	\end{itemize}
+\end{frame}
+
+\section{Church-Zahlen im $\lambda$-Kalkül}
+
+\begin{frame}{Peano-Axiome}
+	\begin{eqnarray*}
+		c_0 &= ?\\
+		c_1 &= s (c_0)\\
+		c_2 &= s (s (c_0))\\
+		c_3 &= s (s (s (c_0)))\\
+		c_8 &= s (s (s (s (s (s (s (s (c_0))))))))
+	\end{eqnarray*}
+
+	\begin{enumerate}
+		\item Die 0 ist Teil der natürlichen Zahlen
+		\item Wenn $n$ Teil der natürlichen Zahlen ist,\\
+	 	      ist auch $s(n) = n + 1$ Teil der natürlichen Zahlen
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}{Church-Zahlen}
+	\begin{itemize}
+		\item \enquote{Zahlen} im $\lambda$-Kalkül werden durch Funktionen in Normalform dargestellt
+		\item $n$ $f$ $x =$ $f$ $n$-mal angewendet auf $x$
+		\item Bspw. $(3$ $g$ $y) = g$ $(g $ $(g$ $y)) = g^3$ $y$\\
+		      Mit $3 = \lambda{}f.\lambda{}x.f$ $(f $ $(f$ $x))$
+		\item Schreibt eine $\lambda$-Funktion $succ$, die eine Church-Zahl nimmt und zu deren Nachfolger auswertet
+		\pause
+		\item Übertragt die Funktion in euren Haskell-Code und wertet $succ$ $c_0$ durch wiederholtes Anwenden von \texttt{normalBeta} aus
+		\item Vergleicht euer Ergebnis mit dem von Wavelength
+		\begin{itemize}
+			\item \url{//pp.ipd.kit.edu/lehre/misc/lambda-ide/Wavelength.html}
+		\end{itemize}
 	\end{itemize}
 \end{frame}
 

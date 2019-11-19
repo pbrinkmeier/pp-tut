@@ -196,7 +196,7 @@
 
 \newcolumntype{s}{>{\hsize=.8\hsize}X}
 
-\begin{frame}{Begriffe im $\lambda$-Kalkül}
+\begin{frame}[label=lambdaoverview]{Begriffe im $\lambda$-Kalkül}
 	\fontsize{9pt}{13}\selectfont
 
 	\begin{tabularx}{\textwidth}{ s | X | X }
@@ -288,10 +288,10 @@
 \begin{frame}{$\eta$-Äquivalenz}
 	\begin{itemize}
 		\item $\lambda{}x.f$ $x \eeq f$, wenn $x \notin fv(f)$
-		\item Wie bei Haskell:\
-			\texttt{all list = foldl (\&\&) True list} $\Leftrightarrow$\\
-			\texttt{all = \textbackslash{}list -> foldl (\&\&) True list} $\Leftrightarrow$\\
-			\texttt{all = foldl (\&\&) True}
+		\item Wie bei Haskell:\\
+	              \texttt{all list = foldl (\&\&) True list} $\Leftrightarrow$\\
+		      \texttt{all = \textbackslash{}list -> foldl (\&\&) True list} $\Leftrightarrow$\\
+		      \texttt{all = foldl (\&\&) True}
 		\item Also:
 		\begin{itemize}
 			\item $\eta$-Äquivalenz: eher Umformungsschritt als Gleichheitskriterium
@@ -347,6 +347,8 @@
 		\item Bindet \texttt{LambdaShow} ein für \texttt{instance Show LambdaTerm}
 	\end{itemize}
 \end{frame}
+
+\againframe{lambdaoverview}
 
 \section{Church-Zahlen im $\lambda$-Kalkül}
 

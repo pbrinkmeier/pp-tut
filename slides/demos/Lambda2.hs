@@ -1,5 +1,7 @@
 module Lambda where
 
+import Data.Set
+
 data LambdaTerm
   = Var String
   | App LambdaTerm LambdaTerm
@@ -11,12 +13,16 @@ instance Show LambdaTerm where
     where
       t1 = case f of
         Abs _ _ -> "(" ++ show f ++ ")"
-        _       -> show f
+        _       ->        show f
       t2 = case x of
         App _ _ -> "(" ++ show x ++ ")"
         Abs _ _ -> "(" ++ show x ++ ")"
-        _       -> show x
+        _       ->        show x
   show (Abs arg body) = "λ" ++ arg ++ "." ++ (show body)
+
+fv (Var s) = fromList [s]
+fv (App f a) = fv f `union` fv a
+fv (Abs p b) = delete p $ fv b
 
 -- alpha equivalence
 instance Eq LambdaTerm where
@@ -24,7 +30,8 @@ instance Eq LambdaTerm where
   (App f1 x1) == (App f2 x2) = f1 == f2 && x1 == x2
   (Abs a1 b1) == (Abs a2 b2)
     | a1 == a2               = b1 == b2
-    | otherwise              = b1 == applySubst (a2 +> Var a1) b2
+    | not (a1 `elem` fv b2)  = b1 == applySubst (a2 +> Var a1) b2
+    | otherwise              = False
   _           == _           = False
 
 type Substitution = (String, LambdaTerm)

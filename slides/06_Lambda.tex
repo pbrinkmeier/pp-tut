@@ -1,0 +1,165 @@
+\documentclass{beamer}
+\usetheme{metropolis}
+
+\usepackage[ngerman]{babel}
+\usepackage[autostyle=true,german=quotes]{csquotes}
+\usepackage[linewidth=1pt]{mdframed}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{pifont}
+\usepackage{tikz}
+\usetikzlibrary{positioning, calc, arrows, fit, decorations.pathreplacing, shapes, shapes.multipart, snakes}
+\usepackage{verbatim}
+\usepackage{tabularx}
+\usepackage{textcomp}
+\usepackage{centernot}
+\usepackage{amsmath}
+%\usepackage{pdfpages}
+
+\batchmode
+
+\hypersetup{
+	colorlinks,
+	urlcolor=blue,
+	linkcolor=black % for ToC
+}
+\newenvironment{qaa}[1]{
+	#1
+
+	\begin{mdframed}
+		\small
+}{
+	\end{mdframed}
+}
+
+\newcommand{\true}{\ding{51}}
+\newcommand{\false}{\ding{55}}
+\newcommand{\code}[1]{
+	\begin{mdframed}
+		\verbatiminput{#1}
+	\end{mdframed}
+}
+
+\title{Tutorium 06: $\lambda$-Kalkül}
+% \subtitle{}
+\author{Paul Brinkmeier}
+\institute{Tutorium Programmierparadigmen am KIT}
+\date{25. November 2019}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\section{Heutiges Programm}
+\begin{frame}{Programm}
+	\begin{itemize}
+		\item Übungsblatt 5
+		\item Church-Zahlen
+		\item Altklausuraufgaben zum $\lambda$-Kalkül
+	\end{itemize}
+\end{frame}
+
+\section{Übungsblatt 5}
+
+\begin{frame}{2.1, 2.3 --- AST: Datenstruktur}
+	\code{demos/AstType.hs}
+
+	\begin{itemize}
+		\item \texttt{t} ist Typvariable, um bspw. \texttt{Int}s als Namen zuzulassen
+		\item Das kommt bspw. bei Compiler-Optimierungen zum Einsatz
+	\end{itemize}
+\end{frame}
+
+\section{Wiederholung}
+
+\begin{frame}{$\lambda$-Terme}
+	Ein Term im $\lambda$-Kalkül hat eine der drei folgenden Formen:
+
+	\vspace{0.5cm}
+
+	\begin{tabularx}{\textwidth}{ X | X | X }
+		\textbf{Notation} & \textbf{Besteht aus}                      & \textbf{Bezeichnung} \\
+		\hline
+		$x$               & $x$ : Variablenname                       & Variable             \\
+		\hline
+		$\lambda{}p.b$    &
+			\begin{tabular}[t]{@{}c@{}}$p$ : Variablenname\\$b$ : $\lambda$-Term\end{tabular}
+									      & Abstraktion          \\
+		\hline
+		$f$ $a$           & $f$, $a$ : $\lambda$-Terme                & Funktionsanwendung   \\
+	\end{tabularx}
+
+	\vspace{0.5cm}
+
+	\begin{itemize}
+		\item \enquote{$\lambda$-Term}: rekursive Datenstruktur
+	\end{itemize}
+\end{frame}
+
+\newcommand{\aeq}{\stackrel{\alpha}{=}}
+\newcommand{\naeq}{\stackrel{\alpha}{\neq}}
+\newcommand{\eeq}{\stackrel{\eta}{=}}
+
+\newcolumntype{s}{>{\hsize=.8\hsize}X}
+
+\begin{frame}[label=lambdaoverview]{Begriffe im $\lambda$-Kalkül}
+	\fontsize{9pt}{13}\selectfont
+
+	\begin{tabularx}{\textwidth}{ s | X | X }
+		\textbf{Begriff} & \textbf{Formel} & \textbf{Bedeutung} \\
+		\hline
+		$\alpha$-Äquivalenz & $t_1 \aeq t_2$ & $t_1$, $t_2$ sind gleicher Struktur \\
+		\hline
+		$\eta$-Äquivalenz & $\lambda{}x.f$ $x \eeq f$ & \enquote{Unterversorgung} \\
+		\hline
+		Freie Variablen & $fv(\lambda{}p.b) = { b }$ & Menge der nicht durch $\lambda$s gebundenen Variablen \\
+		\hline
+		Substitution & $(\lambda{}p.b)\left[b\rightarrow{}c\right]=\lambda{}p.c$ & Ersetzung nicht-freier Variablen \\
+		\hline
+		Redex & $(\lambda{}p.b)$ $t$ & \enquote{Reducible expression} \\
+		\hline
+		$\beta$-Reduktion & $(\lambda{}p.b)$ $t \Rightarrow b\left[p\rightarrow{}t\right]$ & \enquote{Funktionsanwendung} \\
+	\end{tabularx}
+\end{frame}
+
+\section{Church-Zahlen im $\lambda$-Kalkül}
+
+\begin{frame}{Peano-Axiome}
+	\begin{eqnarray*}
+		c_0 &= ?\\
+		c_1 &= s (c_0)\\
+		c_2 &= s (s (c_0))\\
+		c_3 &= s (s (s (c_0)))\\
+		c_8 &= s (s (s (s (s (s (s (s (c_0))))))))
+	\end{eqnarray*}
+
+	\begin{enumerate}
+		\item Die 0 ist Teil der natürlichen Zahlen
+		\item Wenn $n$ Teil der natürlichen Zahlen ist,\\
+	 	      ist auch $s(n) = n + 1$ Teil der natürlichen Zahlen
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}{Church-Zahlen}
+	\begin{itemize}
+		\item \enquote{Zahlen} im $\lambda$-Kalkül werden durch Funktionen in Normalform dargestellt
+		\item $n$ $f$ $x =$ $f$ $n$-mal angewendet auf $x$
+		\item Bspw. $(3$ $g$ $y) = g$ $(g $ $(g$ $y)) = g^3$ $y$\\
+		      Mit $3 = \lambda{}f.\lambda{}x.f$ $(f $ $(f$ $x))$
+		\item Schreibt eine $\lambda$-Funktion $succ$, die eine Church-Zahl nimmt und zu deren Nachfolger auswertet
+		\pause
+		\item Übertragt die Funktion in euren Haskell-Code vom letzten Mal und wertet $succ$ $c_0$ durch wiederholtes Anwenden von \texttt{normalBeta} aus
+		\item Vergleicht euer Ergebnis mit dem von Wavelength
+		\begin{itemize}
+			\item \url{//pp.ipd.kit.edu/lehre/misc/lambda-ide/Wavelength.html}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\section{Klausuraufgabe 1}
+
+\section{Klausuraufgabe 2}
+
+\end{document}

@@ -295,6 +295,21 @@
 \subsection{18SS A4 --- Currying im $\lambda$-Kalkül}
 
 \begin{frame}{18SS A4 --- Currying im $\lambda$-Kalkül}
+	\begin{eqnarray*}
+		pair =& \abs{a}{\abs{b}{\abs{f}{\liiin{f}{a}{b}}}} \\
+		fst  =& \abs{x}{\abs{y}{x}} \\
+		snd  =& \abs{x}{\abs{y}{y}} \\
+		\liin{fst}{\liii{pair}{a}{b}} =& a \\
+		\liin{snd}{\liii{pair}{a}{b}} =& b \\
+	\end{eqnarray*}
+
+	\begin{itemize}
+		\item Schreibe $curry$ und $uncurry$, sodass:
+		\begin{itemize}
+			\item $\liiin{\lii{curry}{f}}{a}{b} = \liiin{f}{\liii{pair}{a}{b}}$
+			\item $\liin{\lii{uncurry}{g}}{\liii{pair}{a}{b}} = \liiin{g}{a}{b}$
+		\end{itemize}
+	\end{itemize}
 \end{frame}
 
 \end{document}

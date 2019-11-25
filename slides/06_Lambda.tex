@@ -14,6 +14,7 @@
 \usepackage{textcomp}
 \usepackage{centernot}
 \usepackage{amsmath}
+\usepackage{xcolor}
 %\usepackage{pdfpages}
 
 \batchmode
@@ -55,20 +56,9 @@
 \section{Heutiges Programm}
 \begin{frame}{Programm}
 	\begin{itemize}
-		\item Übungsblatt 5
 		\item Church-Zahlen
+		\item Übungsblatt 5
 		\item Altklausuraufgaben zum $\lambda$-Kalkül
-	\end{itemize}
-\end{frame}
-
-\section{Übungsblatt 5}
-
-\begin{frame}{2.1, 2.3 --- AST: Datenstruktur}
-	\code{demos/AstType.hs}
-
-	\begin{itemize}
-		\item \texttt{t} ist Typvariable, um bspw. \texttt{Int}s als Namen zuzulassen
-		\item Das kommt bspw. bei Compiler-Optimierungen zum Einsatz
 	\end{itemize}
 \end{frame}
 
@@ -128,11 +118,11 @@
 
 \begin{frame}{Peano-Axiome}
 	\begin{eqnarray*}
-		c_0 &= ?\\
-		c_1 &= s (c_0)\\
-		c_2 &= s (s (c_0))\\
-		c_3 &= s (s (s (c_0)))\\
-		c_8 &= s (s (s (s (s (s (s (s (c_0))))))))
+		c_0 =& ?\\
+		c_1 =& s (c_0)\\
+		c_2 =& s (s (c_0))\\
+		c_3 =& s (s (s (c_0)))\\
+		c_8 =& s (s (s (s (s (s (s (s (c_0))))))))
 	\end{eqnarray*}
 
 	\begin{enumerate}
@@ -158,8 +148,153 @@
 	\end{itemize}
 \end{frame}
 
-\section{Klausuraufgabe 1}
+\section{Übungsblatt 5}
 
-\section{Klausuraufgabe 2}
+\newcommand{\E}{\;}
+
+\newcommand{\liin}[2]{#1\E{}#2}
+\newcommand{\liiin}[3]{#1\E{}#2\E{}#3}
+\newcommand{\livn}[4]{#1\E{}#2\E{}#3\E{}#4}
+\newcommand{\lvn}[5]{#1\E{}#2\E{}#3\E{}#4\E{}#5}
+
+\newcommand{\lii}[2]{(#1\E{}#2)}
+\newcommand{\liii}[3]{(#1\E{}#2\E{}#3)}
+
+\newcommand{\liir}[2]{\textcolor{red}{\underline{(}}#1\E{}#2\textcolor{red}{\underline{)}}}
+\newcommand{\liiir}[3]{\textcolor{red}{\underline{(}}#1\E{}#2\E{}#3\textcolor{red}{\underline{)}}}
+
+\newcommand{\abs}[2]{\lambda{}#1.#2}
+
+\begin{frame}{1.1 --- Klammerung im $\lambda$-Kalkül}
+	\footnotesize
+	\begin{eqnarray}
+		\liiin{c_0}{c_1}{\liii{c_2}{c_3}{c_4}}{c_5}                   =& \pause \liin{\liir{\liir{c_0}{c_1}}{\lii{\liir{c_2}{c_3}}{c_4}}}{c_5}             \\
+		\liin{\liii{c_0}{c_1}{c_2}}{\liii{c_3}{c_4}{c_5}}             =& \pause \liin{\lii{\liir{c_0}{c_1}}{c_2}}{\lii{\liir{c_3}{c_4}}{c_5}}              \\
+		\livn{c_0}{c_1}{\liii{c_2}{c_3}{c_4}}{\lii{c_5}{c_6}}         =& \pause \liin{\liir{\liir{c_0}{c_1}}{\lii{\liir{c_2}{c_3}}{c_4}}}{\lii{c_5}{c_6}}  \\
+		\lvn{c_0}{c_1}{\liii{c_2}{c_3}{c_4}}{c_5}{c_6}                =& \pause \liin{\liir{\liir{\liir{c_0}{c_1}}{\lii{\liir{c_2}{c_3}}{c_4}}}{c_5}}{c_6} \\
+		\livn{c_0}{\lii{c_1}{\liii{c_2}{c_3}{c_4}}}{c_5}{c_6}         =& \pause \liin{\liir{\liir{c_0}{\lii{c_1}{\lii{\liir{c_2}{c_3}}{c_4}}}}{c_5}}{c_6}  \\
+		\liin{(\abs{y}{\liiin{c_0}{c_1}{c_2}})}{\liii{c_3}{c_4}{c_5}} =& \pause \liin{(\abs{y}{\liin{\liir{c_0}{c_1}}{c_2}})}{\lii{\liir{c_3}{c_4}}{c_5}}  \\
+		\liin{(\abs{y}{\lii{c_0}{(\abs{z}{\lii{c_1}{c_2}})}}}{\liii{c_3}{c_4}{c_5}} =& \pause \liin{(\abs{y}{\lii{c_0}{(\abs{z}{\lii{c_1}{c_2}})}}}{\lii{\liir{c_3}{c_4}}{c_5}}
+	\end{eqnarray}
+
+	\normalsize
+	\begin{itemize}
+		\item Funktionsaufrufe sind linksassoziativ, wie in Haskell
+		\item Bzw. in Haskell sind FA linksassoz., wie im $\lambda$-Kalkül
+	\end{itemize}
+\end{frame}
+
+\setcounter{equation}{0}
+
+\begin{frame}{1.2 --- Klammerung im $\lambda$-Kalkül}
+	\begin{eqnarray}
+		\liin{(\abs{y}{y})}{c_0} \stackrel{?}{=} \abs{y}{\liin{y}{c_0}} \\
+		\abs{y}{\lii{y}{c_0}} \stackrel{?}{=} \abs{y}{\liin{y}{c_0}}
+	\end{eqnarray}
+
+	\begin{itemize}
+		\item Term 1 $\approx$ \texttt{App (Abs "y" (Var "y")) (Var "c0")}
+		\item Term 2 $\approx$ \texttt{Abs "y" (App (Var "y") (Var "c0"))}
+		\pause
+		\item $\leadsto$ zweite Gleichung stimmt
+	\end{itemize}
+\end{frame}
+
+\newcommand{\subst}[3]{(#1)\left[#2\,\to\,#3\right]}
+
+\setcounter{equation}{0}
+
+\begin{frame}{1.3 --- Klammerung im $\lambda$-Kalkül}
+	\begin{eqnarray}
+		\subst{\liin{(x)}{c_0}}{x}{\abs{y}{y}} =& \liin{(\abs{y}{y})}{c_0} \\
+		\subst{\liin{x}{c_0}}{x}{(\abs{y}{y})} =& \liin{(\abs{y}{y})}{c_0} \\
+		\subst{\liin{x}{c_0}}{x}{\abs{y}{y}} =& \liin{(\abs{y}{y})}{c_0}
+	\end{eqnarray}
+
+	\begin{itemize}
+		\item Alle drei Substitutionen führen zum selben Ergebnis
+		\item \enquote{Für beliebiges $t$ repräsentieren $t$ und $(t)$ den gleichen $\lambda$-Term} stimmt
+	\end{itemize}
+\end{frame}
+
+\setcounter{equation}{0}
+
+\begin{frame}{1.4 --- Klammerung im $\lambda$-Kalkül}
+	Angenommen, $x = \liin{c_0}{c_1}$.\\
+	Welche der folgenden Aussagen gelten?
+
+	\begin{eqnarray}
+		\liiin{c_0}{c_1}{c_2}                 =& \liin{x}{c_2} \\
+		\liiin{c_2}{c_0}{c_1}                 =& \liin{c_2}{x} \\
+		\livn{c_2}{\lii{c_3}{c_4}}{c_0}{c_1}  =& \liiin{c_2}{\lii{c_3}{c_4}}{x} \\
+		\liin{c_2}{\liii{c_0}{c_1}{c_3}}{c_4} =& \liiin{c_2}{\lii{x}{c_3}}{c_4}
+	\end{eqnarray}
+
+	\pause
+
+	\begin{itemize}
+		\item 1 und 4 gelten
+		\item $\liiin{c_2}{c_0}{c_1} = \liin{\liir{c_2}{c_0}}{c_1} \neq \liin{c_2}{\liir{c_0}{c_1}} = \liin{c_2}{x}$
+		\item $\livn{c_2}{\lii{c_3}{c_4}}{c_0}{c_1} \stackrel{*}{\neq} \liiin{c_2}{\lii{c_3}{c_4}}{x}$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{2 --- Church-Zahlen in Haskell}
+	\code{demos/ChurchNumbers.hs}
+\end{frame}
+
+\section{Klausuraufgaben zum $\lambda$-Kalkül}
+
+\subsection{19SS A4 --- SKI-Kalkül}
+
+\begin{frame}{19SS A4 --- SKI-Kalkül (13P.)}
+	\begin{eqnarray*}
+		S =& \abs{x}{\abs{y}{\abs{z}{\liiin{x}{z}{\lii{y}{z}}}}} \\
+		K =& \abs{x}{\abs{y}{x}} \\
+		I =& \abs{x}{x}
+	\end{eqnarray*}
+
+	\begin{itemize}
+		\item SKI-Kalkül kann alles, was $\lambda$-Kalkül auch kann, mit 3 \enquote{Kombinatoren}
+		\item Definiere $U = \abs{x}{\liiin{x}{S}{K}}$
+		\item Aufgabe: Beweise, dass man $S$, $K$ und $I$ durch $U$ darstellen kann
+		\pause
+		\begin{itemize}
+			\item $\liiin{U}{U}{x} \stackrel{?}{\implies} x = \liin{I}{x}$
+			\item $\liin{U}{\lii{U}{\lii{U}{U}}} = \liin{U}{\lii{U}{I}} \stackrel{?}{\implies} K$
+			\item $\liin{U}{\lii{U}{\lii{U}{\lii{U}{U}}}} = \liin{U}{K} \stackrel{?}{\implies} S$
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\subsection{18WS A5 --- Listen im $\lambda$-Kalkül}
+
+\begin{frame}{18WS A5 --- Listen im $\lambda$-Kalkül}
+	\begin{eqnarray*}
+		nil  =& \abs{n}{\abs{c}{n}} \\
+		cons =& \abs{x}{\abs{xs}{\abs{n}{\abs{c}{\liiin{c}{x}{xs}}}}}
+	\end{eqnarray*}
+
+	\begin{itemize}
+		\item Schreibe $head$ und $tail$, sodass:
+		\begin{itemize}
+			\item $\liin{head}{\liii{cons}{A}{B}} \stackrel{*}{\implies} A$
+			\item $\liin{tail}{\liii{cons}{A}{B}} \stackrel{*}{\implies} B$
+		\end{itemize}
+		\pause
+		\item Schreibe $replicate$, sodass:
+		\begin{itemize}
+			\item $\liiin{replicate}{c_n}{A} = \underbrace{\liiin{cons}{A}{(\lvn{cons}{A}{...}{\liii{cons}{A}{nil}}{...})}}_\text{$n$ mal}$
+			\item Erinnerung: $\liiin{c_n}{f}{x} = \underbrace{\liin{f}{(\livn{f}{...}{\lii{f}{x}}{...})}}_\text{$n$ mal}$
+		\end{itemize}
+		\pause
+		\item Werte aus: $\liiin{replicate}{c_3}{A} \stackrel{*}{\implies} ?$
+	\end{itemize}
+\end{frame}
+
+\subsection{18SS A4 --- Currying im $\lambda$-Kalkül}
+
+\begin{frame}{18SS A4 --- Currying im $\lambda$-Kalkül}
+\end{frame}
 
 \end{document}

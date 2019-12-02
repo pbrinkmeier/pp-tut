@@ -341,13 +341,110 @@
 
 \section{Einführung in Prolog}
 
-% Aufbauen anhand Modulhandbuch, Brettspiel?
+\begin{frame}{Prolog --- Umgebung}
+	\begin{itemize}
+		\item Prolog ist eine Programmiersprache, wenn auch eine \enquote{komische}
+		\item $\leadsto$ gut wird man durch Übung
+		\item Zum Üben:
+		\begin{itemize}
+			\item SWI-Prolog --- gängige Prolog-Umgebung
+			\item \url{https://swish.swi-prolog.org/}{SWISH} --- SWI-Prolog Web-IDE zum Testen
+			\item VIPR, VIPER --- PSE-Tools des IPD, auf der \url{https://pp.ipd.kit.edu/lehre/WS201920/paradigmen/uebung/}{Seite der Übung} verlinkt
+		\end{itemize}
+	\end{itemize}
+\end{frame}
 
-\section{Aufgaben zu Prolog}
+\begin{frame}{How did we get here?}
+	\begin{itemize}
+		\item Erste Computerprogramme: Pragmatischerweise imperativ
+		\begin{itemize}
+			\item lat. imperare: befehlen
+			\item \enquote{Computer, tu dies, dann das, überspringe 5 Anweisungen}
+			\item $\approx$ Turing-Maschine
+			\item $\leadsto$ einfacher zu implementieren als \enquote{$\lambda$-Maschine}
+		\end{itemize}
+		\item Nächster Schritt: Strukturierte/Prozedurale Programmierung
+		\begin{itemize}
+			\item \enquote{Go To Statement Considered Harmful} (Edsger Dijkstra)
+			\item $\approx$ \texttt{if}, \texttt{while}, \texttt{for}, Prozeduren
+		\end{itemize}
+	\item \enquote{Große} Programme ($\geq 10$ kLoC) $\leadsto$ Objektorientierte Prog.
+		\begin{itemize}
+			\item Objekte + Design Patterns, um Komponenten abzugrenzen
+			\item Letztlich \enquote{syntactical sugar} für imperative Programme
+		\end{itemize}
+	\end{itemize}
+\end{frame}
 
-% Klausuraufgaben?
-% Modulhandbuchaufgaben?
-% Wolf-Ziege-Kohl nur anders?
-% Iwas mit Automaten?
+\begin{frame}{How did we get here?}
+	\begin{itemize}
+		\item Imperative Sprachen:
+		\begin{itemize}
+			\item Rein imperativ $\approx$ Programm ist Liste von Befehlen (MIMA)
+			\item Strukturiert $\approx$ Programm ist Liste von Prozeduren (C)
+			\item Objektorientiert $\approx$ Programm ist gegeben durch das Verhalten von Objekten (Java)
+		\end{itemize}
+		\item Gegenstück? \pause \enquote{Deklarative} Sprachen
+		\begin{itemize}
+			\item lat. declarare: kenntlich machen, erklären
+			\item \enquote{Computer, so kannst du das Problem lösen; mach mal}
+			\item Bspw. \texttt{fibs =\\0 : 1 : zipWith (+) (take 1 fibs) (take 2 fibs)}
+			\pause
+			\item Irgendwie schwierig in Hardware zu machen
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{How did we get here?}
+	\begin{itemize}
+		\item Funktionale Programmierung:
+		\begin{itemize}
+			\item Programm ist Baum von Funktionsaufrufen
+			\item \enquote{Teile-und-Herrsche}: Problemlösung durch aufteilen in gelöste Teilprobleme
+			\item Unterste Ebene (\texttt{Prelude}) ist imperativ implementiert
+		\end{itemize}
+		\pause
+		\item Nächsthöhere Abstraktion:
+		\begin{itemize}
+			\item Implementiere \enquote{Lösungs-Maschine} imperativ
+			\item Problem in Prädikatenlogik darstellen, Maschine löst das
+			\item Bspw. \texttt{X ist Voraussetzung für PSE, löse nach X.}
+			\item $\leadsto$ logische Programmierung
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Modulhandbuch}
+	\code{demos/modulhandbuch.pl}
+
+	\begin{itemize}
+		\item Legt \texttt{semester/2} und \texttt{requires/2} für \texttt{opruefung} und Abhängigkeiten an
+		\item Schreibt \texttt{reqT/2}, was auch transitive Abhängigkeiten findet
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Detektivrätsel}
+	\begin{itemize}
+		\item Drei Verdächtige: Alice, Bob, Carl (leben in einer WG)
+		\item ... leider auch die einzigen Zeugen
+		\item Alice:
+		\begin{itemize}
+			\item Bob war mit dem Opfer befreundet.
+			\item Carl und das Opfer waren verfeindet.
+		\end{itemize}
+		\item Bob:
+		\begin{itemize}
+			\item Ich war überhaupt nicht daheim!
+			\item Ich kenne den garnicht!
+		\end{itemize}
+		\item Carl:
+		\begin{itemize}
+			\item Ich bin unschuldig!
+			\item Wir waren zum Zeitpunkt der Tat alle in der WG.
+		\end{itemize}
+		\vspace{1em}
+		\item Überlegt, wie man dieses Problem mit Prolog darstellen und lösen könnte!
+	\end{itemize}
+\end{frame}
 
 \end{document}

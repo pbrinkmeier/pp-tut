@@ -1,0 +1,124 @@
+\documentclass{beamer}
+\usetheme{metropolis}
+
+\usepackage[ngerman]{babel}
+\usepackage[autostyle=true,german=quotes]{csquotes}
+\usepackage[linewidth=1pt]{mdframed}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{pifont}
+\usepackage{tikz}
+\usetikzlibrary{positioning, calc, arrows, fit, decorations.pathreplacing, shapes, shapes.multipart, snakes}
+\usepackage{verbatim}
+\usepackage{tabularx}
+\usepackage{textcomp}
+\usepackage{centernot}
+\usepackage{amsmath}
+\usepackage{xcolor}
+%\usepackage{pdfpages}
+
+\batchmode
+
+\hypersetup{
+	colorlinks,
+	urlcolor=blue,
+	linkcolor=black % for ToC
+}
+\newenvironment{qaa}[1]{
+	#1
+
+	\begin{mdframed}
+		\small
+}{
+	\end{mdframed}
+}
+
+\newcommand{\true}{\ding{51}}
+\newcommand{\false}{\ding{55}}
+\newcommand{\code}[1]{
+	\begin{mdframed}
+		\verbatiminput{#1}
+	\end{mdframed}
+}
+
+\title{Tutorium 07: Prolog-Basics}
+% \subtitle{}
+\author{Paul Brinkmeier}
+\institute{Tutorium Programmierparadigmen am KIT}
+\date{02. Dezember 2019}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\section{Heutiges Programm}
+
+\begin{frame}{Programm}
+	\begin{itemize}
+		\item ÜBs 5 und 6
+		\item Typisierter $\lambda$-Kalkül
+		\item Einführung in Prolog
+		\item Aufgaben zu Prolog
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Information}
+	% Fragen zu Aufgabenrelevanz, \-Kalkül-stdlib, etc.
+\end{frame}
+
+\section{Wiederholung}
+
+\newcommand{\aeq}{\stackrel{\alpha}{=}}
+\newcommand{\naeq}{\stackrel{\alpha}{\neq}}
+\newcommand{\eeq}{\stackrel{\eta}{=}}
+
+\newcommand{\E}{\;}
+
+\newcommand{\liin}[2]{#1\E{}#2}
+\newcommand{\liiin}[3]{#1\E{}#2\E{}#3}
+\newcommand{\livn}[4]{#1\E{}#2\E{}#3\E{}#4}
+\newcommand{\lvn}[5]{#1\E{}#2\E{}#3\E{}#4\E{}#5}
+
+\newcommand{\lii}[2]{(#1\E{}#2)}
+\newcommand{\liii}[3]{(#1\E{}#2\E{}#3)}
+
+\newcommand{\liir}[2]{\textcolor{red}{\underline{(}}#1\E{}#2\textcolor{red}{\underline{)}}}
+\newcommand{\liiir}[3]{\textcolor{red}{\underline{(}}#1\E{}#2\E{}#3\textcolor{red}{\underline{)}}}
+
+\newcommand{\subst}[3]{(#1)\left[#2\,\to\,#3\right]}
+
+\section{Übungsblatt 5}
+
+\subsection{1.5 --- $\beta$-Reduktion}
+
+% Häufiger Fehler: 6 lässt sich wegen Klammerung nicht machen
+
+\subsection{4 --- Church-Paare}
+
+% Backtracken zu Fallunterscheidung im \-Kalkül
+
+\section{Übungsblatt 6}
+
+\subsection{3 --- $\lambda$-Terme und ihre Typen}
+
+% Typsierten \-Kalkül wiederholen
+% Baum aufmalen für E (bspw.)
+
+\subsection{4 --- Typ-Prüfung}
+
+% Wenn Zeit ist, Baum screenshotten und zeigen
+
+\section{Einführung in Prolog}
+
+% Aufbauen anhand Modulhandbuch, Brettspiel?
+
+\section{Aufgaben zu Prolog}
+
+% Klausuraufgaben?
+% Modulhandbuchaufgaben?
+% Wolf-Ziege-Kohl nur anders?
+% Iwas mit Automaten?
+
+\end{document}

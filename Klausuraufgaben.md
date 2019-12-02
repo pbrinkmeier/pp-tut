@@ -64,6 +64,8 @@ Enthält alle Klausuren der ProPa-Website https://pp.ipd.kit.edu/lehre/WS201819/
 
 ## C
 
+### Nicht mehr relevant (kommt auf Reussner-Teil an)
+
 - [ ] SS14/Aufgabe 9 (5,5 P.): Precedence-Regel (Typen lesen)
 
 ## Compiler
@@ -103,7 +105,7 @@ Enthält alle Klausuren der ProPa-Website https://pp.ipd.kit.edu/lehre/WS201819/
 - [ ] WS17/Aufgabe 7 (15 P.): Paralleler Filter
 - [ ] SS18/Aufgabe 7abcd (15 P.): Gefilterte Summe mit JML
 
-### Nicht mehr relevant
+### Nicht mehr relevant (kommt auf Reussner-Teil an)
 
 - [ ] SS17/Aufgabe 8 (8 P.): Aktoren in Java (Akka)
 - [ ] SS17/Aufgabe 9 (8 P.): Petri-Netze in Java
@@ -114,7 +116,7 @@ Enthält alle Klausuren der ProPa-Website https://pp.ipd.kit.edu/lehre/WS201819/
 
 ## Flynn's Taxonomie
 
-### Nicht mehr relevant
+### Nicht mehr relevant (kommt auf Reussner-Teil an)
 
 - [ ] SS14/Aufgabe 6 (4 P.): Tabelle ausfüllen
 

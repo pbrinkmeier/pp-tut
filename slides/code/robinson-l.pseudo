@@ -1,0 +1,11 @@
+unify [] = []
+unify [lhs = rhs | rest] =
+  if lhs == rhs then unify rest
+  if (lhs == Var a) and a not in fv(rhs):
+    unify (apply [a => rhs] rest) ++ [a => rhs]
+  if (rhs == Var a) and a not in fv(lhs):
+    unify (apply [a => lhs] rest) ++ [a => lhs]
+  if (lhs == a -> b) and (rhs == c -> d):
+    unify (rest ++ [a = c, b = d])
+  otherwise:
+    fail

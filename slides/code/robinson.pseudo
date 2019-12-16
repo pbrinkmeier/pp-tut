@@ -1,0 +1,12 @@
+unify(lhs, rhs) =
+  if lhs == rhs: return []
+  if isVar(lhs) and varName(lhs) not in fv(rhs):
+    return [name(lhs) => rhs]
+  if isVar(rhs) and varName(rhs) not in fv(lhs):
+    return [name(rhs) => lhs]
+  if isFunctor(lhs) and isFunctor(rhs)
+  and functorName(lhs) == functorName(rhs):
+  and functorLen(lhs) == functorLen(rhs):
+    // unify functorArgs(lhs) and functorArgs(rhs)
+    // concatenate all unifiers
+  throw error

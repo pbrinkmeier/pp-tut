@@ -1,0 +1,461 @@
+\documentclass{beamer}
+\usetheme{metropolis}
+
+\usepackage[ngerman]{babel}
+\usepackage[autostyle=true,german=quotes]{csquotes}
+\usepackage[linewidth=1pt]{mdframed}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{pifont}
+\usepackage{tikz}
+\usetikzlibrary{positioning, calc, arrows, fit, decorations.pathreplacing, shapes, shapes.multipart, snakes}
+\usepackage{verbatim}
+\usepackage{tabularx}
+\usepackage{textcomp}
+\usepackage{centernot}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{tikz}
+%\usepackage{pdfpages}
+
+\batchmode
+
+\hypersetup{
+	colorlinks,
+	urlcolor=blue,
+	linkcolor=black % for ToC
+}
+\newenvironment{qaa}[1]{
+	#1
+
+	\begin{mdframed}
+		\small
+}{
+	\end{mdframed}
+}
+
+\newcommand{\true}{\ding{51}}
+\newcommand{\false}{\ding{55}}
+\newcommand{\code}[1]{
+	\begin{mdframed}
+		\verbatiminput{#1}
+	\end{mdframed}
+}
+
+\title{Tutorium 09: Typinferenz}
+% \subtitle{}
+\author{Paul Brinkmeier}
+\institute{Tutorium Programmierparadigmen am KIT}
+\date{16. Dezember 2019}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\section{Heutiges Programm}
+
+\begin{frame}{Programm}
+	\begin{itemize}
+		\item Keine ÜBs :(
+		\item Unifikation in Prolog
+		\item Typinferenz mit Typisierungsbäumen
+		\item Allgemeinster Unifikator
+	\end{itemize}
+\end{frame}
+
+\section{Datentypen in Prolog}
+
+\begin{frame}{Funktoren}
+	\code{demos/funktoren.pl}
+
+	\begin{itemize}
+		\item Funktor $\approx$ Name + Liste von Prolog-Ausdrücken
+		\item Liste leer $\leadsto$ \enquote{Atom}
+		\item Name wird immer klein geschrieben
+		\begin{itemize}
+			\item Großbuchstaben: bspw. \texttt{'List'}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Variablen}
+	\code{demos/variablen.pl}
+
+	\begin{itemize}
+		\item Variablen werden immer groß geschrieben
+		\item \texttt{=} ist nicht Zuweisung, sondern Unifikation
+		\item Unifikation $\approx$ (formales) Pattern-Matching
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Unikation zweier Prolog-Terme nach Robinson}
+	\code{code/robinson.pseudo}
+\end{frame}
+
+\begin{frame}{Unifikation zweier Funktoren nach Robinson}
+	\code{code/robinson2.pseudo}
+
+	\begin{itemize}
+		\item Argumente des linken und rechten Funktors werden nacheinander unifiziert
+		\item Dabei müssen die vorherigen Substitutionen beachtet werden
+		\pause
+		\item Umformung des Robinson-Algorithmus der Vorlesung, nur zur Veranschaulichung!
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Prolog-Unifikation}
+	Unifiziert:
+
+	\begin{itemize}
+		\item \texttt{A = x}
+		\item \texttt{B = f(x)}
+		\item \texttt{C = g(C)}
+		\item \texttt{f(x, A, z) = f(x, y, B)}
+		\item \texttt{g(x, A, z) = f(x, A, A)}
+		\item \texttt{f(g(z)) = f(D)}
+	\end{itemize}
+
+	Ergebnis: Entweder \textbf{fail} oder ein Unifikator.
+\end{frame}
+
+\section{Typinferenz}
+
+\newcommand{\aeq}{\stackrel{\alpha}{=}}
+\newcommand{\naeq}{\stackrel{\alpha}{\neq}}
+\newcommand{\eeq}{\stackrel{\eta}{=}}
+
+\newcommand{\E}{\;}
+
+\newcommand{\liin}[2]{#1\E{}#2}
+\newcommand{\liiin}[3]{#1\E{}#2\E{}#3}
+\newcommand{\livn}[4]{#1\E{}#2\E{}#3\E{}#4}
+\newcommand{\lvn}[5]{#1\E{}#2\E{}#3\E{}#4\E{}#5}
+
+\newcommand{\lii}[2]{(#1\E{}#2)}
+\newcommand{\liii}[3]{(#1\E{}#2\E{}#3)}
+
+\newcommand{\liir}[2]{\textcolor{red}{\underline{(}}#1\E{}#2\textcolor{red}{\underline{)}}}
+\newcommand{\liiir}[3]{\textcolor{red}{\underline{(}}#1\E{}#2\E{}#3\textcolor{red}{\underline{)}}}
+
+\newcommand{\subst}[3]{(#1)\left[#2\,\to\,#3\right]}
+\newcommand{\abs}[2]{\lambda{}#1.#2}
+\newcommand{\reducesTo}[1]{\stackrel{#1}{\implies}}
+\newcommand{\tikzmark}[3]{\tikz[baseline, remember picture]{
+	\node[fill=#1,draw] (#2) {#3};
+}}
+
+\newcommand{\typeRule}[3]{\frac{#2}{#3} \textrm{\textsc{#1}}}
+
+\begin{frame}{$\lambda$-Terme}
+	Ein Term im $\lambda$-Kalkül hat eine der drei folgenden Formen:
+
+	\vspace{0.5cm}
+
+	\begin{tabularx}{\textwidth}{ X | X | X }
+		\textbf{Notation} & \textbf{Besteht aus}                      & \textbf{Bezeichnung} \\
+		\hline
+		$x$               & $x$ : Variablenname                       & Variable             \\
+		\hline
+		$\lambda{}p.b$    &
+			\begin{tabular}[t]{@{}c@{}}$p$ : Variablenname\\$b$ : $\lambda$-Term\end{tabular}
+									      & Abstraktion          \\
+		\hline
+		$f$ $a$           & $f$, $a$ : $\lambda$-Terme                & Funktionsanwendung   \\
+	\end{tabularx}
+\end{frame}
+
+\begin{frame}{Wiederholung}
+	\begin{itemize}
+		\item Bisher: Typisierung \emph{prüfen}
+		\item Gegeben Term $t$, Typ $\tau$ und Kontext $\Gamma$, zeige, dass $\Gamma \vdash t : \tau$
+		\begin{itemize}
+			\item \enquote{$t$ hat Typ $\tau$ im Kontext $\Gamma$}
+		\end{itemize}
+	\end{itemize}
+
+	\begin{equation*}
+		\typeRule{Abs}{
+			...
+		}{
+			\texttt{f} : \textrm{int} \to \beta \vdash \abs{\texttt{x}}{\liin{\texttt{f}}{\texttt{x}}} : \textrm{int} \to \beta
+		}
+	\end{equation*}
+	
+	\begin{itemize}
+		\item \enquote{Zeige, dass $\abs{\texttt{x}}{\liin{\texttt{f}}{\texttt{x}}}$ den Typ $\textrm{int} \to \beta$ hat}
+		\pause
+		\item Jetzt drehen wir den Spieß um:
+	\end{itemize}
+
+	\begin{equation*}
+		\typeRule{Abs}{
+			...
+		}{
+			\texttt{f} : \textrm{int} \to \beta \vdash \abs{\texttt{x}}{\liin{\texttt{f}}{\texttt{x}}} : \alpha_1
+		}
+	\end{equation*}
+
+	\begin{itemize}
+		\item \enquote{Finde den allgemeinsten Typen $\alpha_1$ von $\abs{\texttt{x}}{\liin{\texttt{f}}{\texttt{x}}}$}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{\textsc{Var}}
+	\begin{itemize}
+		\item \tikz[baseline, remember picture]{\node [fill=green!20,draw] (varRetL) {\enquote{Der Typkontext $\Gamma$ enthält einen Typ $\sigma$ für $t$}};}
+		\item \tikz[baseline, remember picture]{\node [fill=red!20,draw] (varEatL) {\enquote{$\sigma$ kann mit $\tau$ instanziiert werden}};}
+	\end{itemize}
+
+	\begin{equation*}
+		\frac{
+			\tikz[baseline, remember picture]{\node[fill=green!20,draw] (varRet) {$\Gamma{}(t) = \sigma$};}
+			\;\;\;\;
+			\tikz[baseline, remember picture]{\node[fill=red!20,draw] (varEat) {$\sigma \succeq \tau$};}
+		}{
+			\tikz[baseline, remember picture]{\node[fill=blue!20,draw] (varShow) {
+				$\Gamma \vdash t : \tau$
+			};}
+		} \textrm{\textsc{Var}}
+	\end{equation*}
+
+	\begin{itemize}
+		\item dann gilt:
+		\item \tikz[baseline, remember picture]{\node [fill=blue!20,draw] (varShowL) {\enquote{Variable $t$ hat im Kontext $\Gamma$ den Typ $\tau$}};}
+		\vspace{0.5em}
+		\item $\sigma \succeq \tau$ $\leadsto$ \enquote{$\sigma$ hat $\tau$s Struktur und ist (mind.) allgemeiner}
+		\begin{itemize}
+			\item $\textrm{int} \to \textrm{int} \succeq \textrm{int} \to \textrm{int}$
+			\item $\forall \alpha . \alpha \to \alpha \succeq \textrm{int} \to \textrm{int}$
+			\item $\alpha \to \alpha \not\succeq \textrm{int} \to \textrm{int}$
+			\item $\textrm{int} \to \textrm{int} \not\succeq \forall \alpha . \alpha \to \alpha$
+		\end{itemize}
+	\end{itemize}
+
+	\tikz[overlay, remember picture]{
+		\draw[->] (varShowL) edge [bend left] (varShow);
+		\draw[->] (varRetL) edge [bend right] (varRet);
+		\draw[->] (varEatL) edge [bend left] (varEat);
+	}
+\end{frame}
+
+\begin{frame}{\textsc{App}}
+	\begin{itemize}
+		\item \tikzmark{green!20}{fTypeL}{\enquote{$f$ ist im Kontext $\Gamma$ eine Funktion, die $\phi$s auf $\alpha$s abbildet}}
+		\item \tikzmark{red!20}{aTypeL}{\enquote{$a$ ist im Kontext $\Gamma$ ein Term des Typs $\phi$}}
+	\end{itemize}
+	\begin{equation*}
+		\typeRule{App}{
+			\tikzmark{green!20}{fType}{$\Gamma \vdash f : \phi \to \alpha$}
+			\;\;\;\;\;
+			\tikzmark{red!20}{aType}{$\Gamma \vdash a : \phi$}
+		}{
+			\tikzmark{blue!20}{eType}{$\Gamma \vdash \liin{f}{a} : \alpha$}
+		}
+	\end{equation*}
+
+	\begin{itemize}
+		\item dann gilt:
+		\item \tikzmark{blue!20}{eTypeL}{\enquote{$a$ eingesetzt in $f$ ergibt einen Term des Typs $\alpha$}}
+	\end{itemize}
+
+	\tikz[overlay, remember picture]{
+		\draw[->] (fTypeL) edge [bend right] (fType);
+		\draw[->] (aTypeL) edge [bend left] (aType);
+		\draw[->] (eTypeL) edge [bend left] (eType);
+	}
+\end{frame}
+
+\begin{frame}{\textsc{Abs}}
+	\begin{itemize}
+		\item \tikzmark{red!20}{bodyTypeL}{\enquote{Damit $b$ als Funktion von $p$ typisierbar ist...}}
+		\item \tikzmark{green!20}{contextL}{\enquote{... müssen wir den Typ von $p$ in den Kontext einfügen}}
+	\end{itemize}
+
+	\begin{equation*}
+		\typeRule{Abs}{
+			\tikzmark{green!20}{context}{$\Gamma{}, p : \pi$}
+			\;
+			\tikzmark{red!20}{bodyType}{$\vdash b : \rho$}
+		}{
+			\tikzmark{blue!20}{absType}{$\Gamma \vdash \abs{p}{b} : \pi \to \rho$}
+		}
+	\end{equation*}
+
+	\begin{itemize}
+		\item dann gilt:
+		\item \tikzmark{blue!20}{absTypeL}{\enquote{$\abs{p}{b}$ ist eine Funktion, die $\pi$s auf $\rho$s abbildet}}
+	\end{itemize}
+
+	\tikz[overlay, remember picture]{
+		\draw[->] (bodyTypeL) edge [bend left] (bodyType);
+		\draw[->] (contextL) edge [bend right] (context);
+		\draw[->] (absTypeL) edge [bend left] (absType);
+	}
+\end{frame}
+
+\begin{frame}{Typinferenz}
+	Vorgehensweise zur Typinferenz:
+	\begin{itemize}
+		\item Stelle Typherleitungsbaum auf
+		\begin{itemize}
+			\item In jedem Schritt werden neue Typvariablen $\alpha_i$ angelegt
+			\item Statt die Typen direkt im Baum einzutragen, werden Gleichungen in einem Constraint-System eingetragen
+		\end{itemize}
+		\item Unifiziere Constraint-System zu einem Unifikator
+		\begin{itemize}
+			\item Robinson-Algorithmus, im Grunde wie bei Prolog
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Robinson-Algorithmus}
+	\code{code/robinson-l.pseudo}
+
+	Erzeugt Unifikator zu einem Constraint-System.
+\end{frame}
+
+\begin{frame}{Typinferenz: Übungsaufgabe}
+	\begin{equation*}
+		\typeRule{Abs}{
+			...
+		}{
+			\texttt{f} : \textrm{int} \to \beta \vdash \abs{\texttt{x}}{\liin{\texttt{f}}{\texttt{x}}} : \alpha_1
+		}
+	\end{equation*}
+
+	\begin{itemize}
+		\item \enquote{Finde den allgemeinsten Typen $\alpha_1$ von $\abs{\texttt{x}}{\liin{\texttt{f}}{\texttt{x}}}$}
+	\end{itemize}
+
+	Erinnerung:
+
+	\begin{itemize}
+		\item Baum mit durchnummerierten $\alpha_i$ aufstellen
+		\item Constraints sammeln:
+	\end{itemize}
+
+	\begin{columns}
+		\scriptsize
+		\begin{column}{0.3\textwidth}
+			\begin{equation*}
+			\typeRule{Var}{
+				\Gamma(x) = \sigma
+				\;\;\;\;
+				\sigma \succeq \tau
+			}{
+				\Gamma \vdash x : \tau
+			}
+			\end{equation*}
+
+			Constraint: $\{ \sigma = \tau \}$
+		\end{column}
+		\begin{column}{0.3\textwidth}
+			\begin{equation*}
+			\typeRule{App}{
+				\Gamma \vdash f : \xi
+				\;\;\;\;
+				\Gamma \vdash x : \phi
+			}{
+				\Gamma \vdash \liin{f}{x} : \alpha
+			}
+			\end{equation*}
+
+			Constraint: $\{ \xi = \phi \to \alpha \}$
+		\end{column}
+		\begin{column}{0.3\textwidth}
+			\begin{equation*}
+			\typeRule{Abs}{
+				\Gamma, p : \pi \vdash b : \beta
+			}{
+				\Gamma \vdash \abs{p}{b} : \alpha
+			}
+			\end{equation*}
+
+			Constraint: $\{ \alpha = \pi \to \beta \}$
+		\end{column}
+	\end{columns}
+
+	\begin{itemize}
+		\item Constraint-System auflösen
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Typinferenz: Übungsaufgabe}
+	\begin{equation*}
+		\typeRule{Abs}{
+			...
+		}{
+			\vdash \abs{\texttt{x}}{\abs{f}{\liiin{\texttt{f}}{\texttt{x}}{\texttt{x}}}} : \alpha_1
+		}
+	\end{equation*}
+
+	\begin{itemize}
+		\item \enquote{Finde den allgemeinsten Typen $\alpha_1$ von $\abs{\texttt{x}}{\abs{f}{\liiin{\texttt{f}}{\texttt{x}}{\texttt{x}}}}$}
+	\end{itemize}
+
+	Erinnerung:
+
+	\begin{itemize}
+		\item Baum mit durchnummerierten $\alpha_i$ aufstellen
+		\item Constraints sammeln:
+	\end{itemize}
+
+	\begin{columns}
+		\scriptsize
+		\begin{column}{0.3\textwidth}
+			\begin{equation*}
+			\typeRule{Var}{
+				\Gamma(x) = \sigma
+				\;\;\;\;
+				\sigma \succeq \tau
+			}{
+				\Gamma \vdash x : \tau
+			}
+			\end{equation*}
+
+			Constraint: $\{ \sigma = \tau \}$
+		\end{column}
+		\begin{column}{0.3\textwidth}
+			\begin{equation*}
+			\typeRule{App}{
+				\Gamma \vdash f : \xi
+				\;\;\;\;
+				\Gamma \vdash x : \phi
+			}{
+				\Gamma \vdash \liin{f}{x} : \alpha
+			}
+			\end{equation*}
+
+			Constraint: $\{ \xi = \phi \to \alpha \}$
+		\end{column}
+		\begin{column}{0.3\textwidth}
+			\begin{equation*}
+			\typeRule{Abs}{
+				\Gamma, p : \pi \vdash b : \beta
+			}{
+				\Gamma \vdash \abs{p}{b} : \alpha
+			}
+			\end{equation*}
+
+			Constraint: $\{ \alpha = \pi \to \beta \}$
+		\end{column}
+	\end{columns}
+
+	\begin{itemize}
+		\item Constraint-System auflösen
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Ende}
+	\begin{itemize}
+		\item Korrektur der handschriftlichen ÜB-Abgaben: Bis morgen
+		\item Raum 131, 11:30
+		\item Ansonsten bin ich den Rest der Woche noch häufiger am Infobau
+	\end{itemize}
+
+	Gute Ferienzeit!
+\end{frame}
+
+\end{document}

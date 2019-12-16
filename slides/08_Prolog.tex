@@ -46,7 +46,7 @@
 % \subtitle{}
 \author{Paul Brinkmeier}
 \institute{Tutorium Programmierparadigmen am KIT}
-\date{09. Dezember 2019}
+\date{10. Dezember 2019}
 
 \begin{document}
 
@@ -64,6 +64,62 @@
 \end{frame}
 
 \section{Prolog-Grundlagen}
+
+\begin{frame}{Funktoren}
+	\code{demos/funktoren.pl}
+
+	\begin{itemize}
+		\item Funktor $\approx$ Name + Liste von Prolog-Ausdrücken
+		\item Liste leer $\leadsto$ \enquote{Atom}
+		\item Name wird immer klein geschrieben
+		\begin{itemize}
+			\item Großbuchstaben: bspw. \texttt{'List'}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Variablen}
+	\code{demos/variablen.pl}
+
+	\begin{itemize}
+		\item Variablen werden immer groß geschrieben
+		\item \texttt{=} ist nicht Zuweisung, sondern Unifikation
+		\item Unifikation $\approx$ (formales) Pattern-Matching
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Ziele}
+	\code{demos/ziele.pl}
+
+	\begin{itemize}
+		\item Funktionsaufruf $\approx$ \enquote{Zielerfüllung} in Prolog
+		\item Mögliche Ziele:
+		\begin{itemize}
+			\item Unifikationsziel
+			\item Funktorziel
+			\item Arithmetische Zuweisung
+			\item Arithmetischer Vergleich
+			\item Nicht-Erfüllung
+			\item Cut
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+% Regeln: Kopf + [Ziel]
+% Ziel: Funktor, Unifikation, Ungleichheit, Arithmetik
+
+\begin{frame}{Programme}
+	\begin{itemize}
+		\item Prolog-\enquote{Programme} $\approx$ Datenbanken
+		\item Ausführung $\approx$ Abfrage in der Datenbank
+		\item Datenbank-Inhalt: Regeln, bestehend aus:
+		\begin{itemize}
+			\item Regelkopf --- Ein Funktor $\leadsto$ kann auch Atom sein
+			\item Teilziele --- Liste von Zielen, um diese Regel zu erfüllen
+			\item Keine Teilziele $\leadsto$ Fakt
+		\end{itemize}
+	\end{itemize}
+\end{frame}
 
 \section{Aufgaben}
 
@@ -99,7 +155,7 @@
 \end{frame}
 
 \begin{frame}{Detektivrätsel}
-	Im Fall des Mordes an ihrem Nachbarn Victor sind nun Alice, Bob und Carl die einzigen Zeugen.
+	Im Fall des Mordes an ihrem Nachbarn Victor sind nun Alice, Bob und Carl die einzigen Verdächtigen und Zeugen.
 	\begin{itemize}
 		\item Alice:
 		\begin{itemize}
@@ -189,8 +245,8 @@
 
 \begin{frame}{Putzdienst}
 	\begin{itemize}
-		\item Auf Aaron, Bob, Connor, David und Edison sollen 4 Einheiten Putzdienst übernehmen
-		\item Da sie sich nicht einigen können, wer faulenzen darf, wendet ein Wärter folgendes Vorgehen an:
+		\item Aaron, Bob, Connor, David und Edison sollen 4 Einheiten Putzdienst übernehmen
+		\item Da sie sich nicht einigen können, wer aussetzen darf, wendet ein Wärter folgendes Vorgehen an:
 		\begin{itemize}
 			\item Die fünf werden im Kreis aufgestellt
 			\item Der Wärter stellt sich in die Mitte
@@ -210,7 +266,7 @@
 	\code{demos/putzdienst.pl}
 
 	\begin{itemize}
-		\item Weiter Fälle für \texttt{helper/4}:
+		\item Weitere Fälle für \texttt{helper/4}:
 		\begin{itemize}
 			\item \texttt{C = 0} $\leadsto$ Element entfernen
 			\item Ansonsten: Element hinten wieder anhängen
@@ -226,7 +282,7 @@
 		\item WG --- \href{https://rosettacode.org/wiki/Department_Numbers}{Rosetta Code: Department Numbers}
 		\item Detektiv --- \href{https://github.com/Anniepoo/prolog-examples/blob/master/newdetective.pl}{Anniepoo/prolog-examples}
 		\item Schlafplätze --- SICP, S. 418
-		\item Putzdient --- \href{https://rosettacode.org/wiki/Josephus_problem}{Rosetta Code: Josephus problem}
+		\item Putzdienst --- \href{https://rosettacode.org/wiki/Josephus_problem}{Rosetta Code: Josephus problem}
 	\end{itemize}
 \end{frame}
 

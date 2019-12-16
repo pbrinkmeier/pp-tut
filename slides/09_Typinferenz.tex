@@ -317,6 +317,7 @@
 \end{frame}
 
 \begin{frame}{Typinferenz: Übungsaufgabe}
+	\only<1>{
 	\begin{equation*}
 		\typeRule{Abs}{
 			...
@@ -328,72 +329,22 @@
 	\begin{itemize}
 		\item \enquote{Finde den allgemeinsten Typen $\alpha_1$ von $\abs{\texttt{x}}{\liin{\texttt{f}}{\texttt{x}}}$}
 	\end{itemize}
+	}
 
-	Erinnerung:
-
-	\begin{itemize}
-		\item Baum mit durchnummerierten $\alpha_i$ aufstellen
-		\item Constraints sammeln:
-	\end{itemize}
-
-	\begin{columns}
-		\scriptsize
-		\begin{column}{0.3\textwidth}
-			\begin{equation*}
-			\typeRule{Var}{
-				\Gamma(x) = \sigma
-				\;\;\;\;
-				\sigma \succeq \tau
-			}{
-				\Gamma \vdash x : \tau
-			}
-			\end{equation*}
-
-			Constraint: $\{ \sigma = \tau \}$
-		\end{column}
-		\begin{column}{0.3\textwidth}
-			\begin{equation*}
-			\typeRule{App}{
-				\Gamma \vdash f : \xi
-				\;\;\;\;
-				\Gamma \vdash x : \phi
-			}{
-				\Gamma \vdash \liin{f}{x} : \alpha
-			}
-			\end{equation*}
-
-			Constraint: $\{ \xi = \phi \to \alpha \}$
-		\end{column}
-		\begin{column}{0.3\textwidth}
-			\begin{equation*}
-			\typeRule{Abs}{
-				\Gamma, p : \pi \vdash b : \beta
-			}{
-				\Gamma \vdash \abs{p}{b} : \alpha
-			}
-			\end{equation*}
-
-			Constraint: $\{ \alpha = \pi \to \beta \}$
-		\end{column}
-	\end{columns}
-
-	\begin{itemize}
-		\item Constraint-System auflösen
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Typinferenz: Übungsaufgabe}
+	\only<2>{
 	\begin{equation*}
 		\typeRule{Abs}{
 			...
 		}{
-			\vdash \abs{\texttt{x}}{\abs{f}{\liiin{\texttt{f}}{\texttt{x}}{\texttt{x}}}} : \alpha_1
+			\vdash \abs{\texttt{x}}{\abs{\texttt{f}}{\liiin{\texttt{f}}{\texttt{x}}{\texttt{x}}}} : \alpha_1
 		}
 	\end{equation*}
 
 	\begin{itemize}
-		\item \enquote{Finde den allgemeinsten Typen $\alpha_1$ von $\abs{\texttt{x}}{\abs{f}{\liiin{\texttt{f}}{\texttt{x}}{\texttt{x}}}}$}
+		\item \enquote{Finde den allgemeinsten Typen $\alpha_1$ von $\abs{\texttt{x}}{\abs{\texttt{f}}{\liiin{\texttt{f}}{\texttt{x}}{\texttt{x}}}}$}
 	\end{itemize}
+	}
+
 
 	Erinnerung:
 
@@ -449,12 +400,6 @@
 \end{frame}
 
 \begin{frame}{Ende}
-	\begin{itemize}
-		\item Korrektur der handschriftlichen ÜB-Abgaben: Bis morgen
-		\item Raum 131, 11:30
-		\item Ansonsten bin ich den Rest der Woche noch häufiger am Infobau
-	\end{itemize}
-
 	Gute Ferienzeit!
 \end{frame}
 

@@ -16,7 +16,7 @@ int main(int argc, char** args) {
 	MPI_Status status;
 	if (rank != 0) {
 		MPI_Recv(&msg, 1, MPI_INT, rank - 1, TAG, MPI_COMM_WORLD, &status);
-		printf("I, %d, received message %d\n", rank, msg);
+		printf("I, %d, have received message %d\n", rank, msg);
 	}
 
 	if (rank != size - 1) {

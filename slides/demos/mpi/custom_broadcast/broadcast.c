@@ -1,7 +1,22 @@
 #include <stdio.h>
 #include <mpi.h>
 
-void custom_Bcast(void *buf, int count, MPI_Datatype type, MPI_Datatype root, MPI_Comm comm) {
+void custom_Bcast(void *buf, int count, MPI_Datatype type, int root, MPI_Comm comm) {
+	int rank, size;
+	int unique_tag = 42;
+	MPI_Comm_rank(comm, &rank);
+	MPI_Comm_size(comm, &size);
+
+	if (rank == root) {
+		for (int dest = 0; dest < size; dest++) {
+			if (dest != root) {
+				MPI_Send(buf, count, type, dest, unique_tag, comm);
+			}
+		}
+	} else {
+		MPI_Status status;
+		MPI_Recv(buf, count, type, root, unique_tag, comm, &status);
+	}
 }
 
 int main(int argc, char** args) {

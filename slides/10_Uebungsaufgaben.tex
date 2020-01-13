@@ -1,0 +1,217 @@
+\documentclass{beamer}
+\usetheme{metropolis}
+
+\usepackage[ngerman]{babel}
+\usepackage[autostyle=true,german=quotes]{csquotes}
+\usepackage[linewidth=1pt]{mdframed}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{pifont}
+\usepackage{tikz}
+\usetikzlibrary{positioning, calc, arrows, fit, decorations.pathreplacing, shapes, shapes.multipart, snakes}
+\usepackage{verbatim}
+\usepackage{tabularx}
+\usepackage{textcomp}
+\usepackage{centernot}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{tikz}
+%\usepackage{pdfpages}
+
+\batchmode
+
+\hypersetup{
+	colorlinks,
+	urlcolor=blue,
+	linkcolor=black % for ToC
+}
+\newenvironment{qaa}[1]{
+	#1
+
+	\begin{mdframed}
+		\small
+}{
+	\end{mdframed}
+}
+
+\newcommand{\true}{\ding{51}}
+\newcommand{\false}{\ding{55}}
+\newcommand{\code}[1]{
+	\begin{mdframed}
+		\verbatiminput{#1}
+	\end{mdframed}
+}
+
+\title{Tutorium 10: Übungsaufgaben}
+% \subtitle{}
+\author{Paul Brinkmeier}
+\institute{Tutorium Programmierparadigmen am KIT}
+\date{8. Januar 2020}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\section{Heutiges Programm}
+
+\begin{frame}{Programm}
+	\begin{itemize}
+		\item Wiederholung Typinferenz
+		\item Typinferenz mit \textsc{Let}
+		\item Übungsaufgaben
+	\end{itemize}
+\end{frame}
+
+\section{Typinferenz}
+
+\newcommand{\aeq}{\stackrel{\alpha}{=}}
+\newcommand{\naeq}{\stackrel{\alpha}{\neq}}
+\newcommand{\eeq}{\stackrel{\eta}{=}}
+
+\newcommand{\E}{\;}
+
+\newcommand{\liin}[2]{#1\E{}#2}
+\newcommand{\liiin}[3]{#1\E{}#2\E{}#3}
+\newcommand{\livn}[4]{#1\E{}#2\E{}#3\E{}#4}
+\newcommand{\lvn}[5]{#1\E{}#2\E{}#3\E{}#4\E{}#5}
+
+\newcommand{\lii}[2]{(#1\E{}#2)}
+\newcommand{\liii}[3]{(#1\E{}#2\E{}#3)}
+
+\newcommand{\liir}[2]{\textcolor{red}{\underline{(}}#1\E{}#2\textcolor{red}{\underline{)}}}
+\newcommand{\liiir}[3]{\textcolor{red}{\underline{(}}#1\E{}#2\E{}#3\textcolor{red}{\underline{)}}}
+
+\newcommand{\subst}[3]{(#1)\left[#2\,\to\,#3\right]}
+\newcommand{\abs}[2]{\lambda{}#1.#2}
+\newcommand{\reducesTo}[1]{\stackrel{#1}{\implies}}
+\newcommand{\tikzmark}[3]{\tikz[baseline, remember picture]{
+	\node[fill=#1,draw] (#2) {#3};
+}}
+
+\newcommand{\typeRule}[3]{\frac{#2}{#3} \textrm{\textsc{#1}}}
+
+\begin{frame}{Wiederholung: Typinferenz}
+	Vorgehensweise zur Typinferenz:
+	\begin{itemize}
+		\item Stelle Typherleitungsbaum auf
+		\begin{itemize}
+			\item In jedem Schritt werden neue Typvariablen $\alpha_i$ angelegt
+			\item Statt die Typen direkt im Baum einzutragen, werden Gleichungen in einem Constraint-System eingetragen
+		\end{itemize}
+		\item Unifiziere Constraint-System zu einem Unifikator
+		\begin{itemize}
+			\item Robinson-Algorithmus, im Grunde wie bei Prolog
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Robinson-Algorithmus}
+	\code{code/robinson-l.pseudo}
+
+	Erzeugt Unifikator zu einem Constraint-System.
+\end{frame}
+
+\begin{frame}{Typinferenz: Übungsaufgabe}
+	\only<1>{
+	\begin{equation*}
+		\typeRule{Abs}{
+			...
+		}{
+			\texttt{f} : \textrm{int} \to \beta \vdash \abs{\texttt{x}}{\liin{\texttt{f}}{\texttt{x}}} : \alpha_1
+		}
+	\end{equation*}
+
+	\begin{itemize}
+		\item \enquote{Finde den allgemeinsten Typen $\alpha_1$ von $\abs{\texttt{x}}{\liin{\texttt{f}}{\texttt{x}}}$}
+	\end{itemize}
+	}
+
+	Erinnerung:
+
+	\begin{itemize}
+		\item Baum mit durchnummerierten $\alpha_i$ aufstellen
+		\item Constraints sammeln:
+	\end{itemize}
+
+	\begin{columns}
+		\scriptsize
+		\begin{column}{0.3\textwidth}
+			\begin{equation*}
+			\typeRule{Var}{
+				\Gamma(x) = \sigma
+				\;\;\;\;
+				\sigma \succeq \iota
+			}{
+				\Gamma \vdash x : \tau
+			}
+			\end{equation*}
+
+			Constraint: $\{ \iota = \tau \}$
+		\end{column}
+		\begin{column}{0.3\textwidth}
+			\begin{equation*}
+			\typeRule{App}{
+				\Gamma \vdash f : \xi
+				\;\;\;\;
+				\Gamma \vdash x : \phi
+			}{
+				\Gamma \vdash \liin{f}{x} : \alpha
+			}
+			\end{equation*}
+
+			Constraint: $\{ \xi = \phi \to \alpha \}$
+		\end{column}
+		\begin{column}{0.3\textwidth}
+			\begin{equation*}
+			\typeRule{Abs}{
+				\Gamma, p : \pi \vdash b : \beta
+			}{
+				\Gamma \vdash \abs{p}{b} : \alpha
+			}
+			\end{equation*}
+
+			Constraint: $\{ \alpha = \pi \to \beta \}$
+		\end{column}
+	\end{columns}
+
+	\begin{itemize}
+		\item Constraint-System auflösen (Robinson-Algorithmus)
+	\end{itemize}
+\end{frame}
+
+\newcommand{\unifierLet}{\sigma{}_{\textrm{\textsc{Let}}}}
+
+\begin{frame}{Wozu brauchen wir \textsc{Let}?}
+	\begin{itemize}
+		\item Findet den allgemeinsten Typen von $\alpha_1$ von $(\abs{\texttt{x}}{\liin{\texttt{x}}{\texttt{x}}})\;\abs{\texttt{y}}{\texttt{y}}$
+		\pause
+		\item $\leadsto$ Geht nicht, $\abs{\texttt{y}}{\texttt{y}}$ hat eine feste Struktur, kann nicht auf sich selbst angewendet werden
+		\item Wir müssten \texttt{x} einen Typen geben, den man mehrmals verwenden kann: $\texttt{x} : \forall \alpha . \alpha \to \alpha$
+		\pause
+		\item Dafür gibt es \textsc{Let}:
+	\end{itemize}
+
+		\begin{equation*}
+		\typeRule{Let}{
+			\Gamma \vdash y : \pi
+			\;\;\;\;
+			\Gamma' \vdash b : \beta
+		}{
+			\Gamma \vdash \textrm{let}\;x = y\;\textrm{in}\;b : \tau
+		}
+		\end{equation*}
+	
+	\begin{itemize}
+		\item Mit den Constraints ist das hier etwas komplizierter:
+		\begin{itemize}
+			\item Finde Unifikator $\unifierLet$ und allg. Typ $\pi$ für $y$
+			\item $\Gamma' = \unifierLet(\Gamma)\;,\;x : ta(\unifierLet(\pi), \unifierLet(\Gamma))$
+			\item $ta(\tau, \Gamma)$ bindet alle in $\Gamma$ freien Typvariablen mit einem $\forall$ in $\tau$
+			\item Bspw. $ta(\alpha \to \beta, x : \beta, y : \delta) = \forall \alpha . \alpha \to \textrm{int}$
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\end{document}

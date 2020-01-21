@@ -45,14 +45,6 @@ public class Dirwalker {
     }
 
     ////////////////////////
-    
-    @FunctionalInterface
-    public interface Accumulator<R> {
-        public R accumulate(R acc, File file);
-    }
-
-    ////////////////////////
-    
 
     private static String formatBytes(long size) {
         final String[] units = { "Ki", "Mi", "Gi", "Ti" };

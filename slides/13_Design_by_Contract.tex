@@ -1,0 +1,224 @@
+\documentclass{beamer}
+\usetheme{metropolis}
+
+\usepackage[ngerman]{babel}
+\usepackage[autostyle=true,german=quotes]{csquotes}
+\usepackage[linewidth=1pt]{mdframed}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{pifont}
+\usepackage{tikz}
+\usetikzlibrary{positioning, calc, arrows, fit, decorations.pathreplacing, shapes, shapes.multipart, snakes}
+\usepackage{verbatim}
+\usepackage{tabularx}
+\usepackage{textcomp}
+\usepackage{centernot}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{underscore}
+
+\batchmode
+
+\hypersetup{
+	colorlinks,
+	urlcolor=blue,
+	linkcolor=black % for ToC
+}
+\newenvironment{qaa}[1]{
+	#1
+
+	\begin{mdframed}
+		\small
+}{
+	\end{mdframed}
+}
+
+\newcommand{\true}{\ding{51}}
+\newcommand{\false}{\ding{55}}
+\newcommand{\code}[1]{
+	\begin{mdframed}
+		\verbatiminput{#1}
+	\end{mdframed}
+}
+
+\title{Tutorium 13: Design by Contract}
+% \subtitle{}
+\author{Paul Brinkmeier}
+\institute{Tutorium Programmierparadigmen am KIT}
+\date{27. Januar 2020}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}{Design by Contract}
+	ProPa-Stoff zu Design by Contract:
+
+	\begin{itemize}
+		\item Grundlagen: Pre-/Postconditions, Caller, Callee
+		\begin{itemize}
+			\item A.K.A.: Vor-/Nachbedingungen, Aufrufer, Aufgerufener
+		\end{itemize}
+		\item JML (Java Modeling Language):
+		\begin{itemize}
+			\item \texttt{@ requires}
+			\item \texttt{@ ensures} (mit \texttt{\string\old} und \texttt{\string\result})
+			\item \texttt{@ invariant}
+			\item \texttt{/*@ pure @*/}, \texttt{/*@ nullable @*/}, \texttt{/*@ spec_public @*/}
+			\item Quantoren: \texttt{\string\forall}, \texttt{\string\exists}
+			\item Liskovsches Substitutionsprinzip
+			\pause
+			\item Java-\texttt{assert}-Keyword
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\section{JML-Klausuraufgabe}
+
+\begin{frame}{JML-Klausuraufgabe}
+    Klausur 19SS, Aufgabe 6d (3P.)
+
+    {
+    \footnotesize
+    \code{code/19ss-a6d.java}
+
+    (d) Der Vertrag der Methode \texttt{combine} wird \emph{vom Aufgerufenen} verletzt.
+    Begründen Sie dies und geben Sie an, wie die verletzte Nachbedingung angepasst werden könnte.
+    }
+\end{frame}
+
+\begin{frame}{JML-Klausuraufgabe}
+    Klausur 19SS, Aufgabe 6e (2P.)
+
+    {
+    \footnotesize
+    \code{code/19ss-a6e.java}
+
+    (d) Wird der Vertrag hier \emph{vom Aufrufer} erfüllt?
+    Begründen Sie kurz.
+    }
+\end{frame}
+
+\section{JML}
+
+\begin{frame}{\texttt{@ requires}}
+	\code{code/jml/requires.java}
+
+	\begin{itemize}
+		\item \texttt{@ requires} definiert eine Vorbedingung für eine Methode.
+		\item Vorbedingungen müssen vom Aufrufer erfüllt werden.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{\texttt{@ ensures}}
+	\code{code/jml/ensures.java}
+
+	\begin{itemize}
+		\item \texttt{@ ensures} definiert eine Nachbedingung für eine Methode.
+		\item Nachbedingungen müssen vom Aufgerufenen erfüllt werden.
+        \item Mit \texttt{\string\old} und \texttt{\string\result} werden Beziehungen zwischen Ursprungszustand, Rückgabewert und neuem Zustand eingeführt.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{\texttt{@ invariant}}
+	\code{code/jml/invariant.java}
+
+	\begin{itemize}
+		\item \texttt{@ invariant} definiert Invarianten für eine Klasse.
+		\item Diese können bspw. wiederverwendet werden, um Vorbedingungen für Methoden zu erfüllen.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{\texttt{/*@ pure @*/}}
+	\code{code/jml/pure.java}
+
+	\begin{itemize}
+		\item Verträge sind implizit \texttt{public}.\\
+		$\leadsto$ \texttt{private}-Attribute nicht verwendbar
+		\item Um Getter-Funktionen in Verträgen nutzen zu können, müssen diese frei von Seiteneffekten und mit \texttt{/*@ pure *@/} markiert sein.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{\texttt{/*@ spec_public @*/}}
+	\code{code/jml/specpublic.java}
+
+	\begin{itemize}
+		\item Alternative: \texttt{private}-Attribute als \texttt{/*@ spec_public @*/} markieren.
+		\item Immer noch \texttt{private}, können vom Checker aber trotzdem gesehen werden.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Quantoren, logische Operatoren}
+	\code{code/jml/quantors.java}
+
+	\begin{itemize}
+		\item Für das Arbeiten mit Aussagen in Verträgen gibt es ein paar Helferchen:
+		\begin{itemize}
+			\item \texttt{\string\forall <decl>; <cond>; <expr>}
+			\item \texttt{\string\exists <decl>; <cond>; <expr>}
+			\item \texttt{<cond> ==> <expr>}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\section{Übungsaufgabe: RPN-Taschenrechner}
+
+\begin{frame}{Reverse Polish Notation}
+	\begin{equation*}
+		(2 + 4) * (10 - 3)
+	\end{equation*}
+
+	\begin{itemize}
+		\item \enquote{Natürliche} Darstellung: Infix-Notation
+		\begin{itemize}
+			\item \enquote{Problem}: Man braucht Klammern!
+		\end{itemize}
+		\pause
+		\item Alternative: Polnische (Präfix-)Notation
+		\begin{itemize}
+			\item \texttt{* + 2 4 - 10 3}
+			\item \texttt{multipy (add 2 4) (subtract 10 3)} ($\leadsto$ LISP)
+		\end{itemize}
+		\pause
+		\item Einfach zu implementieren: Umgekehrte polnische Notation
+		\begin{itemize}
+			\item \texttt{10 3 - 2 4 + *}
+			\item Links nach rechts durchgehen
+			\item Zahlen werden auf einen Stack gelegt
+			\item Operatoren nehmen Operanden vom Stack, legen Ergebnis auf den Stack
+		\end{itemize}
+		\pause
+		\item Bspw. alte Taschenrechner, Forth, \href{https://de.wikipedia.org/wiki/Shunting-yard-Algorithmus}{Shunting-yard-Algorithmus}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{RPN-Taschenrechner}
+	\begin{itemize}
+		\item \texttt{demos/java/rpncalculator/RpnCalculator.java}
+		\item Überprüft manuell den Vertrag von \texttt{pop()}.
+		\pause
+		\item Überlegt euch einen entsprechenden Vertrag für \texttt{push(BigInteger)}.
+		\pause
+		\item Identifiziert seiteneffektfreie Methoden und markiert sie mit \texttt{/*@ pure @*/}.
+		\pause
+		\item Überlegt euch Invarianten für \texttt{elementCount} und \texttt{stack.length}.
+		\pause
+		\item Überprüft eure Verträge mit OpenJML:\\
+			{\footnotesize \texttt{java -jar oj/openjml.jar -exec <solver> -esc <.java> -method push,pop}}
+		\item Überpüft dann zusäztlich die Methode \texttt{execute(List<Token>)}.
+	\end{itemize}
+\end{frame}
+
+\section{Ende}
+
+\begin{frame}{Ende}
+	\begin{itemize}
+		\item Im Campus-System kann man sich bis zum 17.03. für die ProPa-Klausur anmelden
+		\item \href{https://campus.studium.kit.edu/renewal/payment.php}{Rückmelden} bis zum 15.02.
+	\end{itemize}
+\end{frame}
+
+\end{document}

@@ -23,6 +23,7 @@ class RpnCalculator {
     ///////////////
     
     private final static int MIN_SIZE = 10;
+
     private BigInteger[] stack;
     private int elementCount;
     
@@ -127,8 +128,11 @@ class RpnCalculator {
         this.stack[this.elementCount++] = x;
     }
 
+    //@ requires elementCount <= stack.length;
+    //@ requires elementCount > 0 ==> stack[elementCount - 1] != null;
+    //@ ensures  elementCount > 0 ==> elementCount == \old(elementCount) - 1;
     private BigInteger pop() {
-        if (this.stack.length == 0) {
+        if (this.elementCount <= 0) {
             System.err.println("Could not pop");
             System.exit(1);
         }

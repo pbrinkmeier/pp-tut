@@ -119,7 +119,11 @@ class RpnCalculator {
         System.out.println(String.format("%s, %d/%d slots used", repr, this.elementCount, this.stack.length));
     }
 
-    //@ requires \typeof(x) == \typeof(BigInteger.ZERO);
+    // Ignoriert die nächsten 4 Zeilen; kleiner Hack wegen Bug (?) in JML.
+    //  Das hier funktioniert leider nicht:
+    //@ // requires \typeof(stack) == \type(BigInteger[]);
+    //  Deswegen:
+    //@ requires \typeof(stack) == \typeof(new BigInteger[1]);
     private void push(BigInteger x) {
         if (this.stack.length == this.elementCount) {
             // Double array size

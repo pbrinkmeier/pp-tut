@@ -1,6 +1,7 @@
 # ProPa-Aufgaben nach Thema
 
 Enthält alle Klausuren der ProPa-Website https://pp.ipd.kit.edu/lehre/WS201819/paradigmen/.
+Aktuell fehlen noch die neusten Klausuren.
 
 ## Haskell
 
@@ -62,12 +63,6 @@ Enthält alle Klausuren der ProPa-Website https://pp.ipd.kit.edu/lehre/WS201819/
 - [ ] SS16/Aufgabe 9 (10 P.): `if`, arithmetische/logische Operationen
 - [ ] SS17/Aufgabe 12 (5 P.): Java-Programm rekonstruieren
 
-## C
-
-### Nicht mehr relevant (kommt auf Reussner-Teil an)
-
-- [ ] SS14/Aufgabe 9 (5,5 P.): Precedence-Regel (Typen lesen)
-
 ## Compiler
 
 - [ ] SS14/Aufgabe 10 (10 P.): First-/Follow-Mengen
@@ -96,6 +91,7 @@ Enthält alle Klausuren der ProPa-Website https://pp.ipd.kit.edu/lehre/WS201819/
 
 ## Parallelität
 
+- [ ] SS14/Aufgabe 6 (4 P.): Flynns Taxonomie
 - [ ] WS14/Aufgabe 6 (12 P.): Wissensfragen zu Parallelität
 - [ ] WS14/Aufgabe 7 (5 P.): Speedup-Berechnung
 - [ ] WS15/Aufgabe 7 (12 P.): Synchronisation in Java
@@ -105,26 +101,22 @@ Enthält alle Klausuren der ProPa-Website https://pp.ipd.kit.edu/lehre/WS201819/
 - [ ] WS17/Aufgabe 7 (15 P.): Paralleler Filter
 - [ ] SS18/Aufgabe 7abcd (15 P.): Gefilterte Summe mit JML
 
-### Nicht mehr relevant (kommt auf Reussner-Teil an)
+## C, (wahrscheinlich) nicht relevant
 
-- [ ] SS17/Aufgabe 8 (8 P.): Aktoren in Java (Akka)
-- [ ] SS17/Aufgabe 9 (8 P.): Petri-Netze in Java
+- [ ] SS14/Aufgabe 9 (5,5 P.): Precedence-Regel (Typen lesen)
 
-### Nicht mehr relevant
+### X10, nicht relevant
 
 - [ ] WS15/Aufgabe 9 (6 P.): Parallelisierung in X10
 
-## Flynn's Taxonomie
-
-### Nicht mehr relevant (kommt auf Reussner-Teil an)
-
-- [ ] SS14/Aufgabe 6 (4 P.): Tabelle ausfüllen
-
-## Scala
-
-### Nicht mehr relevant
+### Scala, nicht relevant
 
 - [ ] SS14/Aufgabe 7 (9 P.): Dining Philosophers Problem
 - [ ] WS14/Aufgabe 8 (4 P.): Scala-Code-Lückentext
 - [ ] SS15/Aufgabe 6 (7 P.): Verständnis
 - [ ] SS15/Aufgabe 7 (8 P.): Aktoren
+
+### Aktoren, nicht relevant
+
+- [ ] SS17/Aufgabe 8 (8 P.): Aktoren in Java (Akka)
+- [ ] SS17/Aufgabe 9 (8 P.): Petri-Netze in Java

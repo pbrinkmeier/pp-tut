@@ -24,7 +24,7 @@ class RpnCalculator {
     
     private final static int MIN_SIZE = 10;
 
-    private BigInteger[] stack;
+    private /*@ spec_public @*/ BigInteger[] stack;
     private int elementCount;
     
     public RpnCalculator() {
@@ -55,6 +55,7 @@ class RpnCalculator {
         }
     }
 
+    //@ ensures id.equals("gcd") ==> stack[stack.length - 1] == euclideanGcd(\old(stack[stack.length - 1]), \old(stack[stack.length - 2]));
     public void handleIdentifier(String id) {
         // greatest common divisor
         if (id.equals("gcd")) {
@@ -69,7 +70,7 @@ class RpnCalculator {
 
     ///////// some algorithms
 
-    private static BigInteger euclideanGcd(BigInteger a, BigInteger b) {
+    private /*@ spec_public pure @*/ static BigInteger euclideanGcd(BigInteger a, BigInteger b) {
         BigInteger smol = a.min(b);
         BigInteger bigg = a.max(b);
 
@@ -104,6 +105,7 @@ class RpnCalculator {
 
     /////////// Internals
 
+    /*@ pure @*/
     public void printStack() {
         String repr = "[";
         for (int i = 0; i < this.elementCount; i++) {
@@ -117,6 +119,7 @@ class RpnCalculator {
         System.out.println(String.format("%s, %d/%d slots used", repr, this.elementCount, this.stack.length));
     }
 
+    //@ requires \typeof(x) == \typeof(BigInteger.ZERO);
     private void push(BigInteger x) {
         if (this.stack.length == this.elementCount) {
             // Double array size
@@ -129,7 +132,7 @@ class RpnCalculator {
     }
 
     //@ requires elementCount <= stack.length;
-    //@ requires elementCount > 0 ==> stack[elementCount - 1] != null;
+    //@ requires elementCount > 0 ==> stack[elementCount] != null;
     //@ ensures  elementCount > 0 ==> elementCount == \old(elementCount) - 1;
     private BigInteger pop() {
         if (this.elementCount <= 0) {

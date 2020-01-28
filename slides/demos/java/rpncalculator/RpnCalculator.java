@@ -1,6 +1,5 @@
 package rpncalculator;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,11 +23,11 @@ class RpnCalculator {
     
     private final static int MIN_SIZE = 10;
 
-    private /*@ spec_public @*/ BigInteger[] stack;
+    private /*@ spec_public @*/ int[] stack;
     private int elementCount;
     
     public RpnCalculator() {
-        this.stack = new BigInteger[RpnCalculator.MIN_SIZE];
+        this.stack = new int[RpnCalculator.MIN_SIZE];
         this.elementCount = 0;
     }
 
@@ -36,10 +35,10 @@ class RpnCalculator {
         for (Token t: program) {
             switch (t.getType()) {
                 case NUMBER:
-                    this.push(new BigInteger(t.text));
+                    this.push(Integer.parseInt(t.text));
                     break;
                 case ADD:
-                    this.push(this.pop().add(this.pop()));
+                    this.push(this.pop() + this.pop());
                     break;
                 case IDENTIFIER:
                     this.handleIdentifier(t.getText());
@@ -70,18 +69,18 @@ class RpnCalculator {
 
     ///////// some algorithms
 
-    private /*@ spec_public pure @*/ static BigInteger euclideanGcd(BigInteger a, BigInteger b) {
-        BigInteger smol = a.min(b);
-        BigInteger bigg = a.max(b);
+    private /*@ spec_public pure @*/ static int euclideanGcd(int a, int b) {
+        int smol = Math.min(a, b);
+        int bigg = Math.max(a, b);
 
         // avoid infinite loop
-        if (smol.compareTo(BigInteger.ZERO) < 0) {
-            System.err.println(String.format("GCD of %s and %s is not defined", smol, bigg));
+        if (smol < 0) {
+            System.err.println(String.format("GCD of %d and %d is not defined", smol, bigg));
             System.exit(1);
         }
 
-        while (!smol.equals(BigInteger.ZERO)) {
-            BigInteger tmp = bigg.mod(smol);
+        while (smol != 0) {
+            int tmp = bigg % smol;
             bigg = smol;
             smol = tmp;
         }
@@ -89,15 +88,15 @@ class RpnCalculator {
         return bigg;
     }
 
-    private static BigInteger factorial(BigInteger n) {
-        if (n.compareTo(BigInteger.ZERO) < 0) {
-            System.err.println(String.format("Factorial of %s is not defined", n));
+    private static int factorial(int n) {
+        if (n < 0) {
+            System.err.println(String.format("Factorial of %d is not defined", n));
             System.exit(1);
         }
 
-        BigInteger fac = BigInteger.ONE;
-        for (; !n.equals(BigInteger.ZERO); n = n.subtract(BigInteger.ONE)) {
-            fac = fac.multiply(n);
+        int fac = 1;
+        for (; n != 0; n--) {
+            fac = fac * n;
         }
 
         return fac;
@@ -109,7 +108,7 @@ class RpnCalculator {
     public void printStack() {
         String repr = "[";
         for (int i = 0; i < this.elementCount; i++) {
-            repr += this.stack[i].toString();
+            repr += Integer.toString(this.stack[i]);
             if (i != this.elementCount - 1) {
                 repr += ", ";
             }
@@ -119,15 +118,10 @@ class RpnCalculator {
         System.out.println(String.format("%s, %d/%d slots used", repr, this.elementCount, this.stack.length));
     }
 
-    // Ignoriert die nächsten 4 Zeilen; kleiner Hack wegen Bug (?) in JML.
-    //  Das hier funktioniert leider nicht:
-    //@ // requires \typeof(stack) == \type(BigInteger[]);
-    //  Deswegen:
-    //@ requires \typeof(stack) == \typeof(new BigInteger[1]);
-    private void push(BigInteger x) {
+    private void push(int x) {
         if (this.stack.length == this.elementCount) {
             // Double array size
-            BigInteger[] newStack = new BigInteger[this.elementCount * 2];
+            int[] newStack = new int[this.elementCount * 2];
             System.arraycopy(this.stack, 0, newStack, 0, this.elementCount);
             this.stack = newStack;
         }
@@ -136,19 +130,19 @@ class RpnCalculator {
     }
 
     //@ requires elementCount <= stack.length;
-    //@ requires elementCount > 0 ==> stack[elementCount] != null;
+    //@ requires elementCount > 0 ==> stack[elementCount] == null;
     //@ ensures  elementCount > 0 ==> elementCount == \old(elementCount) - 1;
-    private BigInteger pop() {
+    private int pop() {
         if (this.elementCount <= 0) {
             System.err.println("Could not pop");
             System.exit(1);
         }
 
-        BigInteger x = this.stack[--this.elementCount];
+        int x = this.stack[--this.elementCount];
 
         if (this.stack.length > RpnCalculator.MIN_SIZE && this.elementCount == this.stack.length / 2) {
             // Halve array size
-            BigInteger[] newStack = new BigInteger[this.elementCount];
+            int[] newStack = new int[this.elementCount];
             System.arraycopy(this.stack, 0, newStack, 0, this.elementCount);
             this.stack = newStack;
         }

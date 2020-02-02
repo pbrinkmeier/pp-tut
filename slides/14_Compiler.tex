@@ -1,0 +1,97 @@
+\documentclass{beamer}
+\usetheme{metropolis}
+
+\usepackage[ngerman]{babel}
+\usepackage[autostyle=true,german=quotes]{csquotes}
+\usepackage[linewidth=1pt]{mdframed}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{pifont}
+\usepackage{tikz}
+\usetikzlibrary{positioning, calc, arrows, fit, decorations.pathreplacing, shapes, shapes.multipart, snakes}
+\usepackage{verbatim}
+\usepackage{tabularx}
+\usepackage{textcomp}
+\usepackage{centernot}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{underscore}
+
+\batchmode
+
+\hypersetup{
+	colorlinks,
+	urlcolor=blue,
+	linkcolor=black % for ToC
+}
+\newenvironment{qaa}[1]{
+	#1
+
+	\begin{mdframed}
+		\small
+}{
+	\end{mdframed}
+}
+
+\newcommand{\true}{\ding{51}}
+\newcommand{\false}{\ding{55}}
+\newcommand{\code}[1]{
+	\begin{mdframed}
+		\verbatiminput{#1}
+	\end{mdframed}
+}
+
+\title{Tutorium 14: Compiler}
+% \subtitle{}
+\author{Paul Brinkmeier}
+\institute{Tutorium Programmierparadigmen am KIT}
+\date{03. Februar 2020}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\section{Einführung}
+
+\begin{frame}{Compiler in ProPa}
+	\begin{itemize}
+		\item Ein bisschen...
+		\begin{itemize}
+			\item Lexikalische Analyse (Tokenisierung)
+			\item Syntaktische Analyse (Parsen)
+			\item \textcolor{gray}{Semantische Analyse (Optimierung)}
+			\item Codegenerierung
+		\end{itemize}
+		\pause
+		\item Klausur:
+		\begin{itemize}
+			\item SLL(k)-Form beweisen
+			\item Rekursiven Abstiegsparser schreiben/vervollständigen
+			\item First/Follow-Mengen berechnen
+			\item Java-Bytecode
+				% Zeigen: SGML-Aufgabe (19WS)
+				% Zeigen: Java-BC-Aufgabe (16SS), Code-Generierung nächste Mittwoch und Freitag (findet noch statt)
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+% Aufgaben:
+% Nicht-SLL(1)-Teilmenge von JSON-Subset ist SLL(n) für n \in 1, 2?
+% Rekursiver Abstieg für JSON-Subset
+% Rekursiver Abstieg für Klausuraufgabenliste
+% Java Bytecode
+
+\section{Lexikalische Analyse}
+
+\section{Syntaktische Analyse}
+
+\section{Semantische Analyse}
+
+\section{Codegenerierung}
+
+% Klausurtermin, Rückmeldung, Cheatsheet, Aufgaben.md, etc.
+
+\end{document}

@@ -25,7 +25,7 @@ class RpnCalculator {
 
     private /*@ spec_public @*/ int[] stack;
     private int elementCount;
-    
+
     public RpnCalculator() {
         this.stack = new int[RpnCalculator.MIN_SIZE];
         this.elementCount = 0;
@@ -118,6 +118,10 @@ class RpnCalculator {
         System.out.println(String.format("%s, %d/%d slots used", repr, this.elementCount, this.stack.length));
     }
 
+
+    //@ requires elementCount >= MIN_SIZE;
+    //@ requires elementCount <= stack.length;
+    //@ requires this.stack.length == this.elementCount ==> elementCount <= Integer.MAX_VALUE / 2;
     private void push(int x) {
         if (this.stack.length == this.elementCount) {
             // Double array size
@@ -130,8 +134,7 @@ class RpnCalculator {
     }
 
     //@ requires elementCount <= stack.length;
-    //@ requires elementCount > 0 ==> stack[elementCount] == null;
-    //@ ensures  elementCount > 0 ==> elementCount == \old(elementCount) - 1;
+    //@ ensures \old(elementCount) > 0 ==> elementCount == \old(elementCount) - 1;
     private int pop() {
         if (this.elementCount <= 0) {
             System.err.println("Could not pop");

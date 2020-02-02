@@ -1,7 +1,6 @@
 # ProPa-Aufgaben nach Thema
 
-Enthält alle Klausuren der ProPa-Website https://pp.ipd.kit.edu/lehre/WS201819/paradigmen/.
-Aktuell fehlen noch die neusten Klausuren.
+Enthält Aufgaben aller Klausuren auf der ProPa-Website (https://pp.ipd.kit.edu/lehre/WS201920/paradigmen/).
 
 ## Haskell
 
@@ -19,20 +18,10 @@ Aktuell fehlen noch die neusten Klausuren.
 - [ ] WS17/Aufgabe 2 (18 P.): Ropes
 - [ ] SS18/Aufgabe 1 (15 P.): Vollkommene Zahlen
 - [ ] SS18/Aufgabe 2 (15 P.): `ListBuilder`
-
-## λ-Kalkül
-
-- [ ] SS14/Aufgabe 3 (15 P.): Natürliche Zahlen, β-Reduktion
-- [ ] SS14/Aufgabe 4 (16 P.): Natürliche Zahlen, Typherleitung
-- [ ] WS14/Aufgabe 3 (17 P.): Freie Variablen, Redex, Normalform
-- [ ] SS15/Aufgabe 2 (15 P.): SKI-Kalkül
-- [ ] WS15/Aufgabe 4 (17 P.): Paare, Euklids Algorithmus
-- [ ] SS16/Aufgabe 4 (16 P.): Zählerobjekte, β-Reduktion
-- [ ] SS17/Aufgabe 6 (15 P.): Gleichheit auf Church-Zahlen
-- [ ] WS17/Aufgabe 5 (12 P.): Alternativer Fixpunktkombinator
-- [ ] SS18/Aufgabe 4 (13 P.): Currying
-- [ ] WS18/Aufgabe 5 (10 P.): Listen
-- [ ] SS19/Aufgabe 4 (13 P.): SKI-Kalkül
+- [ ] WS18/Aufgabe 1 (12 P.): Listen, Verhalten unendlicher Listen
+- [ ] WS18/Aufgabe 2 (18 P.): Queue-Datenstruktur, Binärbaum
+- [ ] SS19/Aufgabe 1 (19 P.): Unendliche Listen
+- [ ] SS19/Aufgabe 2 (16 P.): Assoziativlisten, `Maybe`
 
 ## Prolog
 
@@ -46,6 +35,24 @@ Aktuell fehlen noch die neusten Klausuren.
 - [ ] SS17/Aufgabe 4 (12 P.): Unifikationsalgorithmus nach Robinson
 - [ ] WS17/Aufgabe 3 (18 P.): Gewichtete Bäume
 - [ ] SS18/Aufgabe 3 (20 P.): Rot-Schwarz-Bäume
+- [ ] WS18/Aufgabe 3 (16 P.): Buchstabenrätsel, `not`
+- [ ] SS19/Aufgabe 3 (19 P.): NTM, `not`
+
+## λ-Kalkül
+
+- [ ] SS14/Aufgabe 3 (15 P.): Natürliche Zahlen, β-Reduktion
+- [ ] SS14/Aufgabe 4 (16 P.): Natürliche Zahlen, Typherleitung
+- [ ] WS14/Aufgabe 3 (17 P.): Freie Variablen, Redex, Normalform
+- [ ] SS15/Aufgabe 2 (15 P.): SKI-Kalkül
+- [ ] WS15/Aufgabe 4 (17 P.): Paare, Euklids Algorithmus
+- [ ] SS16/Aufgabe 4 (16 P.): Zählerobjekte, β-Reduktion
+- [ ] SS17/Aufgabe 6 (15 P.): Gleichheit auf Church-Zahlen
+- [ ] WS17/Aufgabe 5 (12 P.): Alternativer Fixpunktkombinator
+- [ ] SS18/Aufgabe 4 (13 P.): Currying
+- [ ] WS18/Aufgabe 5 (10 P.): Listen
+- [ ] WS18/Aufgabe 4b (3 P.): Church-Zahlen, β-Reduktion
+- [ ] WS18/Aufgabe 5 (10 P.): Listen
+- [ ] SS19/Aufgabe 4 (13 P.): SKI-Kalkül, η-Konversion
 
 ## MPI
 
@@ -57,6 +64,8 @@ Aktuell fehlen noch die neusten Klausuren.
 - [ ] SS17/Aufgabe 7 (8 P.): MPI-Funktionen kennen
 - [ ] WS17/Aufgabe 6 (7 P.): Skalarprodukt
 - [ ] SS18/Aufgabe 6 (10 P.): Matrizen-/Vektormultiplikation
+- [ ] WS18/Aufgabe 6 (15 P.): MapReduce in MPI
+- [ ] SS19/Aufgabe 5 (10 P.): `Alltoall` implementieren
 
 ## Java-Bytecode
 
@@ -72,6 +81,8 @@ Aktuell fehlen noch die neusten Klausuren.
 - [ ] SS17/Aufgabe 11 (3 P.): First-/Follow-Mengen
 - [ ] WS17/Aufgabe 9 (20 P.): Linksfaktorisierung, Rekursiver Abstieg
 - [ ] SS18/Aufgabe 8 (12 P.): Rekursiver Abstieg
+- [ ] WS18/Aufgabe 8 (19 P.): SLL-Kriterium, Rekursiver Abstieg für SGML
+- [ ] SS19/Aufgabe 7 (23 P.): Kompilierung von `do until`, Linksfaktorisierung, Rekursiver Abstieg
 
 ## Typsysteme
 
@@ -82,12 +93,15 @@ Aktuell fehlen noch die neusten Klausuren.
 - [ ] SS17/Aufgabe 5 (19 P.): Herleitungsbaum
 - [ ] WS17/Aufgabe 4 (15 P.): Typisierung von λ-Termen, Herleitungsbaum
 - [ ] SS18/Aufgabe 5 (15 P.): Allgemeinster Unifikator, Herleitungsbaum
+- [ ] WS18/Aufgabe 4ac (12 P.): Constraint-System, Typabstraktion
 
 ## Design by Contract
 
 - [ ] SS17/Aufgabe 10 (6 P.): Informelles DbC
 - [ ] WS17/Aufgabe 8 (8 P.): Konto mit JML
 - [ ] SS18/Aufgabe 7ef (5 P.): Gefilterte Summe mit JML
+- [ ] WS18/Aufgabe 7de (5 P.): Synchronisierte Queue mit JML
+- [ ] SS19/Aufgabe 7de (5 P.): Maximaler Betrag-Kombinator mit JML
 
 ## Parallelität
 
@@ -99,7 +113,9 @@ Aktuell fehlen noch die neusten Klausuren.
 - [ ] SS16/Aufgabe 6 (16 P.): `BufferedAsyncWriter` in Java
 - [ ] SS16/Aufgabe 7 (7 P.): Thread-safe `ArrayList` in Java
 - [ ] WS17/Aufgabe 7 (15 P.): Paralleler Filter
-- [ ] SS18/Aufgabe 7abcd (15 P.): Gefilterte Summe mit JML
+- [ ] SS18/Aufgabe 7abcd (15 P.): Gefilterte Summe
+- [ ] WS18/Aufgabe 7abc (10 P.): Synchronisierte Queue, Deadlocks, Race Conditions
+- [ ] SS19/Aufgabe 7abc (10 P.): Reduktion mit Fork-Join
 
 ## C, (wahrscheinlich) nicht relevant
 

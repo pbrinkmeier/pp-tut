@@ -212,6 +212,46 @@
 	\end{itemize}
 \end{frame}
 
+\section{Mehr Java}
+
+\begin{frame}{Übungsaufgabe 1}
+	\begin{itemize}
+		\item \texttt{demos/java/bruteforce/Bruteforce.java}
+		\item \texttt{new Bruteforce(w).countZeroStartSequential(k)} berechnet die Anzahl der \texttt{w}-stelligen kleinbuchstabigen Worte, deren SHA-256-Hash mit \texttt{k} 0-Bytes beginnt.
+		\item Ist dieses Problem parallelisierbar?
+		\pause
+		\item $\leadsto$ Ja; daten-/taskparallel?
+		\pause
+		\item $\leadsto$ Datenparallel; Eingabemenge ist auf identische Ausführungsträger (Threads) aufteilbar.
+		\pause
+		\item Implementiert:\\
+		      \texttt{new Bruteforce(w).countZeroStartParallel(k, n)}, wobei \texttt{n} die Zahl der verwendeten Threads bezeichnet.
+	        \item Vergleicht \texttt{Sequential} mit \texttt{Parallel}\\
+		      für $\textrm{\texttt{w}} \in \{ 5, 6 \}$, $\textrm{\texttt{k}} = 2$, $\textrm{\texttt{n}} \in \{ 1, 2, 4 \}$.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Übungsaufgabe 2}
+	\begin{itemize}
+		\item \texttt{demos/java/set/Set.java}
+		\item Behebt alle Compiler- und Laufzeitfehler in der Klasse \texttt{Set}.
+		\pause
+		\item Behebt ggf. auftretende JML-Warnings.
+		\begin{itemize}
+			\item Geht auch online: \url{https://www.rise4fun.com/OpenJMLESC/}
+		\end{itemize}
+		\pause
+		\item Fügt je mind. eine (sinnvolle) Vor- und Nachbedingung zu folgenden Methoden hinzu:
+		\begin{itemize}
+			\item \texttt{size()}
+			\item \texttt{isEmpty()}
+			\item \texttt{add()}
+			\item \texttt{contains()}
+			\item \texttt{getElements()}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
 \section{Ende}
 
 \begin{frame}{Ende}

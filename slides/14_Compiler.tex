@@ -91,7 +91,7 @@
 
 	\pause
 	\begin{itemize}
-		\item Begründen Sie formal, dass die obige Grammatik nicht in SLL(1)-Form ist (3P.).
+		\item Begründen Sie formal, dass die obige Grammatik nicht in $\textrm{SLL}(1)$-Form ist (3P.).
 		\pause
 		\item Entwickeln Sie für [eine linksfaktorisierte Version der obigen Grammatik] einen rekursiven Abstiegsparser (16P.).
 	\end{itemize}
@@ -218,31 +218,194 @@
 			\end{equation*}
 		\end{column}
 		\begin{column}{0.5\textwidth}
-			\includegraphics[width=0.75\textwidth]{images/baumstruktur.png}
+			\begin{figure}
+				\includegraphics[width=0.65\textwidth]{images/baumstruktur.png}
+			\end{figure}
 		\end{column}
 	\end{columns}
 
 	\begin{itemize}
 		\item Zu beachten: Punkt-vor-Strich (Präzedenz), Klammerung, etc.
 		\item Nicht mehr mit regulären Ausdrücken lösbar
+		\item \enquote{Offensichtliche} Grammatik oft nicht einfach zu Parsen
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Links-/Rechtsrekursion}
+\begin{frame}{Beispiel: Mathematische Ausdrücke}
+	\begin{equation*}
+		E \to \;\; \textrm{\texttt{num}} \mid \textrm{\texttt{(}} \;\; E \;\; \textrm{\texttt{)}}
+		 \mid E \;\; \textrm{\texttt{+}} \;\; E
+		 \mid E \;\; \textrm{\texttt{*}} \;\; E
+	\end{equation*}
+
+	\pause
+
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=0.65\textwidth]{images/baumstruktur2.png}
+			\end{figure}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\begin{figure}
+				\includegraphics[width=0.65\textwidth]{images/baumstruktur.png}
+			\end{figure}
+		\end{column}
+	\end{columns}
+
+	\pause
+
+	\begin{itemize}
+		\item Ableitungsbaum nicht eindeutig $\leadsto$ schlecht
+		\item Ableitungsbaum garantiert nicht Punkt-vor-Strich $\leadsto$ schlecht
+	\end{itemize}
 \end{frame}
 
-\begin{frame}{First-/Followmenge}
+\begin{frame}{Präzedenz, Linksfaktorisierung}
+	Wie zeichnen sich \enquote{gute} Grammatiken aus?
+	\pause
+
+	Operatorpräzedenz schon in Grammatik definiert:
+	\begin{align*}
+		E \to & \;\; E \;\; \textrm{\texttt{+}} \;\; T \mid E \;\; \textrm{\texttt{-}} \;\; T \mid T\\
+		T \to & \;\; T \;\; \textrm{\texttt{*}} \;\; F \mid T \;\; \textrm{\texttt{/}} \;\; F \mid F\\
+		F \to & \;\; \textrm{\texttt{num}} \; | \; \textrm{\texttt{(}} \;\; E \;\; \textrm{\texttt{)}}
+	\end{align*}
+
+	\pause
+
+	Vermeidung von Linksrekursion (Linksfaktorisierung):
+	\begin{align*}
+		E     \to & \;\; T \;\; EList\\
+		EList \to & \;\; \epsilon \mid \textrm{\texttt{+}} \;\; EList \mid \textrm{\texttt{-}} \;\; EList\\
+		T     \to & \;\; F \;\; TList\\
+		TList \to & \;\; \epsilon \mid \textrm{\texttt{*}} \;\; TList \mid \textrm{\texttt{/}} \;\; TList\\
+		F \to & \;\; \textrm{\texttt{num}} \; | \; \textrm{\texttt{(}} \;\; E \;\; \textrm{\texttt{)}}
+	\end{align*}
+\end{frame}
+
+\begin{frame}{First-/Followmenge, Indizmenge}
+	\begin{align*}
+		EList \to & \;\; \epsilon \mid \textrm{\texttt{+}} \;\; EList \mid \textrm{\texttt{-}} \;\; EList
+	\end{align*}
+	
+	Wie können wir bspw. bei $EList$ entscheiden, welche Produktion anzuwenden ist?
+	\pause
+	\begin{itemize}
+		\item $\leadsto$ definiere \emph{Indizmenge} $IM_k(A \to \alpha) = \textrm{First}_k(\alpha \textrm{Follow}_k(A))$
+		\item Wenn nächste $k$ Token in $IM_k(EList \to \phi)$ $\leadsto$ weiter mit $\phi$
+		\item Konkret:
+		\begin{itemize}
+			\item $IM_1(EList \to \; \epsilon) = \textrm{First}_1(\epsilon \textrm{Follow}_1(EList)) = \{ \textrm{\texttt{)}}, \textrm{\texttt{\#}} \}$
+			\item $IM_1(EList \to \; \textrm{\texttt{+}} \;\; Elist) = \textrm{First}_1(\textrm{\texttt{+}} \; Elist \; \textrm{Follow}_1(EList)) = \{ \textrm{\texttt{+}} \}$
+			\item $IM_1(EList \to \; \textrm{\texttt{-}} \;\; Elist) = \textrm{First}_1(\textrm{\texttt{-}} \; Elist \; \textrm{Follow}_1(EList)) = \{ \textrm{\texttt{-}} \}$
+		\end{itemize}
+		\pause
+		\item $\textrm{First}_k(A)$: Menge an möglichen ersten $k$ Token in $A$
+		\item $\textrm{Follow}_k(A)$: Menge an möglichen ersten $k$ Token nach $A$
+	\end{itemize}
 \end{frame}
 
 \begin{frame}{SLL-Kriterium}
+	Grammatik ist in $\textrm{SLL}(k)$-Form\\
+	$:\Leftrightarrow \forall A \to \alpha, A \to \beta \in P: IM_k(A \to \alpha) \cap IM_k(A \to \beta) \neq \emptyset$
+
+	\begin{itemize}
+		\item $\textrm{SLL}(k)$: Bei einem Nichtterminal muss die zu wählende Produktion an den nächsten $k$ Token wählbar sein.
+		\item Nichtterminale mit nur einer Produktion sind hier irrelevant
+		\item Schwierig daran: $\textrm{Follow}$-Mengen berechnen
+	\end{itemize}
+	\pause
+	\begin{align*}
+		E \to & \;\; E \;\; \textrm{\texttt{+}} \;\; T \mid E \;\; \textrm{\texttt{-}} \;\; T \mid T\\
+		T \to & \;\; T \;\; \textrm{\texttt{*}} \;\; F \mid T \;\; \textrm{\texttt{/}} \;\; F \mid F\\
+		F \to & \;\; \textrm{\texttt{num}} \; | \; \textrm{\texttt{(}} \;\; E \;\; \textrm{\texttt{)}}
+	\end{align*}
+	
+	\begin{itemize}
+		\item Begründet formal, dass obige Grammatik nicht $\textrm{SLL}(1)$.
+		\item Berechnet $\textrm{Follow}_1(N)$ für $N \in \{ E, T, F \}$.
+	\end{itemize}
 \end{frame}
 
-% Klausuraufgaben-Analyse, vereinfacht
+\begin{frame}{Rekursive Abstiegsparser}
+\end{frame}
 
-\section{Semantische Analyse}
+\subsection{Semantische Analyse}
 
-\section{Codegenerierung}
+\begin{frame}{Semantische Analyse}
+	\begin{itemize}
+		\item PP beschäftigt sich (bis auf Typinferenz) nur kurz mit semantischer Analyse
+		\item Hier geht es um Optimierungen, Typchecks, etc.
+		\item $\leadsto$ weiterführende (Master-)Vorlesungen am IPD
+	\end{itemize}
+\end{frame}
 
-% Klausurtermin, Rückmeldung, Cheatsheet, Aufgaben.md, etc.
+\subsection{Codegenerierung}
+
+\begin{frame}{Codegenerierung}
+	\begin{figure}
+		\includegraphics[width=\textwidth]{images/javabytecode}
+	\end{figure}
+
+	\begin{itemize}
+		\item Codegenerierung wird in PP am Beispiel Java-Bytecode demonstriert
+		\begin{itemize}
+			\item \enquote{Jede_r kann Java}
+			\item Relativ übersichtliche \enquote{Maschinensprache}
+			\item Ggf. relevant, wenn seltsame Bugs in Java-Programmen auftreten
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Java-Bytecode: Lokale Variablen, Operandenstack}
+	\begin{itemize}
+		\item \texttt{?load_<x>}, \texttt{?store_<x>}
+		\begin{itemize}
+			\item \texttt{<x>}: ID einer lokalen Variablen
+		\end{itemize}
+		\item \texttt{?add}
+		\item \texttt{?sub}
+		\item \texttt{?mul}
+		\item \texttt{bipush <c>}
+		\item \texttt{?const_<c>}
+	\end{itemize}
+
+	\scriptsize
+
+	\texttt{?}-Instruktionen gibt es für verschiedene Typen, bspw. \texttt{iadd}, \texttt{fadd}
+\end{frame}
+
+\begin{frame}{Java-Bytecode: Klassen, Methoden}
+	\begin{itemize}
+		\item \texttt{getfield <field>}, \texttt{putfield <field>}
+		\item \texttt{invokevirtual <m>}, \texttt{invokestatic <m>}
+		\item \texttt{new <t>}, \texttt{newarray <t>}
+		\item \texttt{?return}
+		\begin{itemize}
+			\item \texttt{areturn} für Objekte
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Java-Bytecode: Sprünge}
+	\begin{itemize}
+		\item \texttt{goto <label>}
+		\item \texttt{if(eq|ne|lt|gt|le|ge) <label>}
+		\item \texttt{if_?cmp(eq|ne|lt|gt|le|ge) <label>}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Java-Bytecode: Codegenerierung}
+	Kennen sollte man:
+
+	\begin{itemize}
+		\item Methodenaufrufe (\texttt{invokevirtual})
+		\item Zugriff auf Attribute (\texttt{getfield}, \texttt{putfield})
+		\item \texttt{if}, \texttt{while}
+		\item Kurzauswertung (Laziness bei \texttt{\&\&} und \texttt{\string|\string|})
+		\item Negation (Kein \texttt{not}-Befehl, nur veränderte Sprungziele)
+	\end{itemize}
+\end{frame}
 
 \end{document}

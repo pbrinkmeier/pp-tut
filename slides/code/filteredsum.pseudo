@@ -1,0 +1,7 @@
+xs: List<Integer>
+foreach x of xs:
+    threads.add(new Thread () -> {
+        if x < 10 then element else 0
+    })
+foreach t of threads:
+    result += t.join()

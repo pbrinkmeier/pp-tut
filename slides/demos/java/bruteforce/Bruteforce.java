@@ -4,7 +4,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 import javax.xml.bind.DatatypeConverter;
 
 public class Bruteforce {
@@ -19,7 +23,7 @@ public class Bruteforce {
         System.out.println(String.format("Sequential found %d hashes starting with %d zeroes.", count1, k));
 
         long count2 = Bruteforce.time("Parallel", () -> {
-            return b.countZeroStartParallel(k);
+            return b.countZeroStartParallel(k, Runtime.getRuntime().availableProcessors());
         });
         System.out.println(String.format("Parallel found %d hashes starting with %d zeroes.", count2, k));
     }
@@ -42,6 +46,7 @@ public class Bruteforce {
             byte[] currentHash = d.digest(word);
 
             if (Bruteforce.hasZeroPrefixOf(prefixlen, currentHash)) {
+                // System.out.println(DatatypeConverter.printHexBinary(currentHash));
                 result++;
             }
 
@@ -51,8 +56,44 @@ public class Bruteforce {
         return result;
     }
 
-    public long countZeroStartParallel(int prefixlen) {
-        return 0;
+    public long countZeroStartParallel(int prefixlen, long n) {
+        long wordCount = (long) Math.pow(26, this.wordlen);
+        AtomicLong result = new AtomicLong(0);
+        
+        List<Thread> threads = LongStream.range(0, n).boxed().map((i) -> new Thread(() -> {
+            MessageDigest d = Bruteforce.sha256digest();
+            long startIncl = i * (wordCount / n);
+            long endExcl = (i + 1) * (wordCount / n);
+            // System.out.println(String.format("%d will work on [%d; %d)", i, startIncl, endExcl));
+            byte[] word = Bruteforce.numToWord(this.wordlen, startIncl);
+            long localCount = 0;
+
+            for (long k = startIncl; k < endExcl; k++) {
+                byte[] currentHash = d.digest(word);
+
+                if (Bruteforce.hasZeroPrefixOf(prefixlen, currentHash)) {
+                    // System.out.println(DatatypeConverter.printHexBinary(currentHash));
+                    localCount++;
+                }
+
+                Bruteforce.nextWord(word);
+            }
+
+            result.getAndAdd(localCount);
+        })).collect(Collectors.toList());
+
+        for (Thread t: threads) {
+            t.start();
+        }
+        for (Thread t: threads) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                System.err.println("Thread got interrupted while joining :(");
+            }
+        }
+
+        return result.get();
     }
 
     ////// utilities

@@ -72,9 +72,43 @@
 			\item Rekursiven Abstiegsparser schreiben/vervollständigen
 			\item First/Follow-Mengen berechnen
 			\item Java-Bytecode
-				% Zeigen: SGML-Aufgabe (19WS)
 				% Zeigen: Java-BC-Aufgabe (16SS), Code-Generierung nächste Mittwoch und Freitag (findet noch statt)
 		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\subsection{Syntaktische Analyse (18WS)}
+
+\begin{frame}{Syntaktische Analyse (18WS)}
+	\begin{align*}
+		SGML \to & \;\; \textrm{\texttt{< id >}} \;\; Children \;\; \textrm{\texttt{< / >}}\\
+		Children \to & \;\; \epsilon \mid SGML \;\; Children
+	\end{align*}
+
+	\begin{equation*}
+		\{\textrm{\texttt{<id><id></><id></></>}},\;\;\textrm{\texttt{<id></>}},\;\;...\} \in G
+	\end{equation*}
+
+	\pause
+	\begin{itemize}
+		\item Begründen Sie formal, dass die obige Grammatik nicht in SLL(1)-Form ist (3P.).
+		\pause
+		\item Entwickeln Sie für [eine linksfaktorisierte Version der obigen Grammatik] einen rekursiven Abstiegsparser (16P.).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Java-Bytecode (16SS)}
+	\footnotesize
+	Übersetzen Sie folgenden Java-Programmausschnitt in Java-Bytecode (10P.):
+
+	\code{code/bytecode16ss.java}
+
+	\pause
+	Hinweise:
+
+	\begin{itemize}
+		\item Codeerzeugung für bedingte Sprünge: Folien 447ff.
+		\item Um eine Bedingung der Form \texttt{!cond} zu übersetzen, reicht es, \texttt{cond} zu übersetzen und die Sprungziele anzupassen.
 	\end{itemize}
 \end{frame}
 
@@ -84,9 +118,126 @@
 % Rekursiver Abstieg für Klausuraufgabenliste
 % Java Bytecode
 
-\section{Lexikalische Analyse}
+\section{Compiler}
 
-\section{Syntaktische Analyse}
+\subsection{Motivation}
+
+\begin{frame}{Compiler: Motivation}
+	\begin{itemize}
+		\item Maschine(-nmodell) versteht i.d.R. eingeschränkten Instruktionssatz
+		\begin{itemize}
+			\item Es gibt/gab zwar auch mal CISC-Maschinen, heute ist sind aber RISC(-ähnliche) Prozessoren am weitesten verbreitet
+			\item Gründe: RISC-Prozessoren sind wesentlich einfacher (= billiger) zu bauen
+		\end{itemize}
+		\item Programme in Maschinensprache sind i.d.R. für Menschen nicht einfach zu Schreiben.
+		\pause
+		\item Also: Erfinde einfacher zu Schreibende ($\approx$ mächtigere) Sprache, die dann in die Sprache der Maschine übersetzt wird.
+		\item Diesen Übersetzungsschritt sollte optimalerweise ein Programm erledigen, da wir sonst auch einfach direkt Maschinensprache-Programme schreiben können.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Compiler}
+	\begin{itemize}
+		\item Übersetzer für formale Sprachen nennt man \emph{Compiler}
+		\item Beispiele:
+		\begin{itemize}
+			\item C, Haskell, Rust, Go $\to$ X86
+			\item Java, Clojure, Kotlin $\to$ Java-Bytecode
+			\item TypeScript $\to$ JavaScript
+			\item \textcolor{gray}{Python $\to$ Python-AST}
+		\end{itemize}
+		\pause
+		\item \textcolor{gray}{Interpreter kann man auch als Compiler kategorisieren, sie zählen aber i.A. nicht dazu}
+		\pause
+		\item Single-pass vs. Multi-pass
+		\begin{itemize}
+			\item Single-pass: Eingabe wird einmal gelesen, Ausgabe währenddessen erzeugt (ältere Compiler)
+			\item Multi-pass: Eingabe wird in Zwischenschritten in verschiedene Repräsentationen umgewandelt
+			\begin{itemize}
+				\item Quellsprache, Tokens, AST, Zwischensprache, Zielsprache
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\subsection{Lexikalische Analyse}
+
+\begin{frame}{Lexikalische Analyse}
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			\code{code/lexinput.java}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\code{code/lexoutput.java}
+		\end{column}
+	\end{columns}
+
+	\begin{itemize}
+		\item Lexikalische Analyse (Tokenisierung) verarbeitet eine Zeichensequenz in eine Liste von \emph{Tokens}.
+		\item Tokens sind Zeichengruppen, denen eine Semantik innewohnt:
+		\begin{itemize}
+			\item \texttt{int} --- Typ einer Ganzzahl
+			\item \texttt{=} --- Zuweisungsoperator
+			\item \texttt{x1} --- Variablen- oder Methodenname
+			\item \texttt{123} --- Literal einer Ganzzahl
+			\item \texttt{"123"} --- String-Literal
+			\item etc.
+		\end{itemize}
+		\item Lösbar mit regulären Ausdrücken, Automaten
+	\end{itemize}
+\end{frame}
+
+\subsection{Syntaktische Analyse}
+
+\begin{frame}{Syntaktische Analyse}
+	\begin{itemize}
+		\item Syntaktische Analyse stellt die unterliegende Struktur der bisher linear gelesenen Eingabe fest:
+		\begin{itemize}
+			\item Blockstruktur von Programmen
+			\item Baumstruktur von HTML-Dateien
+			\item Header, Inhalt-Struktur von Mails
+			\item Verschachtelte mathematische Ausdrücke
+		\end{itemize}
+		\item Syntaktische Analyse ist das größte Compiler-Thema in PP.
+		\pause
+		\item Übliche Vorgehensweise (in PP):
+		\begin{itemize}
+			\item Grammatik $G$ erfinden
+			\item ggf. $G$ in einfache Form $G'$ bringen
+			\item rekursiven Abstiegsparser für $G'$ implementieren
+		\end{itemize}
+		\item Alternativ: Parser-Kombinatoren, Yacc, etc.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Beispiel: Mathematische Ausdrücke}
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			\begin{equation*}
+				1 + 5 * 7 + 6
+			\end{equation*}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\includegraphics[width=0.75\textwidth]{images/baumstruktur.png}
+		\end{column}
+	\end{columns}
+
+	\begin{itemize}
+		\item Zu beachten: Punkt-vor-Strich (Präzedenz), Klammerung, etc.
+		\item Nicht mehr mit regulären Ausdrücken lösbar
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Links-/Rechtsrekursion}
+\end{frame}
+
+\begin{frame}{First-/Followmenge}
+\end{frame}
+
+\begin{frame}{SLL-Kriterium}
+\end{frame}
+
+% Klausuraufgaben-Analyse, vereinfacht
 
 \section{Semantische Analyse}
 

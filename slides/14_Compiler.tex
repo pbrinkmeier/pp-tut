@@ -277,16 +277,18 @@
 	Vermeidung von Linksrekursion (Linksfaktorisierung):
 	\begin{align*}
 		E     \to & \;\; T \;\; EList\\
-		EList \to & \;\; \epsilon \mid \textrm{\texttt{+}} \;\; EList \mid \textrm{\texttt{-}} \;\; EList\\
+		EList \to & \;\; \epsilon \mid \textrm{\texttt{+}} \;\; T \;\; EList \mid \textrm{\texttt{-}} \;\; T \;\; EList\\
 		T     \to & \;\; F \;\; TList\\
-		TList \to & \;\; \epsilon \mid \textrm{\texttt{*}} \;\; TList \mid \textrm{\texttt{/}} \;\; TList\\
+		TList \to & \;\; \epsilon \mid \textrm{\texttt{*}} \;\; F \;\; TList \mid \textrm{\texttt{/}} \;\; F \;\; TList\\
 		F \to & \;\; \textrm{\texttt{num}} \; | \; \textrm{\texttt{(}} \;\; E \;\; \textrm{\texttt{)}}
 	\end{align*}
 \end{frame}
 
 \begin{frame}{First-/Followmenge, Indizmenge}
+	\footnotesize
+
 	\begin{align*}
-		EList \to & \;\; \epsilon \mid \textrm{\texttt{+}} \;\; EList \mid \textrm{\texttt{-}} \;\; EList
+		EList \to & \;\; \epsilon \mid \textrm{\texttt{+}} \;\; T \;\; EList \mid \textrm{\texttt{-}} \;\; T \;\; EList
 	\end{align*}
 	
 	Wie können wir bspw. bei $EList$ entscheiden, welche Produktion anzuwenden ist?
@@ -294,12 +296,10 @@
 	\begin{itemize}
 		\item $\leadsto$ definiere \emph{Indizmenge} $IM_k(A \to \alpha) = \textrm{First}_k(\alpha \textrm{Follow}_k(A))$
 		\item Wenn nächste $k$ Token in $IM_k(EList \to \phi)$ $\leadsto$ weiter mit $\phi$
-		\item Konkret:
-		\begin{itemize}
-			\item $IM_1(EList \to \; \epsilon) = \textrm{First}_1(\epsilon \textrm{Follow}_1(EList)) = \{ \textrm{\texttt{)}}, \textrm{\texttt{\#}} \}$
-			\item $IM_1(EList \to \; \textrm{\texttt{+}} \;\; Elist) = \textrm{First}_1(\textrm{\texttt{+}} \; Elist \; \textrm{Follow}_1(EList)) = \{ \textrm{\texttt{+}} \}$
-			\item $IM_1(EList \to \; \textrm{\texttt{-}} \;\; Elist) = \textrm{First}_1(\textrm{\texttt{-}} \; Elist \; \textrm{Follow}_1(EList)) = \{ \textrm{\texttt{-}} \}$
-		\end{itemize}
+		\pause
+		\item $IM_1(EList \to \; \epsilon) = \textrm{First}_1(\epsilon \textrm{Follow}_1(EList)) = \{ \textrm{\texttt{)}}, \textrm{\texttt{\#}} \}$
+		\item $IM_1(EList \to \; \textrm{\texttt{+}} \;\; T \;\; EList) = \textrm{First}_1(\textrm{\texttt{+}} \; T \; EList \; \textrm{Follow}_1(EList)) = \{ \textrm{\texttt{+}} \}$
+		\item $IM_1(EList \to \; \textrm{\texttt{-}} \;\; T \;\; EList) = \textrm{First}_1(\textrm{\texttt{-}} \; T \; EList \; \textrm{Follow}_1(EList)) = \{ \textrm{\texttt{-}} \}$
 		\pause
 		\item $\textrm{First}_k(A)$: Menge an möglichen ersten $k$ Token in $A$
 		\item $\textrm{Follow}_k(A)$: Menge an möglichen ersten $k$ Token nach $A$
@@ -329,6 +329,27 @@
 \end{frame}
 
 \begin{frame}{Rekursive Abstiegsparser}
+	\footnotesize
+	\begin{align*}
+		E     \to & \;\; T \;\; EList\\
+		EList \to & \;\; \epsilon \mid \textrm{\texttt{+}} \;\; T \;\; EList \mid \textrm{\texttt{-}} \;\; T \;\; EList\\
+		T     \to & \;\; F \;\; TList\\
+		TList \to & \;\; \epsilon \mid \textrm{\texttt{*}} \;\; F \;\; TList \mid \textrm{\texttt{/}} \;\; F \;\; TList\\
+		F \to & \;\; \textrm{\texttt{num}} \; | \; \textrm{\texttt{(}} \;\; E \;\; \textrm{\texttt{)}}
+	\end{align*}
+	\begin{itemize}
+		\item Yay, unsere Grammatik hat jetzt $\textrm{SLL}(1)$-Form!
+		\item Aber was bringt das?
+		\pause
+		\item $G$ ist jetzt einfach ausprogrammierbar:
+		\begin{itemize}
+			\item 1 Methode per Nichtterminal: \texttt{parseE()}, \texttt{parseEList()}, ...
+			\item \texttt{Token[k]}-Instanzattribut für $k$ langen Lookahead
+			\item \texttt{expect(TokenType)}-Methode, um Token zu verarbeiten
+		\end{itemize}
+		\pause
+		\item Vervollständigt \texttt{demos/java/exprparser/ExprParser.java}!
+	\end{itemize}
 \end{frame}
 
 \subsection{Semantische Analyse}
@@ -405,6 +426,20 @@
 		\item \texttt{if}, \texttt{while}
 		\item Kurzauswertung (Laziness bei \texttt{\&\&} und \texttt{\string|\string|})
 		\item Negation (Kein \texttt{not}-Befehl, nur veränderte Sprungziele)
+	\end{itemize}
+\end{frame}
+
+\section{Ende}
+
+\begin{frame}{Ende}
+	\begin{itemize}
+		\item Danke für's Kommen!
+		\item Bei Fragen: \texttt{paul.brinkmeier@fsmi.uni-karlsruhe.de}
+		\item Fragestunde mit den Übungsleitern:
+		\begin{itemize}
+			\item 16.03.2020, 14:00, Raum -101
+		\end{itemize}
+		\item \texttt{Klausuraufgaben.md} enthält jetzt auch die neuesten Klausuren
 	\end{itemize}
 \end{frame}
 

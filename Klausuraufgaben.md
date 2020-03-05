@@ -101,7 +101,7 @@ Enthält Aufgaben aller Klausuren auf der ProPa-Website (https://pp.ipd.kit.edu/
 - [ ] WS17/Aufgabe 8 (8 P.): Konto mit JML
 - [ ] SS18/Aufgabe 7ef (5 P.): Gefilterte Summe mit JML
 - [ ] WS18/Aufgabe 7de (5 P.): Synchronisierte Queue mit JML
-- [ ] SS19/Aufgabe 7de (5 P.): Maximaler Betrag-Kombinator mit JML
+- [ ] SS19/Aufgabe 6de (5 P.): Maximaler Betrag-Kombinator mit JML
 
 ## Parallelität
 

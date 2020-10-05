@@ -308,10 +308,10 @@
 
 \begin{frame}{SLL-Kriterium}
 	Grammatik ist in $\textrm{SLL}(k)$-Form\\
-	$:\Leftrightarrow \forall A \to \alpha, A \to \beta \in P: IM_k(A \to \alpha) \cap IM_k(A \to \beta) \neq \emptyset$
+	$:\Leftrightarrow \forall A \to \alpha, A \to \beta \in P: IM_k(A \to \alpha) \cap IM_k(A \to \beta) = \emptyset$
 
 	\begin{itemize}
-		\item $\textrm{SLL}(k)$: Bei einem Nichtterminal muss die zu wählende Produktion an den nächsten $k$ Token wählbar sein.
+		\item $\textrm{SLL}(k)$: Bei jedem Nichtterminal muss die zu wählende Produktion an den nächsten $k$ Token wählbar sein.
 		\item Nichtterminale mit nur einer Produktion sind hier irrelevant
 		\item Schwierig daran: $\textrm{Follow}$-Mengen berechnen
 	\end{itemize}

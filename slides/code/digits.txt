@@ -2,4 +2,4 @@ digits   42 == [4, 2]
 digits  101 == [1, 0, 1]
 digits 1024 == [1, 0, 2, 4]
 digits    0 == [0]
-digits   -5 == error "need positive number"
+digits (-5) == error "need positive number"

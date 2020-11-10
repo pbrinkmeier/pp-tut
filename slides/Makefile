@@ -1,10 +1,8 @@
-NAME = 01_Haskell_Basics
-
 .PHONY: clean
 
-%.pdf: %.tex code/* demos/* images/*
+%.pdf: %.tex code/*
 	mkdir -p build
-	latexmk -pdf -jobname=build/$(basename $@) $<
+	latexmk -shell-escape -pdf -jobname=build/$(basename $@) $<
 	cp build/$@ $@
 
 clean:

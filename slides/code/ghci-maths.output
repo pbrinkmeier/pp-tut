@@ -1,5 +1,5 @@
 $ ghci
-GHCi, version 8.6.5: http://www.haskell.org/ghc/
+GHCi, version 8.8.4: http://www.haskell.org/ghc/
 Prelude> :l Maths.hs 
 [1 of 1] Compiling Maths ( Maths.hs, interpreted )
 Ok, one module loaded.

@@ -1,8 +1,0 @@
-unifier = []
-for i in 0..functorLen(lhs):
-  unifier.addAll(unify(
-    unifier.apply(lhs.getArg(i)),
-    unifier.apply(rhs.getArg(i))
-  ))
-
-return unifier

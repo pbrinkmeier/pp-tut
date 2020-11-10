@@ -1,8 +1,0 @@
-Prelude> add x y = x + y
-Prelude> :t add
-add :: Num a => a -> a -> a
-Prelude> :t pi
-pi :: Floating a => a
-Prelude> max x y = if x > y then x else y
-Prelude> :t max
-max :: Ord p => p -> p -> p

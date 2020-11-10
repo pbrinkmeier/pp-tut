@@ -1,4 +1,4 @@
 $ ghci
-GHCi, version 8.6.5: http://www.haskell.org/ghc/
+GHCi, version 8.8.4: http://www.haskell.org/ghc/
 Prelude> putStrLn "Hello, World!"
 Hello, World!

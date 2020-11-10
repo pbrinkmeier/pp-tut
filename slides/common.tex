@@ -1,0 +1,38 @@
+\usetheme{metropolis}
+
+\usepackage[ngerman]{babel}
+\usepackage[autostyle=true,german=quotes]{csquotes}
+\usepackage[linewidth=1pt]{mdframed}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{pifont}
+\usepackage{tikz}
+\usetikzlibrary{positioning, calc, arrows, fit, decorations.pathreplacing, shapes, shapes.multipart, snakes}
+\usepackage{verbatim}
+\usepackage{textcomp}
+\usepackage{ulem}
+%\usepackage{pdfpages}
+
+\batchmode
+
+\hypersetup{
+	colorlinks,
+	urlcolor=blue,
+	linkcolor=black % for ToC
+}
+\newenvironment{qaa}[1]{
+	#1
+
+	\begin{mdframed}
+		\small
+}{
+	\end{mdframed}
+}
+
+\newcommand{\true}{\ding{51}}
+\newcommand{\false}{\ding{55}}
+\newcommand{\code}[1]{
+	\begin{mdframed}
+		\verbatiminput{#1}
+	\end{mdframed}
+}

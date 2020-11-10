@@ -1,47 +1,12 @@
 \documentclass{beamer}
-\usetheme{metropolis}
 
-\usepackage[ngerman]{babel}
-\usepackage[autostyle=true,german=quotes]{csquotes}
-\usepackage[linewidth=1pt]{mdframed}
-\usepackage{hyperref}
-\usepackage{makecell}
-\usepackage{pifont}
-\usepackage{tikz}
-\usetikzlibrary{positioning, calc, arrows, fit, decorations.pathreplacing, shapes, shapes.multipart, snakes}
-\usepackage{verbatim}
-\usepackage{textcomp}
-%\usepackage{pdfpages}
-
-\batchmode
-
-\hypersetup{
-	colorlinks,
-	urlcolor=blue,
-	linkcolor=black % for ToC
-}
-\newenvironment{qaa}[1]{
-	#1
-
-	\begin{mdframed}
-		\small
-}{
-	\end{mdframed}
-}
-
-\newcommand{\true}{\ding{51}}
-\newcommand{\false}{\ding{55}}
-\newcommand{\code}[1]{
-	\begin{mdframed}
-		\verbatiminput{#1}
-	\end{mdframed}
-}
+\input{common.tex}
 
 \title{Tutorium 01: Haskell Basics}
 % \subtitle{}
 \author{Paul Brinkmeier}
 \institute{Tutorium Programmierparadigmen am KIT}
-\date{21. Oktober 2019}
+\date{10. November 2020}
 
 \begin{document}
 
@@ -49,30 +14,24 @@
 	\titlepage
 \end{frame}
 
-\section{Heutiges Programm}
-\begin{frame}{Programm}
-	\begin{itemize}
-		\item Haskell installieren
-		\item Wiederholung der Vorlesung
-		\item Aufgaben zu Haskell
-	\end{itemize}
-\end{frame}
-
 \section{Organisatorisches}
 
 \begin{frame}{Organisatorisches}
 	\begin{itemize}
-		\item \texttt{paul.brinkmeier@fsmi.uni-karlsruhe.de}
+		\item \texttt{pp-tut@pbrinkmeier.de}
 		\begin{itemize}
-			\item Feedback
-			\item Fragen zur Orga
+			\item Für Feedback und Fragen
 		\end{itemize}
 		\item \url{https://github.com/pbrinkmeier/pp-tut}
 		\begin{itemize}
 			\item Folien
 			\item Codebeispiele
+                        \item Liste von Klausuraufgaben
 		\end{itemize}
-		\item Bitte Laptop o.Ä. mitbringen
+                \item \sout{Bitte Laptop o.Ä. mitbringen}
+                \begin{itemize}
+                    \item Bis auf weiteres: Onlinetutorium
+                \end{itemize}
 	\end{itemize}
 \end{frame}
 
@@ -81,27 +40,37 @@
 		\item ProPa hat keinen Übungsschein
 		\item $\leadsto$ ÜBs zur eigenen Übung!
 		\item Abgabe per Praktomat
-		\item \url{https://praktomat.cs.kit.edu/pp_2019_WS/tasks}
+		\item \url{https://praktomat.cs.kit.edu/pp_2020_WS/tasks}
 		\item Nicht-Code-Abgaben:
 		\begin{itemize}
-			\item Briefkasten im Infobau-UG
-			\item Oder per Praktomat
-			\item Zur Not per Mail
+                    \item \sout{Briefkasten im Infobau-UG}
+                    \item Per Praktomat
+                    \item \sout{Zur Not} per Mail
 		\end{itemize}
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Klausur}
 	\begin{itemize}
-		\item 24.03.2020, 11:00 bis 13:00
+		\item Termin: ??.??.2020, vermutlich April/Mai
 		\item Papier-Materialien dürfen mitgebracht werden!
 		\item $\leadsto$ Skript, Mitschriebe, \enquote{Formelsammlung}
 	\end{itemize}
 \end{frame}
 
+\section{Heutiges Programm}
+\begin{frame}{Programm}
+	\begin{itemize}
+		\item Haskell installieren
+		\item Wiederholung des Vorlesungs
+		\item Aufgaben zu Haskell
+	\end{itemize}
+\end{frame}
+
+
 \section{Haskell}
 
-\begin{frame}{GHCi}
+\begin{frame}[fragile]{GHCi}
 	\code{code/ghci.output}
 
 	\begin{itemize}
@@ -117,11 +86,11 @@
 \end{frame}
 
 \begin{frame}{Module}
-	\code{demos/Maths.hs}
+        \code{../demos/Maths.hs}
 
 	\begin{itemize}
-		\item Ein Haskell-Programm ist eine Folge von Funktionsdefinitionen
-		\item Funktionen müssen keine Argumente haben
+		\item Ein Haskell-Programm ist eine Folge von Funktionsdefinitionen.
+		\item Funktionen müssen keine Argumente haben.
 	\end{itemize}
 \end{frame}
 
@@ -130,17 +99,18 @@
 
 	\begin{itemize}
 		\item \texttt{ghci} ist ein sog. \enquote{Read-Eval-Print-Loop}
-		\item \texttt{:l} --- Modul aus Datei laden
+                \item \texttt{:l} --- Modul aus Datei laden
+                \item \texttt{:r} --- Modul neu laden
 		\item \texttt{:t} --- Typ eines Audrucks abfragen
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Funktionen}
-	\code{demos/Maths.hs}
+        \code{../demos/Maths.hs}
 
 	\begin{itemize}
-		\item Unterschied zu C-ähnlichen: Keine Klammern/Kommata, \texttt{=}
-		\item Funktionsaufruf: Selbe Syntax
+		\item Unterschied zu C-ähnlichen Sprachen: Keine Klammern/Kommata, \texttt{=}
+                \item Leerzeichen als Syntax für \enquote{Funktionsaufruf}
 	\end{itemize}
 \end{frame}
 
@@ -155,18 +125,18 @@
 		3.1415927 & \texttt{float} & \pause \texttt{Float} \\
 		3.141592653589793 & \texttt{double} & \pause \texttt{Double} \\
 		\texttt{[Tt]rue}, \texttt{[Ff]alse} & \texttt{boolean} & \pause \texttt{Bool} \\
-		$\frac{1}{3}$ & \false & \pause \texttt{Fractional a => a} \\
+		$\frac{1}{3}$ & \false & \pause \texttt{Rational} \\
 	\end{tabular}
 \end{frame}
 
 \begin{frame}{Basistypen}
-	\code{demos/Maths.hs}
+	\code{../demos/Maths.hs}
 
 	\begin{itemize}
 		\item Schreibt ein Modul \texttt{FirstSteps} mit folgenden Funktionen:
 		\begin{itemize}
-			\item \texttt{double x} --- verdoppelt \texttt{x}
-			\item \texttt{dSum x y} --- verdoppelt \texttt{x} und \texttt{y} und summiert die Ergebnisse
+			\item \texttt{double x} --- Verdoppelt \texttt{x}
+			\item \texttt{dSum x y} --- Verdoppelt \texttt{x} und \texttt{y} und summiert die Ergebnisse
 			\item \texttt{area r} --- Fläche eines Kreises mit Radius \texttt{r}
 			\item \texttt{sum3 a b c} --- Summiert \texttt{a}, \texttt{b} und \texttt{c}
 			\item \texttt{sum4 a b c d} --- Summiert \texttt{a}, \texttt{b}, \texttt{c} und \texttt{d}
@@ -179,17 +149,17 @@
 		\item \texttt{sum3}, \texttt{sum4}, \texttt{sumX} zu schreiben ist irgendwie doof
 		\pause
 		\item Lösung des Problems: Listen
-		\item \texttt{[ a ]} ist der Typ einer Liste, deren Elemente von Typ \texttt{a} sind
+		\item \texttt{[a]} ist der Typ einer Liste, deren Elemente von Typ \texttt{a} sind
 		\item $\leadsto$ Listen sind homogen, nur eine Art von Element
 	\end{itemize}
 
-	\code{demos/Lists.hs}
+	\code{../demos/Lists.hs}
 
 	\begin{itemize}
-		\item Ein Ausdruck des Typs \texttt{[ a ]} hat genau einen von zwei Werten:
+		\item Ein Ausdruck des Typs \texttt{[a]} hat genau einen von zwei Werten:
 		\begin{itemize}
 			\item \texttt{[]} --- die leere Liste
-			\item \texttt{(h : t)} --- Erstes El. + Rest, mit \texttt{h :: a} und \texttt{t :: [ a ]}
+			\item \texttt{(h : t)} --- Element + Rest, mit \texttt{h :: a} und \texttt{t :: [a]}
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -199,7 +169,7 @@
 		\item \textbf{Funktionen sind Werte}
 		\item $\leadsto$ Funktionen haben einen Typ
 		\item Allgemeine Form: \texttt{x -> y}
-		\item Beispiel: \texttt{length :: [ a ] -> Int}
+		\item Beispiel: \texttt{length :: [a] -> Int}
 		\begin{itemize}
 			\item Java: \texttt{Function<List<A>, Integer> length;}
 			\item C: \texttt{int (*strlen)(char *str)};
@@ -208,7 +178,7 @@
 \end{frame}
 
 \begin{frame}{Funktionstypen, mehrere Argumente}
-	\code{demos/Maths.hs}
+	\code{../demos/Maths.hs}
 
 	\begin{itemize}
 		\item Funktionen sind vom Typ \texttt{x -> y}
@@ -216,7 +186,7 @@
 		\pause
 		$\leadsto$ \texttt{Num a => a -> a -> a}
 		\item \texttt{->} ist rechtsassoz. \\
-		$\leadsto$ \texttt{a -> a -> a} $\Leftrightarrow$ \texttt{a -> (a -> a)}
+		$\leadsto$ \texttt{a -> a -> a} $\equiv$ \texttt{a -> (a -> a)}
 	\end{itemize}
 \end{frame}
 
@@ -224,30 +194,20 @@
 	\begin{itemize}
 		\item Haskell-Funktionen sind \enquote{ge-Curry-d}
 		\item D.h.: Jede Funktion hat exakt ein Argument
-		\item Funktionen mit (logisch gesehen) mehreren Argumenten geben solange Funktionen zurück, bis sie ausreichend \enquote{versorgt} sind
+		\item Funktionen mit mehreren Argumenten geben solange Funktionen zurück, bis sie ausreichend \enquote{versorgt} sind
 	\end{itemize}
-\end{frame}
 
-\begin{frame}{Typklassen}
-	\code{code/ghci-typeclass.output}
-
-	\begin{itemize}
-		\item Typklassen übernehmen ähnliche Aufgaben wie Generics in Java
-		\item Bspw. enthält \texttt{Ord a} alle Typen \texttt{a}, auf denen eine Ordnung definiert ist
-		\begin{itemize}
-			\item Java: \pause \texttt{Comparable<A>}
-		\end{itemize}
-	\end{itemize}
+        \code{code/curry.txt}
 \end{frame}
 
 \begin{frame}{Fallunterscheidung: if-then-else}
-	\code{demos/MaxIf.hs}
+	\code{../demos/MaxIf.hs}
 
 	\begin{itemize}
 		\item Einfachste Form der Fallunterscheidung
 		\item \texttt{if <Bedingung> then <WertA> else <WertB>}
 		\pause
-		\item Das ist nichts anderes als der ternäre Operator in den C-ähnlichen
+		\item Das ist nichts anderes als der ternäre Operator in C-ähnlichen Sprachen:
 		\begin{itemize}
 			\item \texttt{<Bedingung> ? <WertA> : <WertB>}
 		\end{itemize}
@@ -255,7 +215,7 @@
 \end{frame}
 
 \begin{frame}{Fallunterscheidung: Guard-Notation}
-	\code{demos/MaxGuard.hs}
+	\code{../demos/MaxGuard.hs}
 
 	\begin{itemize}
 		\item \enquote{Guard}-Notation
@@ -267,80 +227,60 @@
 \end{frame}
 
 \begin{frame}{Fallunterscheidung: Pattern Matching}
-	\code{demos/Bool.hs}
+	\code{../demos/Bool.hs}
 
 	\begin{itemize}
 		\item Statt Variablen einfach Werte in den Funktionskopf setzen
 		\item Mehrere Funktionsdefinitionen möglich
 		\item Funktioniert nicht immer (bspw. bei \texttt{max})
-		\item Hier nützlich: \texttt{\textunderscore} ignoriert Argument
+                \item Hier nützlich: \texttt{\textunderscore} \enquote{ignoriert} Argument
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Eingebaute Funktionen}
+\begin{frame}{Cheatsheet: Listen}
 	\begin{itemize}
-		\item Für \texttt{Num a}:
-		\begin{itemize}
-			\item \texttt{(+)}, \texttt{(-)}, \texttt{(*)}, \texttt{(\textasciicircum)}
-		\end{itemize}
-		\item Für \texttt{Integral a}:
-		\begin{itemize}
-			\item \texttt{div}, \texttt{mod}
-		\end{itemize}
-		\item Für \texttt{Floating a}:
-		\begin{itemize}
-			\item \texttt{(/)}
-		\end{itemize}
-		\item Für \texttt{Bool}:
-		\begin{itemize}
-			\item \texttt{(\&\&)}, \texttt{(||)}
-		\end{itemize}
-		\item Für \texttt{Eq a}:
-		\begin{itemize}
-			\item \texttt{(==)}, \texttt{(/=)}
-		\end{itemize}
-		\item Für \texttt{Ord a}:
-		\begin{itemize}
-			\item \texttt{(<)}, \texttt{(<=)}, \texttt{(>)}, \texttt{(>=)}, \texttt{min}, \texttt{max}
-		\end{itemize}
+          \item \texttt{[]}, \texttt{(:)}
+          \item \texttt{(++) :: [a] -> [a] -> [a]}
+          \item \texttt{head :: [a] -> a}
+          \item \texttt{tail :: [a] -> [a]}
+          \item \texttt{null :: [a] -> Bool}
+          \item \texttt{length :: [a] -> Int}
+          \item \texttt{isIn :: [a] -> a -> Bool}
+          \item \texttt{elem :: a -> [a] -> Bool}
+          \item \texttt{minimum, maximum :: Ord a => [a] -> a}
+          \item \texttt{reverse :: [a] -> [a]}
+          \item \texttt{take, drop :: Int -> [a] -> [a]}
+          \item \emph{Endrekursion}, \emph{Akkumulatortechnik}
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Eingebaute Funktionen}
+\begin{frame}{Cheatsheet: Basics}
 	\begin{itemize}
-		\item Für \texttt{[ a ]}:
-		\begin{itemize}
-			\item \texttt{(++) :: [ a ] -> [ a ] -> [ a ]}
-			\item \texttt{(!!) :: [ a ] -> Int -> a}
-			\item \texttt{head, last :: [ a ] -> a}
-			\item \texttt{null :: [ a ] -> Bool}
-			\item \texttt{take, drop :: Int -> [ a ] -> [ a ]}
-			\item \texttt{length :: [ a ] -> Int}
-			\item \texttt{reverse :: [ a ] -> [ a ]}
-			\item \texttt{elem :: a -> [ a ] -> Bool}
-		\end{itemize}
+          \item \texttt{(==) :: Eq a => a -> a -> Bool}
+          \item \texttt{(<), (<=), (>), (>=) :: Ord a => a -> a -> Bool}
+          \item \texttt{min, max :: Ord a => a -> a -> a}
+          \item \texttt{type String = [Char]}
+          \item Syntax:
+          \begin{itemize}
+            \item \emph{\texttt{if ... then ... else}}
+            \item \emph{\texttt{case ... of { ... }}}
+            \item \emph{Guard-Notation}, \emph{Pattern-Matching}
+            \item \emph{Lambda-Notation}
+            \item \emph{\texttt{where}} vs. \emph{\texttt{let}}
+          \end{itemize}
+          \item \emph{Anonyme Funktionen}
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Eingebaute Funktionen: Funktionen höherer Ordnung}
+\begin{frame}{Cheatsheet: Funktionen höherer Ordnung}
 	\begin{itemize}
-		\item Für \texttt{[ a ]}:
-		\begin{itemize}
-			\item \texttt{map :: (a -> b) -> [ a ] -> [ b ]}
-			\item \texttt{filter :: (a -> Bool) -> [ a ] -> [ a ]}
-			\pause
-			\item \texttt{all :: (a -> Bool) -> [ a ] -> Bool}
-			\item \texttt{any :: (a -> Bool) -> [ a ] -> Bool}
-			\pause
-			\item \texttt{foldl :: (b -> a -> b) -> b -> [ a ] -> b}
-		\end{itemize}
-		\pause
-		\item Für Funktionen:
-		\begin{itemize}
-			\item \texttt{(.) :: (a -> b) -> (b -> c) -> (a -> c)}
-			\item \texttt{(\$) :: (a -> b) -> a -> b}
-			\item \texttt{flip :: (a -> b -> c) -> (b -> a -> c)}
-		\end{itemize}
+          \item \emph{Currying}, \emph{Unterversorgung}
+          \item \emph{$\lambda$-Abstraktion}, \emph{gebundene/freie Variablen}
+          \item \texttt{(.), comp :: (b -> c) -> (a -> b) -> a -> c}
+          \item \texttt{iter :: (t -> t) -> Integer -> (t -> t)}
+          \item \texttt{foldr :: (a -> b -> b) -> b -> [a] -> b}
+          \item \texttt{foldl :: (b -> a -> b) -> b -> [a] -> b}
+          \item \texttt{sum, product :: [Int] -> Int} (per Fold implementiert)
 	\end{itemize}
 \end{frame}
 
@@ -353,19 +293,22 @@
 		\item \texttt{fibs n} --- Liste der ersten \texttt{n} Fibonacci-Zahlen
 		\item \texttt{fibsTo n} --- Liste der Fibonacci-Zahlen bis \texttt{n}
 		\item \texttt{productL l} --- Berechnet das Produkt aller Einträge von \texttt{l}
-		\item \texttt{odds} --- (Unendliche) Liste aller ungeraden natürlichen Zahlen
-		\item \texttt{evens} --- (Unendliche) Liste aller geraden natürlichen Zahlen
+                \item \texttt{odds l} --- Ungerade Zahlen in \texttt{l}
+                \item \texttt{evens l} --- Gerade Zahlen in \texttt{l}
 		\item \texttt{squares l} --- Liste der Quadrate aller Einträge von \texttt{l}
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Hangman}
-	\begin{itemize}
-		\item \url{//pbrinkmeier.de/Hangman.hs}
-		\item \texttt{showHangman} --- Zeigt aktuellen Spielstand als \texttt{String}
-		\item \texttt{initHangman} --- Anfangszustand, leere Liste
-		\item \texttt{updateHangman} --- Bildet Usereingabe (als \texttt{String}) und alten Zustand auf neuen Zustand ab
-	\end{itemize}
+\begin{frame}{Digits}
+  Schreibt ein Module \texttt{Digits} mit:
+
+  \begin{itemize}
+    \item \texttt{digits :: Int -> [Int]} --- Liste der Stellen einer positiven Zahl.
+  \end{itemize}
+
+  Bspw.:
+
+  \code{code/digits.txt}
 \end{frame}
 
 \end{document}

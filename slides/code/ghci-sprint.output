@@ -1,5 +1,0 @@
-*Merge> pp3 = primepowers 3
-*Merge> take 10 pp3
-[2,3,4,5,7,8,9,11,13,17]
-*Merge> :sprint pp3
-pp3 = 2 : 3 : 4 : 5 : 7 : 8 : 9 : 11 : 13 : 17 : _

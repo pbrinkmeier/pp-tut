@@ -1,6 +1,6 @@
 .PHONY: clean
 
-%.pdf: %.tex code/*
+%.pdf: %.tex code/* ../demos/*
 	mkdir -p build
 	latexmk -shell-escape -pdf -jobname=build/$(basename $@) $<
 	cp build/$@ $@

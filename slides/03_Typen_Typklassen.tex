@@ -1,0 +1,88 @@
+\documentclass{beamer}
+\usetheme{metropolis}
+
+\input{common.tex}
+
+\title{Tutorium 03: Typen und Typklassen}
+% \subtitle{}
+\author{Paul Brinkmeier}
+\institute{Tutorium Programmierparadigmen am KIT}
+\date{24. November 2020}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\section{Heutiges Programm}
+\begin{frame}{Programm}
+	\begin{itemize}
+                \item Übungsblätter 1 und 2
+		\item Wiederholung der Vorlesung: Typen und Typklassen
+		\item Datentypen selbst definieren
+	\end{itemize}
+\end{frame}
+
+\section{Übungsblatt 1}
+
+\begin{frame}{Aufgaben 2 und 3}
+  Todo
+\end{frame}
+
+\section{Übungsblatt 2}
+
+\begin{frame}
+  Todo
+\end{frame}
+
+\section{Wiederholung: Typen}
+
+\begin{frame}{Cheatsheet: Listenkombinatoren}
+  \begin{itemize}
+    \item \texttt{foldr :: (a -> b -> b) -> b -> [a] -> b}
+    \item \texttt{foldl :: (b -> a -> b) -> b -> [a] -> b}
+    \item \texttt{map :: (a -> b) -> [a] -> [b]}
+    \item \texttt{filter :: (a -> Bool) -> [a] -> [a]}
+    \item \texttt{zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]}
+    \item \texttt{zip :: [a] -> [b] -> [(a, b)]}
+    \item \texttt{and, or :: [Bool] -> Bool}
+  \end{itemize}
+
+  Idee: Statt Rekursion selbst zu formulieren verwenden wir fertige \enquote{Bausteine}, sogenannte \enquote{Kombinatoren}.
+\end{frame}
+
+\begin{frame}{Cheatsheet: Tupel und Konzepte}
+  \begin{itemize}
+    \item \emph{List comprehension}, \emph{Laziness}
+    \item \texttt{[f x | x <- xs, p x]} $\equiv$ \texttt{map f (filter p xs)}\\
+      Bspw.: \texttt{[x * x | x <- [1..]]} $\Rightarrow$ \texttt{[1,4,9,16,25,...]}
+    \item \emph{Tupel}
+    \item \texttt{(,) :: a -> b -> (a, b)} (\enquote{Tupel-Konstruktor})
+    \item \texttt{fst :: (a, b) -> a}
+    \item \texttt{snd :: (a, b) -> b}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Cheatsheet: Typen}
+  \begin{itemize}
+    \item \texttt{Char}, \texttt{Int}, \texttt{Integer}, ...
+    \item \texttt{String}
+    \item \emph{Typvariablen}/\emph{Polymorphe Typen}:
+    \begin{itemize}
+      \item \texttt{(a, b)}: Tupel
+      \item \texttt{[a]}: Listen
+      \item \texttt{a -> b}: Funktionen
+      \item Vgl. Java: \texttt{List<A>}, \texttt{Function<A, B>}
+    \end{itemize}
+    \item \emph{Typsynonyme}: \texttt{type String = [Char]}
+  \end{itemize}
+\end{frame}
+
+\section{Wiederholung: Typklassen}
+
+\section{Typen selbst definieren}
+
+\section{Typklassen definieren und implementieren}
+
+\end{document}

@@ -26,43 +26,23 @@
 
 \section{Übungsblatt 1}
 
-\begin{frame}{Aufgaben 2 und 3}
-  Todo
+\begin{frame}{1.2.\{1,2\} -- Insertionsort}
+  \code{../demos/InsertSort.hs}
+\end{frame}
+
+\begin{frame}{1.2.\{3,4\} -- Mergesort}
+  \code{../demos/MergeSort.hs}
 \end{frame}
 
 \section{Übungsblatt 2}
 
-\begin{frame}
-  Todo
+\begin{frame}{2.1.\{1,2,3\} -- Polynome}
+  \code{../demos/Polynom.hs}
+
+  \texttt{(\$) :: (a -> b) -> a -> b} -- Funktionsanwendung als Operator.
 \end{frame}
 
-\section{Wiederholung: Typen}
-
-\begin{frame}{Cheatsheet: Listenkombinatoren}
-  \begin{itemize}
-    \item \texttt{foldr :: (a -> b -> b) -> b -> [a] -> b}
-    \item \texttt{foldl :: (b -> a -> b) -> b -> [a] -> b}
-    \item \texttt{map :: (a -> b) -> [a] -> [b]}
-    \item \texttt{filter :: (a -> Bool) -> [a] -> [a]}
-    \item \texttt{zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]}
-    \item \texttt{zip :: [a] -> [b] -> [(a, b)]}
-    \item \texttt{and, or :: [Bool] -> Bool}
-  \end{itemize}
-
-  Idee: Statt Rekursion selbst zu formulieren verwenden wir fertige \enquote{Bausteine}, sogenannte \enquote{Kombinatoren}.
-\end{frame}
-
-\begin{frame}{Cheatsheet: Tupel und Konzepte}
-  \begin{itemize}
-    \item \emph{List comprehension}, \emph{Laziness}
-    \item \texttt{[f x | x <- xs, p x]} $\equiv$ \texttt{map f (filter p xs)}\\
-      Bspw.: \texttt{[x * x | x <- [1..]]} $\Rightarrow$ \texttt{[1,4,9,16,25,...]}
-    \item \emph{Tupel}
-    \item \texttt{(,) :: a -> b -> (a, b)} (\enquote{Tupel-Konstruktor})
-    \item \texttt{fst :: (a, b) -> a}
-    \item \texttt{snd :: (a, b) -> b}
-  \end{itemize}
-\end{frame}
+\section{Wiederholung:\\Typen und Typklassen}
 
 \begin{frame}{Cheatsheet: Typen}
   \begin{itemize}
@@ -79,10 +59,149 @@
   \end{itemize}
 \end{frame}
 
-\section{Wiederholung: Typklassen}
+\begin{frame}{Cheatsheet: Algebraische Datentypen in Haskell}
+  \begin{itemize}
+    \item \emph{\texttt{data}-Definitionen}, \emph{Datenkonstruktoren}
+    \item Algebraische Datentypen: \emph{Produkttypen} und \emph{Summentypen}
+    \begin{itemize}
+      \item Produkttypen $\approx$ \texttt{struct}s in C
+      \item Summentypen $\approx$ \texttt{enum}s
+    \end{itemize}
+    \item \emph{Typkonstruktoren}, bspw. \texttt{[] :: * -> *}
+    \item \emph{Polymorphe} Datentypen, bspw. \texttt{[a]}, \texttt{Maybe a}
+    \item Beispiel:
+  \end{itemize}
+  \code{../demos/Shape.hs}
+\end{frame}
+
+\begin{frame}{Cheatsheet: Typklassen 1}
+  \begin{itemize}
+    \item \emph{Klasse}, \emph{Operationen}/\emph{Methoden}, \emph{Instanzen}
+    \item Beispiele:
+    \begin{itemize}
+      \item \texttt{Eq t}, $\{ \texttt{(==)}, \texttt{(/=)} \}$, $\{ \texttt{Eq Bool}, \texttt{Eq Int}, \texttt{Eq Char}, ... \}$
+      \item \texttt{Show t}, $\{ \texttt{show} \}$, $\{ \texttt{Show Bool}, \texttt{Show Int}, \texttt{Show Char}, ... \}$
+    \end{itemize}
+    \item Weitere Typklassen: \texttt{Ord}, \texttt{Num}, \texttt{Enum}
+    \item Deklaration/Implementierung:
+  \end{itemize}
+
+  \code{../demos/Truthy.hs}
+\end{frame}
+
+\begin{frame}{Cheatsheet: Typklassen 2}
+  \begin{itemize}
+    \item \emph{Vererbung}: Typklassen mit Voraussetzungen
+  \end{itemize}
+
+  \code{../demos/Truthy2.hs}
+\end{frame}
 
 \section{Typen selbst definieren}
 
-\section{Typklassen definieren und implementieren}
+\begin{frame}{Typen selbst definieren}
+  Modelliert mit \texttt{data}:
+
+  \vfill
+
+  \begin{itemize}
+    \item Führerschein
+    \item Lambda-Ausdrücke
+    \item Spielkarten
+    \item Monopolykarten
+    \item Boolesche Ausdrücke
+    \item Typen in Haskell
+    \item MiMa-Instruktionen
+  \end{itemize}
+
+  \vfill
+
+  \href{https://codi.teuber.dev/8hJC3QsPR5SU7ACRZlXgGg\#}{Kollaboratives Markdown-Dokument}
+\end{frame}
+
+\begin{frame}{Führerschein}
+  \code{../demos/DriversLicense.hs}
+
+  \vfill
+
+  \begin{itemize}
+    \item Klasse B kann Zusatzziffer B96 haben.
+    \item Für Daten gibt es natürlich auch eigene Typen.
+    \item Beispiel:\\
+          \texttt{DriversLicense [A, B True] "{}Arthur"{} (1, 1, 1970)}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Lambda-Ausdrücke}
+  \code{../demos/LamTerm.hs}
+
+  \vfill
+
+  Beispiele:
+  \begin{itemize}
+    \item $\lam{\bnd{x}}{\bnd{x}}$ entspricht \texttt{Lam "{}x"{} (Var "{}x"{})}
+    \item $\lam{\bnd{x}}{\lam{\bnd{y}}{\app{\bnd{x}}{\bnd{y}}}}$ entspricht\\
+          \texttt{Lam "{}x"{} (Lam "{}y"{} (App (Var "{}x"{}) (Var "{}y"{})))}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Spielkarten}
+  \code{../demos/PlayingCard.hs}
+\end{frame}
+
+\begin{frame}{Monopolykarten}
+  \code{../demos/Monopoly.hs}
+\end{frame}
+
+\begin{frame}{Boolesche Logik}
+  \code{../demos/BoolExpr.hs}
+
+  \vfill
+
+  Beispiele:
+  \begin{itemize}
+    \item $a \wedge b$ entspricht \texttt{BinaryOp (Var "{}a"{}) AND (Var "{}b"{})}
+    \item $a \vee (b \wedge 0)$ entspricht\\
+          \texttt{BinaryOp (Var "{}a"{}) AND (BinaryOp (Var "{}b"{}) OR (Const False))}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{MiMa}
+  \code{../demos/MiMa.hs}
+\end{frame}
+
+\section{Typklassen implementieren}
+
+\begin{frame}{Implementierung von Typklassen}
+  Implementiert:
+
+  \vfill
+
+  \begin{itemize}
+    \item Lambda-Ausdrücke: \texttt{Eq LamTerm}, \texttt{Show LamTerm}
+    \item Monopolykarten: \texttt{Eq MonopolyCard}, \texttt{Show MonopolyCard}
+    \item Boolesche Ausdrücke: \texttt{Show BoolExpr}
+    \item Typen in Haskell: \texttt{Show Type}
+    \item MiMa-Instruktionen: \texttt{Show MiMaInst}
+    \item Spielkarten: \texttt{Eq} und \texttt{Ord} für \texttt{Suit}, \texttt{Rank} und \texttt{PlayingCard}
+    \begin{itemize}
+      \item \texttt{Ord PlayingCard}: Zuerst nach Farbe, dann nach Wert.
+    \end{itemize}
+  \end{itemize}
+
+  \vfill
+  
+  Aufgabe: Spielkarten + eine weitere
+\end{frame}
+
+\begin{frame}{\texttt{Ord PlayingCard} -- Vorlage}
+  \code{../demos/PlayingCard2.hs}
+\end{frame}
+
+\begin{frame}{\texttt{Ord PlayingCard} -- Automatische Instanz durch \texttt{deriving}}
+  \code{../demos/PlayingCard3.hs}
+
+  \texttt{Enum} ermöglicht es, bspw. \texttt{[Hearts .. Spades]} zu schreiben.
+\end{frame}
 
 \end{document}

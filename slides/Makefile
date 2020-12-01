@@ -2,7 +2,7 @@
 
 %.pdf: %.tex code/* ../demos/*
 	mkdir -p build
-	latexmk -shell-escape -pdf -jobname=build/$(basename $@) $<
+	latexmk -f -shell-escape -pdf -jobname=build/$(basename $@) $<
 	cp build/$@ $@
 
 clean:

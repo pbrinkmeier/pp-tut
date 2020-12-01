@@ -3,7 +3,7 @@
 
 \input{common.tex}
 
-\title{Tutorium 04: Entwurf in Haskell}
+\title{Tutorium 04: $\lambda$-Kalkül}
 % \subtitle{}
 \author{Paul Brinkmeier}
 \institute{Tutorium Programmierparadigmen am KIT}
@@ -18,13 +18,13 @@
 \section{Heutiges Programm}
 \begin{frame}{Programm}
 	\begin{itemize}
-		\item Übungsblatt 3
+		\item Übungsblatt 2
 		\item Lambda-Kalkül
                 \item ... und Implementierung in Haskell
 	\end{itemize}
 \end{frame}
 
-\section{Übungsblatt 3}
+\section{Übungsblatt 2}
 
 \begin{frame}{1 --- Listenkombinatoren}
   \code{../demos/Polynom.hs}
@@ -65,8 +65,63 @@
 
 \section{Wiederholung: Algebraische Datentypen}
 
-\begin{frame}{Algebraische Datentypen}
-  TODO
+\begin{frame}{Cheatsheet: Algebraische Datentypen in Haskell}
+  \begin{itemize}
+    \item \emph{\texttt{data}-Definitionen}, \emph{Datenkonstruktoren}
+    \item Algebraische Datentypen: \emph{Produkttypen} und \emph{Summentypen}
+    \begin{itemize}
+      \item Produkttypen $\approx$ \texttt{struct}s in C
+      \item Summentypen $\approx$ \texttt{enum}s
+    \end{itemize}
+    \item \emph{Typkonstruktoren}, bspw. \texttt{[] :: * -> *}
+    \item \emph{Polymorphe} Datentypen, bspw. \texttt{[a]}, \texttt{Maybe a}
+    \item Beispiel:
+  \end{itemize}
+  \code{../demos/Shape.hs}
+\end{frame}
+
+\begin{frame}{Cheatsheet: Typklassen 1}
+  \begin{itemize}
+    \item \emph{Klasse}, \emph{Operationen}/\emph{Methoden}, \emph{Instanzen}
+    \item Beispiele:
+    \begin{itemize}
+      \item \texttt{Eq t}, $\{ \texttt{(==)}, \texttt{(/=)} \}$, $\{ \texttt{Eq Bool}, \texttt{Eq Int}, \texttt{Eq Char}, ... \}$
+      \item \texttt{Show t}, $\{ \texttt{show} \}$, $\{ \texttt{Show Bool}, \texttt{Show Int}, \texttt{Show Char}, ... \}$
+    \end{itemize}
+    \item Weitere Typklassen: \texttt{Ord}, \texttt{Num}, \texttt{Enum}
+    \item Deklaration/Implementierung:
+  \end{itemize}
+
+  \code{../demos/Truthy.hs}
+\end{frame}
+
+\begin{frame}{Cheatsheet: Typklassen 2}
+  \begin{itemize}
+    \item \emph{Vererbung}: Typklassen mit Voraussetzungen
+  \end{itemize}
+
+  \code{../demos/Truthy2.hs}
+\end{frame}
+
+\begin{frame}{Spielkarten}
+  \code{../demos/PlayingCard.hs}
+\end{frame}
+
+\begin{frame}{Monopolykarten}
+  \code{../demos/Monopoly.hs}
+\end{frame}
+
+\begin{frame}{Boolesche Logik}
+  \code{../demos/BoolExpr.hs}
+
+  \vfill
+
+  Beispiele:
+  \begin{itemize}
+    \item $a \wedge b$ entspricht \texttt{BinaryOp (Var "{}a"{}) AND (Var "{}b"{})}
+    \item $a \vee (b \wedge 0)$ entspricht\\
+          \texttt{BinaryOp (Var "{}a"{}) AND (BinaryOp (Var "{}b"{}) OR (Const False))}
+  \end{itemize}
 \end{frame}
 
 \section{$\lambda$-Kalkül}
@@ -119,7 +174,7 @@
 
 	\begin{itemize}
                 \item \href{https://github.com/pbrinkmeier/pp-tut}{github.com/pbrinkmeier/pp-tut}
-		\item Modul \texttt{x} liegt in \texttt{slides/demos/x.hs}
+		\item Modul \texttt{x} liegt in \texttt{demos/x.hs}
 	\end{itemize}
 \end{frame}
 
@@ -141,7 +196,7 @@
 		\hline
 		Freie Variablen & $fv(\lambda{}p.b) = { b }$ & Menge der nicht durch $\lambda$s gebundenen Variablen \\
 		\hline
-		Substitution & $(\lambda{}p.b)\left[b\rightarrow{}c\right]=\lambda{}p.c$ & Ersetzung nicht-freier Variablen \\
+		Substitution & $(\lambda{}p.b)\left[b\rightarrow{}c\right]=\lambda{}p.c$ & Ersetzung freier Variablen \\
 		\hline
 		Redex & $(\lambda{}p.b)$ $t$ & \enquote{Reducible expression} \\
 		\hline
@@ -249,6 +304,49 @@
 	\end{itemize}
 \end{frame}
 
+\begin{frame}{Beispiel: Church-Booleans}
+  \begin{eqnarray*}
+    \ctrue &= \lam{x}{\lam{y}{x}} \\
+    \cfalse &= \lam{x}{\lam{y}{y}} \\
+    \cand &= \lam{a}{\lam{b}{\app{\app{a}{b}}{\cfalse}}} \\
+          &= \lam{a}{\lam{b}{\app{(\app{a}{b})}{\cfalse}}} \\
+  \end{eqnarray*}
+
+  Funktioniert $\cand$? $\leadsto$ Wahrheitstabelle aufstellen:
+
+  \begin{eqnarray*}
+    &\app{\app{\cand}{\ctrue}}{\ctrue} = \app{\app{(\uline{\lam{a}{\lam{b}{\app{\app{a}{b}}{\cfalse}}}})}{\ctrue}}{\ctrue} \\
+    \pause
+    &\Rightarrow_\beta \app{(\lam{b}{\app{\app{a}{b}}{\cfalse}})\left[ a \to \ctrue \right]}{\ctrue} = \app{(\uline{\lam{b}{\app{\app{\ctrue}{b}}{\cfalse}}})}{\ctrue} \\
+    \pause
+    &\Rightarrow_\beta (\app{\app{\ctrue}{b}}{\cfalse}) \left[ b \to \ctrue \right] = \app{\app{(\uline{\lam{x}{\lam{y}{x}}})}{\ctrue}}{\cfalse} \\
+    \pause
+    &\Rightarrow_\beta \app{(\uline{\lam{y}{\ctrue}})}{\ctrue} \Rightarrow_\beta \ctrue \;\; \text{\true}
+  \end{eqnarray*}
+\end{frame}
+
+\begin{frame}{Beispiel: Church-Booleans}
+  \begin{eqnarray*}
+    &\app{\app{\cand}{\cfalse}}{t} = \app{\app{(\uline{\lam{a}{\lam{b}{\app{\app{a}{b}}{\cfalse}}}})}{\cfalse}}{t} \\
+    \pause
+    &\Rightarrow_\beta \app{(\lam{b}{\app{\app{a}{b}}{\cfalse}})\left[ a \to \cfalse \right]}{t} = \app{(\uline{\lam{b}{\app{\app{\cfalse}{b}}{\cfalse}}})}{t} \\
+    \pause
+    &\Rightarrow_\beta (\app{\app{\ctrue}{b}}{\cfalse}) \left[ b \to t \right] = \app{\app{(\uline{\lam{x}{\lam{y}{y}}})}{t}}{\cfalse} \\
+    \pause
+    &\Rightarrow^2 \cfalse
+  \end{eqnarray*}
+
+  \begin{eqnarray*}
+    &\app{\app{\cand}{t}}{\cfalse} = \app{\app{(\uline{\lam{a}{\lam{b}{\app{\app{a}{b}}{\cfalse}}}})}{t}}{\cfalse} \\
+    \pause
+    &\Rightarrow_\beta \app{(\lam{b}{\app{\app{a}{b}}{\cfalse}})\left[ a \to t \right]}{\cfalse} = \app{(\uline{\lam{b}{\app{\app{t}{b}}{\cfalse}}})}{\cfalse} \\
+    \pause
+    &\Rightarrow_\beta (\app{\app{t}{b}}{\cfalse}) \left[ b \to \cfalse \right] = \app{\app{t}{\cfalse}}{\cfalse} \\
+    \pause
+    &\leadsto \cfalse
+  \end{eqnarray*}
+\end{frame}
+
 \begin{frame}{Auswertungsstrategien}
 	\begin{itemize}
 		\item Welcher Redex soll zuerst ausgewertet werden?
@@ -272,7 +370,7 @@
 		      \texttt{normalBeta :: LambdaTerm -> LambdaTerm}
 	        \item Führt einen $\beta$-Reduktionsschritt in Normalreihenfolge (linkester Redex) aus
 		\item Wenn kein Redex vorkommt, wird derselbe Term zurückgegeben
-		\item Bindet \texttt{LambdaShow} ein für \texttt{instance Show LambdaTerm}
+		\item Bindet \texttt{LambdaShow} ein für \texttt{Show LambdaTerm}
 	\end{itemize}
 \end{frame}
 
@@ -297,17 +395,29 @@
 \begin{frame}{Church-Zahlen}
 	\begin{itemize}
 		\item \enquote{Zahlen} im $\lambda$-Kalkül werden durch Funktionen in Normalform dargestellt
-		\item $n$ $f$ $x =$ $f$ $n$-mal angewendet auf $x$
-		\item Bspw. $(3$ $g$ $y) = g$ $(g $ $(g$ $y)) = g^3$ $y$\\
-		      Mit $3 = \lambda{}f.\lambda{}x.f$ $(f $ $(f$ $x))$
+		\item $c_n$ $f$ $x =$ $f$ $n$-mal angewendet auf $x$
+		\item Bspw. $(c_3$ $g$ $y) = g$ $(g $ $(g$ $y)) = g^3$ $y$\\
+		      Mit $c_3 = \lambda{}f.\lambda{}x.f$ $(f $ $(f$ $x))$
 		\item Schreibt eine $\lambda$-Funktion $succ$, die eine Church-Zahl nimmt und zu deren Nachfolger auswertet
 		\pause
 		\item Übertragt die Funktion in euren Haskell-Code und wertet $succ$ $c_0$ durch wiederholtes Anwenden von \texttt{normalBeta} aus
-		\item Vergleicht euer Ergebnis mit dem von Wavelength
+		\item Vergleicht euer Ergebnis mit dem von Wavelength:
 		\begin{itemize}
-			\item \url{//pp.ipd.kit.edu/lehre/misc/lambda-ide/Wavelength.html}
+                  \item \href{https://pp.ipd.kit.edu/lehre/misc/lambda-ide/Wavelength.html}{pp.ipd.kit.edu/lehre/misc/lambda-ide/Wavelength.html}
 		\end{itemize}
 	\end{itemize}
+\end{frame}
+
+\begin{frame}{Cheatsheet: Lambda-Kalkül/Basics}
+  \begin{itemize}
+    \item Terme $t$: Variable ($x$), Funktion ($\lambda x . t$), Anwendung ($t \; t$)
+    \item \emph{$\alpha$-Äquivalenz}: Gleiche Struktur
+    \item \emph{$\eta$-Äquivalenz}: Unterversorgung
+    \item \emph{Freie Variablen}, \emph{Substitution}, \emph{RedEx}
+    \item \emph{$\beta$-Reduktion}: \\
+          $(\lambda{}p.b)$ $t \Rightarrow b\left[p\rightarrow{}t\right]$
+    \item \emph{Church-Booleans}, \emph{Church-Zahlen}, \emph{Y-Kombinator}
+  \end{itemize}
 \end{frame}
 
 \end{document}

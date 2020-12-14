@@ -43,7 +43,23 @@
 
 \newcommand{\app}[2]{#1\;#2}
 \newcommand{\lam}[2]{\lambda #1.\, #2}
+\newcommand{\appp}[3]{\app{\app{#1}{#2}}{#3}}
 
 \newcommand{\ctrue}{c_\text{true}}
 \newcommand{\cfalse}{c_\text{false}}
 \newcommand{\cand}{\text{AND}}
+
+\newcommand{\csucc}{\text{succ}}
+\newcommand{\cn}[1]{c_{#1}}
+
+\newcommand{\cpair}{\text{pair}}
+\newcommand{\cfst}{\text{fst}}
+\newcommand{\csnd}{\text{snd}}
+\newcommand{\ccurry}{\text{curry}}
+\newcommand{\cuncurry}{\text{uncurry}}
+
+\newcommand{\cnil}{\text{nil}}
+\newcommand{\ccons}{\text{cons}}
+\newcommand{\chead}{\text{head}}
+\newcommand{\ctail}{\text{tail}}
+\newcommand{\creplicate}{\text{replicate}}

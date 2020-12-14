@@ -1,50 +1,12 @@
 \documentclass{beamer}
-\usetheme{metropolis}
 
-\usepackage[ngerman]{babel}
-\usepackage[autostyle=true,german=quotes]{csquotes}
-\usepackage[linewidth=1pt]{mdframed}
-\usepackage{hyperref}
-\usepackage{makecell}
-\usepackage{pifont}
-\usepackage{tikz}
-\usetikzlibrary{positioning, calc, arrows, fit, decorations.pathreplacing, shapes, shapes.multipart, snakes}
-\usepackage{verbatim}
-\usepackage{tabularx}
-\usepackage{textcomp}
-\usepackage{centernot}
-\usepackage{amsmath}
-%\usepackage{pdfpages}
-
-\batchmode
-
-\hypersetup{
-	colorlinks,
-	urlcolor=blue,
-	linkcolor=black % for ToC
-}
-\newenvironment{qaa}[1]{
-	#1
-
-	\begin{mdframed}
-		\small
-}{
-	\end{mdframed}
-}
-
-\newcommand{\true}{\ding{51}}
-\newcommand{\false}{\ding{55}}
-\newcommand{\code}[1]{
-	\begin{mdframed}
-		\verbatiminput{#1}
-	\end{mdframed}
-}
+\input{common.tex}
 
 \title{Tutorium 05: $\lambda$-Kalkül}
 % \subtitle{}
 \author{Paul Brinkmeier}
 \institute{Tutorium Programmierparadigmen am KIT}
-\date{19. November 2019}
+\date{8. Dezember 2020}
 
 \begin{document}
 
@@ -55,17 +17,35 @@
 \section{Heutiges Programm}
 \begin{frame}{Programm}
 	\begin{itemize}
-		\item Übungsblatt 4
-		\item $\lambda$-Kalkül: Basics + Church-Zahlen
-		\pause
-		\item $\lambda$-Kalkül in Haskell
+		\item Übungsblatt 3
+		\item $\lambda$-Kalkül: Wiederholung der Basics
+                \item $\lambda$-Kalkül: Auswertungsstrategien, Church-Zahlen, SKI
 	\end{itemize}
 \end{frame}
 
-\section{Übungsblatt 4}
+\section{Übungsblatt 3}
+
+\begin{frame}{1 --- Typen und Typklassen in Haskell}
+  \begin{figure}
+    \texttt{fun7 x = \emph{if} show x /= [] \emph{then} x \emph{else} error}
+  \end{figure}
+
+  \vfill
+
+  Ansatz?
+
+  \pause
+
+  \begin{itemize}
+    \item \texttt{error :: String -> a}
+    \item Wegen \texttt{\emph{if}}: Auch \texttt{x :: String -> a}
+    \item Wegen \texttt{show x}: Constraint \texttt{Show (String -> a)}
+    \item Also: \texttt{fun7 :: Show (String -> a) => (String -> a) -> String -> a}
+  \end{itemize}
+\end{frame}
 
 \begin{frame}{2.1, 2.3 --- AST: Datenstruktur}
-	\code{demos/AstType.hs}
+	\code{../demos/AstType.hs}
 
 	\begin{itemize}
 		\item \texttt{t} ist Typvariable, um bspw. \texttt{Int}s als Namen zuzulassen
@@ -74,283 +54,64 @@
 \end{frame}
 
 \begin{frame}{2.2 --- AST: Auswertung}
-	\code{demos/AstEval.hs}
+	\code{../demos/AstEval.hs}
+
+        \begin{itemize}
+          \item Zum Auswerten der Summe müssen erstmal die Summanden bekannt sein $\leadsto$ rekursiv \texttt{eval} aufrufen
+        \end{itemize}
 \end{frame}
 
 \begin{frame}{2.3 --- AST: Boolsche Ausdrücke}
-	\code{demos/AstEval2.hs}
+	\code{../demos/AstEval2.hs}
 
 	\begin{itemize}
 		\item Aufgabe sorgfältig lesen, nur 0 ist \enquote{falsey} in C
-		\item $\leadsto$ kann einem in der Klausur in den Arsch beißen
+                \item Alternative Lösung: \texttt{bool2int}/\texttt{int2boot} implementieren
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{2.4 --- AST: \texttt{Show}}
-	\code{demos/AstShow.hs}
+	\code{../demos/AstShow.hs}
 
 	\begin{itemize}
-		\item \texttt{Show t => Show (Exp t)} $\Leftrightarrow$ \enquote{Wenn man \texttt{t}s anzeigen kann, kann man auch \texttt{Exp t}s anzeigen}
+		\item \texttt{Show t => Show (Exp t)}: \enquote{Wenn man ein \texttt{t} anzeigen kann, kann man auch eine \texttt{Exp t} anzeigen}
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{3.1 --- \texttt{ropeLength}}
-	\code{demos/RopeLength.hs}
+	\code{../demos/RopeLength.hs}
 \end{frame}
 
 \begin{frame}{3.2 --- \texttt{ropeConcat}}
-	\code{demos/RopeConcat.hs}
+	\code{../demos/RopeConcat.hs}
 \end{frame}
 
 \begin{frame}{3.3 --- \texttt{ropeSplitAt}}
-	\code{demos/RopeSplitAt.hs}
+	\code{../demos/RopeSplitAt.hs}
 \end{frame}
 
 \begin{frame}{3.4 --- \texttt{ropeInsert}}
-	\code{demos/RopeInsert.hs}
+	\code{../demos/RopeInsert.hs}
 \end{frame}
 
 \begin{frame}{3.5 --- \texttt{ropeDelete}}
-	\code{demos/RopeDelete.hs}
+	\code{../demos/RopeDelete.hs}
 \end{frame}
 
 \section{Wiederholung}
 
-\begin{frame}{Algebraische Datentypen}
-	\code{demos/DataExamples.hs}
-
-	\begin{itemize}
-		\item Keyword \text{data} definiert \emph{neuen} Typ
-		\item \enquote{\texttt{enum} auf Meth}
-	\end{itemize}
+\begin{frame}{Cheatsheet: Lambda-Kalkül/Basics}
+  \begin{itemize}
+    \item Terme $t$: Variable ($x$), Funktion ($\lambda x . t$), Anwendung ($t \; t$)
+    \item \emph{$\alpha$-Äquivalenz}: Gleiche Struktur
+    \item \emph{$\eta$-Äquivalenz}: Unterversorgung
+    \item \emph{Freie Variablen}, \emph{Substitution}, \emph{RedEx}
+    \item \emph{$\beta$-Reduktion}: \\
+          $(\lambda{}p.b)$ $t \Rightarrow b\left[p\rightarrow{}t\right]$
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{Typklassen}
-	\code{demos/TypeClassExamples.hs}
-
-	\begin{itemize}
-		\item Typklassen stellen globale Operationen für Typen bereit
-		\item Bspw. \texttt{Eq} und \texttt{Ord} für Vergleiche, \texttt{Enum} für Aufzählbarkeit
-	\end{itemize}
-\end{frame}
-
-\section{$\lambda$-Kalkül}
-
-\begin{frame}{$\lambda$-Kalkül}
-	\begin{itemize}
-		\item Funktionales Gegenstück zur Turingmaschine
-		\item Entsprechend theoretisch
-		\item Wurde u.a. genutzt um Unlösbarkeit des Halteproblems zu zeigen
-		\item Gibt saftig Punkte in der Klausur
-		\begin{itemize}
-			\item 13P. im 19SS
-			\item 10P. (+15P.) im 18WS
-			\item 20P. (+15P.) im 18SS
-		\end{itemize}
-		\item Nicht kompliziert aber \enquote{schwierig} (wie bspw. Go oder Schach)
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{$\lambda$-Terme}
-	Ein Term im $\lambda$-Kalkül hat eine der drei folgenden Formen:
-
-	\vspace{0.5cm}
-
-	\begin{tabularx}{\textwidth}{ X | X | X }
-		\textbf{Notation} & \textbf{Besteht aus}                      & \textbf{Bezeichnung} \\
-		\hline
-		$x$               & $x$ : Variablenname                       & Variable             \\
-		\hline
-		$\lambda{}p.b$    &
-			\begin{tabular}[t]{@{}c@{}}$p$ : Variablenname\\$b$ : $\lambda$-Term\end{tabular}
-									      & Abstraktion          \\
-		\hline
-		$f$ $a$           & $f$, $a$ : $\lambda$-Terme                & Funktionsanwendung   \\
-	\end{tabularx}
-
-	\vspace{0.5cm}
-
-	\begin{itemize}
-		\item \enquote{$\lambda$-Term}: rekursive Datenstruktur
-		\item Semantik definieren wir später
-		\pause
-		\item Jetzt: Ergänzt das Modul \texttt{Lambda} um die fehlenden Typen
-		\begin{itemize}
-			\item +Fragen zur ÜB-Korrektur
-		\end{itemize}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{$\lambda$-Terme in Haskell}
-	\code{demos/Lambda.hs}
-
-	\begin{itemize}
-		\item \url{//github.com/pbrinkmeier/pp-tut}
-		\item Modul \texttt{x} liegt in \texttt{slides/demos/x.hs}
-	\end{itemize}
-\end{frame}
-
-\newcommand{\aeq}{\stackrel{\alpha}{=}}
-\newcommand{\naeq}{\stackrel{\alpha}{\neq}}
-\newcommand{\eeq}{\stackrel{\eta}{=}}
-
-\newcolumntype{s}{>{\hsize=.8\hsize}X}
-
-\begin{frame}[label=lambdaoverview]{Begriffe im $\lambda$-Kalkül}
-	\fontsize{9pt}{13}\selectfont
-
-	\begin{tabularx}{\textwidth}{ s | X | X }
-		\textbf{Begriff} & \textbf{Formel} & \textbf{Bedeutung} \\
-		\hline
-		$\alpha$-Äquivalenz & $t_1 \aeq t_2$ & $t_1$, $t_2$ sind gleicher Struktur \\
-		\hline
-		$\eta$-Äquivalenz & $\lambda{}x.f$ $x \eeq f$ & \enquote{Unterversorgung} \\
-		\hline
-		Freie Variablen & $fv(\lambda{}p.b) = { b }$ & Menge der nicht durch $\lambda$s gebundenen Variablen \\
-		\hline
-		Substitution & $(\lambda{}p.b)\left[b\rightarrow{}c\right]=\lambda{}p.c$ & Ersetzung nicht-freier Variablen \\
-		\hline
-		Redex & $(\lambda{}p.b)$ $t$ & \enquote{Reducible expression} \\
-		\hline
-		$\beta$-Reduktion & $(\lambda{}p.b)$ $t \Rightarrow b\left[p\rightarrow{}t\right]$ & \enquote{Funktionsanwendung} \\
-	\end{tabularx}
-\end{frame}
-
-\subsection{Substitution, Freie Variablen}
-
-\begin{frame}{Freie Variablen}
-	\begin{itemize}
-		\item $fv(t)$ bezeichnet die frei vorkommenden Variablen im Term $t$
-		\item Frei vorkommend $\approx$ nicht durch ein $\lambda$ gebunden
-		\begin{itemize}
-			\item $fv(x) = \{x\}$, wenn $x$ Variable
-			\item $fv(f$ $x) = fv(f) \cup fv(x)$
-			\item $fv(\lambda{}p.b) = fv(b) \setminus \{p\}$
-		\end{itemize}
-		\item Beispiele:
-		\begin{itemize}
-			\item $fv(\lambda{}x.x) = \emptyset$
-			\item $fv(\lambda{}x.y) = \{y\}$
-		\end{itemize}
-		\pause
-		\item Implementiert \texttt{fv :: LambdaTerm -> Set String}
-		\begin{itemize}
-			\item Benutzt \texttt{Set}, \texttt{union}, \texttt{delete} und \texttt{fromList} aus \texttt{Data.Set}
-		\end{itemize}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Substitution}
-	\begin{itemize}
-		\item Substitution ersetzt alle \emph{freien} Variablen in einem Term
-		\item $t\left[a \to b\right]$ --- Ersetze $a$ durch $b$ in $t$
-		\item Beispiele:
-		\begin{itemize}
-			\item $a\left[a \to b\right] = b$
-			\item $a\left[b \to c\right] = a$
-			\item $(f$ $x)\left[f \to g\right]\left[x \to y\right] = g$ $y$
-			\pause
-			\item $(\lambda{}x.f$ $x)\left[x \to y\right] = \lambda{}x.f$ $x$ ($x$ ist nicht frei)
-			\item $(\lambda{}x.f$ $x)\left[f \to g\right] = \lambda{}x.g$ $x$ ($f$ ist frei)
-		\end{itemize}
-		\pause
-		\item Implementiert\\
-		      \texttt{substitute :: (String, Term) -> Term -> Term}
-		\begin{itemize}
-			\item \texttt{type Term = LambdaTerm}
-			\item \texttt{fv} braucht ihr dafür nicht
-		\end{itemize}
-	\end{itemize}
-\end{frame}
-
-\subsection{Äquivalenz}
-
-\begin{frame}{$\alpha$-Äquivalenz}
-	\begin{itemize}
-		\item $t_1 \aeq t_2$ --- Strukturelle Äquivalenz der Terme $t_1$ und $t_2$
-		\item Umformung von $t_1$ in $t_2$ allein durch Substitution der (gebundenen) Variablen möglich
-		\pause
-		\item Bspw.:
-		\begin{itemize}
-			\item $x \naeq y$, da $x$ und $y$ frei sind
-			\item $\lambda{}x.x \aeq \lambda{}y.y$, durch Umbenennen von $x$ zu $y$
-			\item $f$ $(\lambda{}x.y) \aeq f$ $(\lambda{}p.y)$
-			\item $\lambda{}x.y \naeq \lambda{}x.z$
-		\end{itemize}
-		\pause
-		\item Aufgabe: Implementiert \texttt{instance Eq Term} als $\alpha$-Äquivalenz
-		\begin{itemize}
-			\item Benutzt \texttt{substitute}!
-		\end{itemize}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{$\eta$-Äquivalenz}
-	\begin{itemize}
-		\item $\lambda{}x.f$ $x \eeq f$, wenn $x \notin fv(f)$
-		\item Wie bei Haskell:\\
-	              \texttt{all list = foldl (\&\&) True list} $\Leftrightarrow$\\
-		      \texttt{all = \textbackslash{}list -> foldl (\&\&) True list} $\Leftrightarrow$\\
-		      \texttt{all = foldl (\&\&) True}
-		\item Also:
-		\begin{itemize}
-			\item $\eta$-Äquivalenz: eher Umformungsschritt als Gleichheitskriterium
-			\item Formelle Definition von Unterversorgung
-		\end{itemize}
-	\end{itemize}
-\end{frame}
-
-\subsection{Redex, $\beta$-Reduktion}
-
-\begin{frame}{$\beta$-Reduktion}
-	\begin{itemize}
-		\item Bisher: $\lambda$-Terme als (seltsame) Datenstruktur\\
-		      Jetzt: Ausführungssemantik
-		\pause
-		\item RedEx: \enquote{Reducible expression} $\Leftrightarrow$\\
-		      Funktionsanwendung ($f$ $a$), mit $f = \lambda{}p.b$
-	      \item $(\lambda{}p.b)$ $a\pause \implies b\left[p \to a\right]$
-		\pause
-		\item \enquote{Ausführung} (besser: Auswertung) von $\lambda$-Termen: Anwenden der $\beta$-Reduktion, bis Term \enquote{konvergiert}
-		\item Term konvergiert $\approx$ Normalform $\approx$ enthält keinen Redex mehr
-		\begin{itemize}
-			\item Notation: $t \centernot\implies$
-		\end{itemize}
-		\pause
-		\item $id$ $a = (\lambda{}x.x)$ $a \implies x\left[x \to a\right] = a \centernot\implies$
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Auswertungsstrategien}
-	\begin{itemize}
-		\item Welcher Redex soll zuerst ausgewertet werden?
-		\item $\leadsto$ verschiedene Auswertungsstrategien
-	\end{itemize}
-	\pause
-	\vspace{1cm}
-	\begin{itemize}
-		\item \textbf{Volle $\beta$-Reduktion} --- Beliebiger Redex
-		\item \textbf{Normalreihenfolge} --- \enquote{Linkester} Redex
-		\pause
-		\item \textbf{Call-by-Name} --- \emph{Nur äußerster} \enquote{linkester Redex}
-		\item \textbf{Call-by-Value} --- \enquote{Linkester Redex}, der eine Normalform als Argument hat
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Normalreihenfolge}
-	\code{demos/LambdaN.hs}
-	\begin{itemize}
-		\item Implementiert\\
-		      \texttt{normalBeta :: LambdaTerm -> LambdaTerm}
-	        \item Führt einen $\beta$-Reduktionsschritt in Normalreihenfolge (linkester Redex) aus
-		\item Wenn kein Redex vorkommt, wird derselbe Term zurückgegeben
-		\item Bindet \texttt{LambdaShow} ein für \texttt{instance Show LambdaTerm}
-	\end{itemize}
-\end{frame}
-
-\againframe{lambdaoverview}
-
-\section{Church-Zahlen im $\lambda$-Kalkül}
+\section{Church-Zahlen}
 
 \begin{frame}{Peano-Axiome}
 	\begin{eqnarray*}
@@ -371,16 +132,222 @@
 \begin{frame}{Church-Zahlen}
 	\begin{itemize}
 		\item \enquote{Zahlen} im $\lambda$-Kalkül werden durch Funktionen in Normalform dargestellt
-		\item $n$ $f$ $x =$ $f$ $n$-mal angewendet auf $x$
-		\item Bspw. $(3$ $g$ $y) = g$ $(g $ $(g$ $y)) = g^3$ $y$\\
-		      Mit $3 = \lambda{}f.\lambda{}x.f$ $(f $ $(f$ $x))$
+		\item $c_n$ $f$ $x =$ $f$ $n$-mal angewendet auf $x$
+		\item Bspw. $(c_3$ $g$ $y) = g$ $(g $ $(g$ $y)) = g^3$ $y$\\
+		      Mit $c_3 = \lambda{}f.\lambda{}x.f$ $(f $ $(f$ $x))$
 		\item Schreibt eine $\lambda$-Funktion $succ$, die eine Church-Zahl nimmt und zu deren Nachfolger auswertet
+              \end{itemize}
+              \pause
+
+              \begin{equation*}
+                \csucc = \lam{n}{\lam{s}{\lam{z}{
+                  \app{s}{(
+                    \app{n}{\app{s}{z}}
+                  )}
+                }}}
+              \end{equation*}
+\end{frame}
+
+\section{Auswertungsstrategien}
+
+\begin{frame}{Auswertungsstrategien}
+        \begin{equation*}
+          \overbrace{\app{
+              \uline{\csucc}
+            }{
+              \overbrace{(\app{\uline{\csucc}}{\cn{0}})}^{\text{Redex 2}}
+            }}^{\text{Redex 1}}
+        \end{equation*}
+
+        mit
+
+        \begin{eqnarray*}
+          \cn{0} =& \lam{s}{\lam{z}{z}} \\
+          \csucc =& \lam{n}{\lam{s}{\lam{z}{\app{s}{(\app{\app{n}{s}}{z})}}}}
+        \end{eqnarray*}
+
+	\begin{itemize}
+		\item Welcher Redex soll zuerst ausgewertet werden?
+		\item $\leadsto$ verschiedene Auswertungsstrategien
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Normalreihenfolge}
+        \begin{eqnarray*}
+          &
+          \app{
+            \uline{\csucc}
+          }{
+            (\app{\uline{\csucc}}{\cn{0}})
+          } \\
+          \Rightarrow_\beta&
+          \lam{s}{\lam{z}{\app{s}{(\app{\app{(\app{\uline{\csucc}}{\cn{0}})}{s}}{z})}}} \\
+          \Rightarrow_\beta&
+          \lam{s}{\lam{z}{
+            \app{s}{
+              (\app{\app{\uline{(\lam{s}{\lam{z}{
+                \app{s}{(\app{\app{\uline{\cn{0}}}{s}}{z})}
+              }})}}{s}}{z})
+            }
+          }} \\
+          \Rightarrow_\beta^2&
+          \lam{s}{\lam{z}{
+            \app{s}{(\app{s}{(\app{\app{\uline{\cn{0}}}{s}}{z})})}
+          }} \\
+          \Rightarrow_\beta^2&
+          \lam{s}{\lam{z}{
+            \app{s}{(\app{s}{z})}
+          }} \centernot\implies
+        \end{eqnarray*}
+
+        \vfill
+
+        Normalreihenfolge: Linkester Redex zuerst.
+\end{frame}
+
+\begin{frame}{Call-by-Name}
+        \begin{eqnarray*}
+          &
+          \app{
+            \uline{\csucc}
+          }{
+            (\app{\uline{\csucc}}{\cn{0}})
+          } \\
+          \Rightarrow_\beta&
+          \lam{s}{\lam{z}{\app{s}{(\app{\app{(\app{\uline{\csucc}}{\cn{0}})}{s}}{z})}}} \centernot\implies_{\text{CbN}}
+        \end{eqnarray*}
+
+        \vfill
+
+        Call-by-Name: Linkester Redex zuerst, aber:
+
+        \begin{itemize}
+          \item Funktionsinhalte werden nicht weiter reduziert
+          \item $\leadsto$ Betrachte nur Redexe, die nicht von einem $\lambda$ umgeben sind
+          \item So funktioniert auch Laziness in Haskell (mit Auflagen)
+        \end{itemize}
+\end{frame}
+
+\begin{frame}{Call-by-Value}
+        \begin{eqnarray*}
+          &
+          \app{
+            \uline{\csucc}
+          }{
+            (\app{\uline{\csucc}}{\cn{0}})
+          } \\
+          \Rightarrow_\beta&
+          \app{
+            \uline{\csucc}
+          }{
+            (\lam{s}{\lam{z}{
+              \app{s}{
+                (\app{\app{\uline{\cn{0}}}{s}}{z})
+              }
+            }})
+          } \\
+          \Rightarrow_\beta&
+          \lam{s}{\lam{z}{
+          \app{\app{
+            \uline{(\lam{s}{\lam{z}{
+              \app{s}{
+                (\app{\app{\uline{\cn{0}}}{s}}{z})
+              }
+            }})}
+          }{s}}{z}
+          }} \centernot\implies_\text{CbV}
+        \end{eqnarray*}
+        \vfill
+
+        Call-by-Name: Linkester Redex zuerst, aber:
+
+        \begin{itemize}
+          \item Funktionsinhalte werden nicht weiter reduziert
+          \item $\leadsto$ Betrachte nur Redexe, die nicht von einem $\lambda$ umgeben sind
+          \item Berechne Argumente vor dem Einsetzen
+          \item $\leadsto$ Betrachte nur Redexe, deren Argument \emph{unter CbV} nicht weiter reduziert werden muss
+        \end{itemize}
+\end{frame}
+
+\begin{frame}{Cheatsheet: Lambda-Kalkül/Fortgeschritten}
+  \begin{itemize}
+    \item Auswertungsstrategien (von lässig nach streng):
+    \begin{itemize}
+      \item \emph{Volle $\beta$-Reduktion}
+      \item \emph{Normalreihenfolge}
+      \item \emph{Call-by-Name}
+      \item \emph{Call-by-Value}
+    \end{itemize}
+    \item Datenstrukturen:
+    \begin{itemize}
+      \item \emph{Church-Booleans}
+      \item \emph{Church-Zahlen}
+      \item \emph{Church-Listen}
+    \end{itemize}
+    \item Rekursion durch \emph{Y-Kombinator}
+  \end{itemize}
+\end{frame}
+
+\section{Klausuraufgaben zum $\lambda$-Kalkül}
+
+\begin{frame}{19SS A4 --- SKI-Kalkül (13P.)}
+	\begin{eqnarray*}
+          S =& \lam{x}{\lam{y}{\lam{z}{\appp{x}{z}{(\app{y}{z})}}}} \\
+		K =& \lam{x}{\lam{y}{x}} \\
+		I =& \lam{x}{x}
+	\end{eqnarray*}
+
+	\begin{itemize}
+		\item SKI-Kalkül kann alles, was $\lambda$-Kalkül auch kann, allein mit den Kombinatoren $S$, $K$ und $I$
+		\item Definiere $U = \lam{x}{\appp{x}{S}{K}}$
+		\item Aufgabe: Beweise, dass man $S$, $K$ und $I$ durch $U$ darstellen kann:
 		\pause
-		\item Übertragt die Funktion in euren Haskell-Code und wertet $succ$ $c_0$ durch wiederholtes Anwenden von \texttt{normalBeta} aus
-		\item Vergleicht euer Ergebnis mit dem von Wavelength
 		\begin{itemize}
-			\item \url{//pp.ipd.kit.edu/lehre/misc/lambda-ide/Wavelength.html}
+			\item $\appp{U}{U}{x} \stackrel{?}{\implies} x$
+                        \item $\app{U}{(\app{U}{(\app{U}{U})})} = \app{U}{(\app{U}{I})} \stackrel{?}{\implies} K$
+                        \item $\app{U}{(\app{U}{(\app{U}{(\app{U}{U})})})} = \app{U}{K} \stackrel{?}{\implies} S$
 		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{18SS A4 --- Currying im $\lambda$-Kalkül (13P.)}
+	\begin{eqnarray*}
+		\cpair =& \lam{a}{\lam{b}{\lam{f}{\appp{f}{a}{b}}}} \\
+                \cfst  =& \lam{p}{\app{p}{(\lam{x}{\lam{y}{x}})}} \\
+                \csnd  =& \lam{p}{\app{p}{(\lam{x}{\lam{y}{y}})}} \\
+                \app{\cfst}{(\appp{\cpair}{a}{b})} =& a \\
+                \app{\csnd}{(\appp{\cpair}{a}{b})} =& b \\
+	\end{eqnarray*}
+
+	\begin{itemize}
+		\item Schreibe $\ccurry$ und $\cuncurry$, sodass:
+		\begin{itemize}
+                  \item $\appp{(\app{\ccurry}{f})}{a}{b} = \appp{f}{(\appp{\cpair}{a}{b})}$
+                  \item $\app{(\app{\cuncurry}{g})}{(\appp{\cpair}{a}{b})} = \appp{g}{a}{b}$
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{18WS A5 --- Listen im $\lambda$-Kalkül (10P.)}
+	\begin{eqnarray*}
+		\cnil  =& \lam{n}{\lam{c}{n}} \\
+                \ccons =& \lam{x}{\lam{xs}{\lam{n}{\lam{c}{(\appp{c}{x}{xs})}}}}
+	\end{eqnarray*}
+
+	\begin{itemize}
+		\item Schreibe $head$ und $tail$, sodass:
+		\begin{itemize}
+                  \item $\app{\chead}{(\appp{\ccons}{A}{B})} \stackrel{*}{\implies} A$
+                  \item $\app{\ctail}{(\appp{\ccons}{A}{B})} \stackrel{*}{\implies} B$
+		\end{itemize}
+		\pause
+		\item Schreibe $\creplicate$, sodass:
+		\begin{itemize}
+                  \item $\appp{\creplicate}{\cn{n}}{A} = \underbrace{\appp{\ccons}{A}{(\appp{\ccons}{A}{... (\appp{\ccons}{A}{\cnil})})}}_\text{$n$ mal}$
+		\end{itemize}
+              \item Erinnerung: $\appp{\cn{n}}{f}{x} = \underbrace{\app{f}{(\app{f}{... (\app{f}{x})})}}_\text{$n$ mal}$
+		\pause
+              \item Werte aus: $\appp{\creplicate}{\cn{3}}{A} \stackrel{*}{\implies} ?$
 	\end{itemize}
 \end{frame}
 

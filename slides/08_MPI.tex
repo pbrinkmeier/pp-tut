@@ -1,0 +1,488 @@
+\documentclass{beamer}
+\usetheme{metropolis}
+
+\usepackage[ngerman]{babel}
+\usepackage[autostyle=true,german=quotes]{csquotes}
+\usepackage[linewidth=1pt]{mdframed}
+\usepackage{hyperref}
+\usepackage{makecell}
+\usepackage{pifont}
+\usepackage{tikz}
+\usetikzlibrary{positioning, calc, arrows, fit, decorations.pathreplacing, shapes, shapes.multipart, snakes}
+\usepackage{verbatim}
+\usepackage{tabularx}
+\usepackage{textcomp}
+\usepackage{centernot}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{underscore}
+%\usepackage{pdfpages}
+
+\batchmode
+
+\hypersetup{
+	colorlinks,
+	urlcolor=blue,
+	linkcolor=black % for ToC
+}
+\newenvironment{qaa}[1]{
+	#1
+
+	\begin{mdframed}
+		\small
+}{
+	\end{mdframed}
+}
+
+\newcommand{\true}{\ding{51}}
+\newcommand{\false}{\ding{55}}
+\newcommand{\code}[1]{
+	\begin{mdframed}
+		\verbatiminput{#1}
+	\end{mdframed}
+}
+
+\title{Tutorium 11: Parallelprogrammierung mit MPI}
+% \subtitle{}
+\author{Paul Brinkmeier}
+\institute{Tutorium Programmierparadigmen am KIT}
+\date{13. Januar 2020}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+% {
+%	\usebackgroundtemplate{\includegraphics[width=\paperwidth]{EulenfestWerbung}}
+%	\begin{frame}[plain]
+%	\end{frame}
+% }
+
+\section{Heutiges Programm}
+
+% TODO
+\begin{frame}{test}
+  \begin{figure}
+    \input{../demos/mpi/hello/perf.pgf}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Parallelprogrammierung}
+	ProPa-Stoff zu Parallelprogrammierung:
+
+	\begin{itemize}
+		\item Grundlegende Begriffe
+		\item Message Passing, wurde in OS \emph{kurz} behandelt (\enquote{message queues})
+		\item Shared Memory + Synchronisierung, wie in SWT1, OS, etc.
+		\begin{itemize}
+			\item In Java, mit ein paar Details zur JVM
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\section{Begriffe}
+
+\begin{frame}{Flynns Taxonomie}
+	\begin{itemize}
+		\item SISD: Single Instruction, Single Data\\
+			{\footnotesize Ein Datum wird von einer Ausführungsarbeit bearbeitet}
+		\item SIMD: Single Instruction, Multiple Data\\
+			{\footnotesize Eine Ausführungseinheit bearbeitet mehrere Daten gleichzeitig}
+		\item MIMD: Multiple Instruction, Multiple Data\\
+			{\footnotesize $\approx$ Mehrere Ausführungseinheiten arbeiten gleichzeitig}
+		\item MISD: Multiple Instruction, Single Data\\
+			{\footnotesize $\approx$ Mehrere Ausführungseinheiten arbeiten gleichzeitig an einem Datum}
+	\end{itemize}
+
+	\pause
+	Beispiele?
+\end{frame}
+
+\begin{frame}{Daten- und Taskparallelismus}
+	Parallele Probleme sind üblicherweise entweder
+	
+	\begin{itemize}
+		\item \enquote{datenparallel}: Problem kann auf identische Ausführungseinheiten verteilt werden\\
+			Beispiel: \texttt{map primeFactors [1432793, 651433, ...]}
+
+		\item \enquote{taskparallel}: Problembestandteile sind nicht homogen\\
+			Beispiel: Videospiel mit Render-, Netzwerk- und Logikprozessen
+	\end{itemize}
+
+	Datenparallele Probleme sind i.d.R. einfacher zu behandeln (auch: \enquote{embarrassingly parallel}).
+	Bei manchen Problemen verschwimmt die Grenze auch (bspw. Webserver).
+\end{frame}
+
+\section{MPI-Basics}
+
+\begin{frame}{MPI}
+	MPI (\enquote{Message Passing Interface}) ist ein Standard für Parallelprogrammierung.
+	Es existieren verschiedene Implementierungen für verschiedene Sprachen.
+	Die VL verwendet \href{https://www.open-mpi.org/}{Open MPI}, eine Open-Source-Implementierung.
+
+	\begin{itemize}
+		\item MPI-\enquote{Prozesse} beziehen sich i.d.R. auf Prozessorkerne
+		\item Man verwendet Message Passing statt Shared Memory
+		\begin{itemize}
+			\item Daten werden explizit über \texttt{Send} und \texttt{Recv} geteilt
+		\end{itemize}
+		\item MPI-Prozesse werden in sog. \emph{Communicators} eingeteilt. Wir verwenden immer den Communicator, der alle Prozesse enthält (\texttt{MPI_COMM_WORLD)})
+	\end{itemize}
+\end{frame}
+
+\subsection{Installation}
+
+\begin{frame}{Installation von MPI}
+	MPI-Beispiel gehen von Linux-Systemen aus, verwendet unter Windows bitte WSL.
+
+	\begin{itemize}
+		\item \texttt{apt install openmpi-bin} (Ubuntu)
+		\item \texttt{pacman -S openmpi} (Arch Linux)
+		\item \texttt{dnf install openmpi} (Fedora)
+	\end{itemize}
+
+	Dann \texttt{mpicc --version} zum Testen der Installation.
+\end{frame}
+
+\begin{frame}{Bauen und Ausführen von MPI-Programmen}
+	MPI-Programme werden mit \texttt{mpicc} (Wrapper um \texttt{gcc}) kompiliert:
+
+        % TODO
+	% \code{code/mpicompile.sh}
+
+	Um ein Programm auszuführen, wird \texttt{mpirun} verwendet:
+
+	% TODO
+        % \code{code/mpirun.sh}
+
+	\begin{itemize}
+		\item \texttt{N} ist die Zahl der Prozesse, die ausgeführt werden sollen
+                % TODO
+		\item \texttt{--oversubscribe} braucht ihr, falls \texttt{N} größer als die Zahl eurer Prozessorkerne ist
+		\item Vergleicht die Ausgabe der Demos \texttt{hello} und \texttt{sendrecv}
+	\end{itemize}
+\end{frame}
+
+\subsection{Primitive}
+
+\newcolumntype{C}{p{0.4cm}}
+
+\begin{frame}{Send/Recv}
+	Per \texttt{Send} und \texttt{Recv} werden Daten zwischen Prozessen ausgetauscht.\\
+	Die Aufrufe sind unabhängig vom Medium (IPC, Sockets, ...).
+
+	\begin{figure}
+	\begin{tikzpicture}
+		\node (lhs) {\begin{tabular}{|C|C|C|}
+			\hline
+			$A_0$ & & \\
+			\hline
+			& & \\
+			\hline
+			& & \\
+			\hline
+		\end{tabular}};
+		\node (lhsLabelP) [left=0 of lhs] {\rotatebox{90}{\tiny Prozesse}};
+		\node (lhsLabelD) [above=0 of lhs] {\tiny Daten};
+
+		\node (rhs) [right=4cm of lhs] {\begin{tabular}{|C|C|C|}
+			\hline
+			$A_0$ & & \\
+			\hline
+			\textcolor{blue}{$A_0$} & & \\
+			\hline
+			& & \\
+			\hline
+		\end{tabular}};
+
+		\draw[->, thick] (lhs) -- node[above] {$P_0$: \texttt{Send(dest=1)}} (rhs);
+		\draw[->, thick] (lhs) -- node[below] {$P_1$: \texttt{Recv(source=0)}} (rhs);
+	\end{tikzpicture}
+	\end{figure}
+
+	\begin{itemize}
+		\item {\footnotesize \texttt{int MPI_Send(buf, count, datatype, dest, tag, comm)}}
+		\item {\footnotesize \texttt{int MPI_Recv(buf, count, datatype, source, tag, comm, status)}}
+	\end{itemize}
+\end{frame}
+
+\section{Kollektive Operationen}
+
+\begin{frame}{Bcast}
+	\texttt{Bcast} verteilt ein Datum auf alle Prozesse.
+
+	\begin{figure}
+	\begin{tikzpicture}
+		\node (lhs) {\begin{tabular}{|C|C|C|}
+			\hline
+			$A_0$ & & \\
+			\hline
+			& & \\
+			\hline
+			& & \\
+			\hline
+		\end{tabular}};
+		\node (lhsLabelP) [left=0 of lhs] {\rotatebox{90}{\tiny Prozesse}};
+		\node (lhsLabelD) [above=0 of lhs] {\tiny Daten};
+
+		\node (rhs) [right=4cm of lhs] {\begin{tabular}{|C|C|C|}
+			\hline
+			$A_0$ & & \\
+			\hline
+			\textcolor{blue}{$A_0$} & & \\
+			\hline
+			\textcolor{blue}{$A_0$} & & \\
+			\hline
+		\end{tabular}};
+
+		\draw[->, thick] (lhs) -- node[above] {\texttt{Bcast(root=0)}} (rhs);
+	\end{tikzpicture}
+	\end{figure}
+
+	\begin{itemize}
+		\item {\footnotesize \texttt{int MPI_Bcast(buf, count, datatype, root, comm)}}
+		\item Daten befinden sich ursprünglich auf \texttt{root} 
+		\begin{itemize}
+			\item $\leadsto$ Fallunterscheidung in \texttt{Bcast}:
+			\item {\footnotesize \texttt{if rank == root then forall others: send() else recv()}}
+		\end{itemize}
+	\end{itemize}
+
+	\pause
+	Implementiert \texttt{custom_Bcast} in \texttt{demos/mpi/custom_broadcast}!
+\end{frame}
+
+\begin{frame}{Scatter}
+	\texttt{Scatter} verteilt eine Liste von Daten auf mehrere Prozesse.
+
+	\begin{figure}
+	\begin{tikzpicture}
+		\node (lhs) {\begin{tabular}{|C|C|C|}
+			\hline
+			$A_0$ & $A_1$ & $A_2$ \\
+			\hline
+			& & \\
+			\hline
+			& & \\
+			\hline
+		\end{tabular}};
+		\node (lhsLabelP) [left=0 of lhs] {\rotatebox{90}{\tiny Prozesse}};
+		\node (lhsLabelD) [above=0 of lhs] {\tiny Daten};
+
+		\node (rhs) [right=4cm of lhs] {\begin{tabular}{|C|C|C|}
+			\hline
+			\textcolor{blue}{$A_0$} & & \\
+			\hline
+			\textcolor{blue}{$A_1$} & & \\
+			\hline
+			\textcolor{blue}{$A_2$} & & \\
+			\hline
+		\end{tabular}};
+
+		\draw[->, thick] (lhs) -- node[above] {\texttt{Scatter(root=0)}} (rhs);
+	\end{tikzpicture}
+	\end{figure}
+
+	\begin{itemize}
+		\item {\footnotesize \texttt{int MPI_Scatter(sendbuf, sendcount, sendtype, recvbuf, recvcount, recvtype, root, comm)}}
+		\item \texttt{sendcount}, \texttt{recvcount}: Zahl der Elemente, die an einen Prozess verteilt werden
+		\item i.d.R.: \texttt{sendcount == recvcount}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Gather}
+	\texttt{Gather} sammelt Daten von allen Prozessen in einer Liste.
+
+	\begin{figure}
+	\begin{tikzpicture}
+		\node (lhs) {\begin{tabular}{|C|C|C|}
+			\hline
+			$A_0$ & & \\
+			\hline
+			$A_1$ & & \\
+			\hline
+			$A_2$ & & \\
+			\hline
+		\end{tabular}};
+		\node (lhsLabelP) [left=0 of lhs] {\rotatebox{90}{\tiny Prozesse}};
+		\node (lhsLabelD) [above=0 of lhs] {\tiny Daten};
+
+		\node (rhs) [right=4cm of lhs] {\begin{tabular}{|C|C|C|}
+			\hline
+			\textcolor{blue}{$A_0$} & \textcolor{blue}{$A_1$} & \textcolor{blue}{$A_2$} \\
+			\hline
+			& & \\
+			\hline
+			& & \\
+			\hline
+		\end{tabular}};
+
+		\draw[->, thick] (lhs) -- node[above] {\texttt{Gather(root=0)}} (rhs);
+	\end{tikzpicture}
+	\end{figure}
+
+	\begin{itemize}
+		\item {\footnotesize \texttt{int MPI_Gather(sendbuf, sendcount, sendtype, recvbuf, recvcount, recvtype, root, comm)}}
+		\item \texttt{sendcount}, \texttt{recvcount}: Zahl der Elemente, die an einen Prozess verteilt werden
+		\item i.d.R.: \texttt{sendcount == recvcount}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Scatter und Gather}
+	\texttt{Scatter} und \texttt{Gather} sind \enquote{invers}:
+
+        % TODO
+	% \code{code/scatter.c}
+
+	Dieser Code hat keine Effekte außer Seiteneffekte.
+\end{frame}
+
+\begin{frame}{Aufgabe zu Scatter und Gather}
+	Implementiert folgendes Programm mit MPI:
+
+	\begin{itemize}
+		\item $N$: Prozessoranzahl (\texttt{MPI_Comm_size}), $x$: 10
+		\item $P_0$ legt \texttt{long}-Liste mit Elementen $[1, 2, ..., N \cdot x]$ an
+		\item $P_i$ summiert einen $x$-Ausschnitt der Liste mit $i \in [0;N)$
+		\item $P_0$ summiert die einzelnen Summen
+	\end{itemize}
+
+	Verwendet dafür:
+
+	\begin{itemize}
+		\item \texttt{MPI_Comm_size}, \texttt{MPI_Comm_rank}
+		\item \texttt{MPI_Scatter}
+		\item \texttt{MPI_Gather}
+	\end{itemize}
+
+	Dokumentation für MPI-Funktionen bekommt ihr mit \texttt{man <f>}
+\end{frame}
+
+\begin{frame}{Allgather}
+	\texttt{Allgather} ist die Verknüpfung von \texttt{Gather} und \texttt{Bcast}.
+
+	\begin{figure}
+	\begin{tikzpicture}
+		\node (lhs) {\begin{tabular}{|C|C|C|}
+			\hline
+			$A_0$ & & \\
+			\hline
+			$A_1$ & & \\
+			\hline
+			$A_2$ & & \\
+			\hline
+		\end{tabular}};
+		\node (lhsLabelP) [left=0 of lhs] {\rotatebox{90}{\tiny Prozesse}};
+		\node (lhsLabelD) [above=0 of lhs] {\tiny Daten};
+
+		\node (rhs) [right=4cm of lhs] {\begin{tabular}{|C|C|C|}
+			\hline
+			\textcolor{blue}{$A_0$} & \textcolor{blue}{$A_1$} & \textcolor{blue}{$A_2$} \\
+			\hline
+			\textcolor{blue}{$A_0$} & \textcolor{blue}{$A_1$} & \textcolor{blue}{$A_2$} \\
+			\hline
+			\textcolor{blue}{$A_0$} & \textcolor{blue}{$A_1$} & \textcolor{blue}{$A_2$} \\
+			\hline
+		\end{tabular}};
+
+		\draw[->, thick] (lhs) -- node[above] {\texttt{Allgather()}} (rhs);
+	\end{tikzpicture}
+	\end{figure}
+
+	\begin{itemize}
+		\item {\footnotesize \texttt{int MPI_Allgather(sendbuf, sendcount, sendtype, recvbuf, recvcount, recvtype, comm)}}
+		\item Im Gegensatz zu \texttt{Gather} gibt es keinen Parameter \texttt{root}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Alltoall}
+	\texttt{Alltoall} stückelt Daten von jedem Prozess und verteilt sie.
+
+	\begin{figure}
+	\begin{tikzpicture}
+		\node (lhs) {\begin{tabular}{|C|C|C|}
+			\hline
+			$A_0$ & $A_1$ & $A_2$ \\
+			\hline
+			$B_0$ & $B_1$ & $B_2$ \\
+			\hline
+			$C_0$ & $C_1$ & $C_2$ \\
+			\hline
+		\end{tabular}};
+		\node (lhsLabelP) [left=0 of lhs] {\rotatebox{90}{\tiny Prozesse}};
+		\node (lhsLabelD) [above=0 of lhs] {\tiny Daten};
+
+		\node (rhs) [right=4cm of lhs] {\begin{tabular}{|C|C|C|}
+			\hline
+			\textcolor{blue}{$A_0$} & \textcolor{blue}{$B_0$} & \textcolor{blue}{$C_0$} \\
+			\hline
+			\textcolor{blue}{$A_1$} & \textcolor{blue}{$B_1$} & \textcolor{blue}{$C_1$} \\
+			\hline
+			\textcolor{blue}{$A_2$} & \textcolor{blue}{$B_2$} & \textcolor{blue}{$C_2$} \\
+			\hline
+		\end{tabular}};
+
+		\draw[->, thick] (lhs) -- node[above] {\texttt{Alltoall()}} (rhs);
+	\end{tikzpicture}
+	\end{figure}
+
+	\begin{itemize}
+		\item {\footnotesize \texttt{int MPI_Alltoall(sendbuf, sendcount, sendtype, recvbuf, recvcount, recvtype, comm)}}
+		\item Es führt sozusagen jeder Prozess einmal \texttt{Scatter} aus
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Reduce}
+	\texttt{Reduce} wendet eine assoziative Operation auf verteilte Daten an.
+
+	\begin{figure}
+	\begin{tikzpicture}
+		\node (lhs) {\begin{tabular}{|C|C|C|}
+			\hline
+			$A_0$ & & \\
+			\hline
+			$B_0$ & & \\
+			\hline
+			$C_0$ & & \\
+			\hline
+		\end{tabular}};
+		\node (lhsLabelP) [left=0 of lhs] {\rotatebox{90}{\tiny Prozesse}};
+		\node (lhsLabelD) [above=0 of lhs] {\tiny Daten};
+
+		\node (rhs) [right=4cm of lhs] {\begin{tabular}{|p{2cm}|C|C|}
+			\hline
+			\textcolor{blue}{$A_0+A_1+A_2$} & & \\
+			\hline
+			& & \\
+			\hline
+			& & \\
+			\hline
+		\end{tabular}};
+
+		\draw[->, thick] (lhs) -- node[above] {\texttt{Reduce(root=0,op=+)}} (rhs);
+	\end{tikzpicture}
+	\end{figure}
+
+	\begin{itemize}
+		\item {\footnotesize \texttt{int MPI_Reduce(sendbuf, recvbuf, count, type, op, root, comm)}}
+		\item \textcolor{red}{\emph{Ungefähr}} dasselbe wie ein Fold!
+		\pause
+		\item Ersetzt den letzten Teil der Summenaufgabe durch einen Aufruf zu \texttt{Reduce}
+	\end{itemize}
+\end{frame}
+
+\section{Ende}
+
+\begin{frame}{Ende}
+  % TODO
+	\begin{itemize}
+		\item Im Campus-System kann man sich bis zum 17.03. für die ProPa-Klausur anmelden
+		\item Ab Mittwoch kann man sich \href{https://campus.studium.kit.edu/renewal/payment.php}{Rückmelden} bis zum 15.02.
+		\item Eulenfest am 23.01.!
+	\end{itemize}
+\end{frame}
+
+\end{document}

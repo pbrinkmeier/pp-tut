@@ -19,7 +19,7 @@ int main(int argc, char** args) {
 
 	printf("Hello world, I have rank %d out of %d\n", rank, size);
         // Ten billion
-        long N = 10 * 1000 * 1000 * 1000;
+        long N = 10L * 1000L * 1000L * 1000L;
         task(N / size);
 
 	MPI_Finalize();

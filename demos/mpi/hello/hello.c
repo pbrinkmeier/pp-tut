@@ -21,7 +21,7 @@ int processor_name_length;
 	printf("Hello world, I have rank %d out of %d\n", rank, size);
         long N = 10000000000;
         task(N / size);
-l
+
 	MPI_Finalize();
 
 	return 0;

@@ -12,14 +12,14 @@ void task(long n) {
 int main(int argc, char** args) {
 	int size;
 	int rank;
-int processor_name_length;
 
 	MPI_Init(&argc, &args);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 	printf("Hello world, I have rank %d out of %d\n", rank, size);
-        long N = 10000000000;
+        // Ten billion
+        long N = 10 * 1000 * 1000 * 1000;
         task(N / size);
 
 	MPI_Finalize();

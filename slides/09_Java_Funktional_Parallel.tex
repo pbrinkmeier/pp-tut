@@ -337,9 +337,31 @@
 \section{Happens-before}
 
 \begin{frame}{Happens-before-Beziehung}
+  \code{code/happens-before.java}
+
   \begin{itemize}
-    \item TBD
+    \item \texttt{flag = 1} und \texttt{print(flag)} haben keine \enquote{Happens-before}-Beziehung
+    \item $\leadsto$ Indeterministische Ausgabe: 0 oder 1
+    \item Innerhalb eines Threads gibt es immer eine \enquote{oben-nach-unten} Happens-before-Beziehung
+    \item Zwischen Threads nur durch bestimmte Konstrukte:
+    \begin{itemize}
+      \item \texttt{start()}, \texttt{join()}
+      \item \texttt{synchronized}, \texttt{volatile}
+    \end{itemize}
   \end{itemize}
+\end{frame}
+
+\begin{frame}{Bedeutung von Happens-before}
+  \code{code/happens-before2.java}
+
+  {\small
+  \begin{itemize}
+    \item \enquote{Happens-before} hat bei mehreren Threads nichts mit der Ausführungsreihenfolge zu tun
+    \item Stattdessen: Schreiboperationen sind \emph{immer} für spätere Leseoperationen sichtbar
+    \item Ohne Happens-before: Möglicherweise wird Thread-lokale Variable im Cache nicht geupdated
+    \item Lösung: Variable als \texttt{volatile} deklarieren
+  \end{itemize}
+  }
 \end{frame}
 
 \section{Ende}

@@ -15,6 +15,7 @@
 \usepackage{ulem}
 \usepackage{mathpartir}
 \usepackage{pdfpages}
+\usepackage{wasysym}
 
 \batchmode
 
@@ -66,3 +67,11 @@
 \newcommand{\creplicate}{\text{replicate}}
 
 \newcommand{\subst}[3]{(#1)\left[#2\,\to\,#3\right]}
+
+% unification etc.
+
+\newcommand{\functor}[2]{\texttt{#1}(#2)}
+\newcommand{\pa}[1]{\texttt{#1}}
+\newcommand{\plsunify}{\stackrel{!}{=}}
+\newcommand{\unifier}[1]{\left[#1\right]}
+\newcommand{\su}[2]{#1 \; \text{\pointer} \; #2}

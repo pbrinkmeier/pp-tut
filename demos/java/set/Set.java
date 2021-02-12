@@ -1,5 +1,6 @@
 package set;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Set<T> {
@@ -13,24 +14,34 @@ public class Set<T> {
         }
     }
 
-    public int size() {
-        return -1;
+    private List<T> elements;
+
+    public Set() {
+        elements = new ArrayList<>();
+    }
+
+    //@ ensures isEmpty() ==> \result == 0;
+    /*@ pure @*/ public int size() {
+        return elements.size();
     }
 
     //@ ensures size() == 0 ==> \result;
-    public boolean isEmpty() {
-        return false;
+    /*@ pure @*/ public boolean isEmpty() {
+        return size() == 0;
     }
 
     //@ ensures \old(getElements()).contains(element) ==> size() == \old(size());
     public void add(T element) {
+      if (!elements.contains(element)) {
+        elements.add(element);
+      }
     }
 
-    public boolean contains(T element) {
-        return false;
+    /*@ pure @*/ public boolean contains(T element) {
+        return elements.contains(element);
     }
 
-    public List<T> getElements() {
-        return null;
+    /*@ pure @*/ public List<T> getElements() {
+        return this.elements;
     }
 }

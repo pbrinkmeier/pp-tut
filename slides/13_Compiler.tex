@@ -713,91 +713,394 @@
 		\begin{itemize}
 			\item Blockstruktur von Programmen
 			\item Baumstruktur von HTML-Dateien
-			\item Header, Inhalt-Struktur von Mails
-			\item Verschachtelte mathematische Ausdrücke
+			\item Header + Inhalt-Struktur von Mails
+			\item Verschachtelte arithmetische Ausdrücke
 		\end{itemize}
 		\item Syntaktische Analyse ist das größte Compiler-Thema in PP.
 		\pause
 		\item Übliche Vorgehensweise (in PP):
 		\begin{itemize}
 			\item Grammatik $G$ erfinden
-			\item ggf. $G$ in einfache Form $G'$ bringen
+			\item ggf. $G$ in einfachere Form $G'$ bringen
 			\item rekursiven Abstiegsparser für $G'$ implementieren
 		\end{itemize}
 		\item Alternativ: Parser-Kombinatoren, Yacc, etc.
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Beispiel: Mathematische Ausdrücke}
-	\begin{columns}
-		\begin{column}{0.3\textwidth}
-			\begin{equation*}
-				1 + 5 * 7 + 6
-			\end{equation*}
-		\end{column}
-		\begin{column}{0.8\textwidth}
-                  \Tree [.E [.E 1 ] + [.E [.E [.E 5 ] * [.E 7 ] ] + [.E 6 ] ] ]
-		\end{column}
-	\end{columns}
+\begin{frame}{Beispiel: Arithmetische Ausdrücke}
+  \begin{center}
+    \textcolor<1>{red}{\texttt{a+a+b}} \hfill \textcolor<2>{red}{\texttt{a*c+b}} \hfill \textcolor<3>{red}{\texttt{a*c+b*d}}
+  \end{center}
 
-	\begin{itemize}
-		\item Zu beachten: Punkt-vor-Strich (Präzedenz), Klammerung, etc.
-		\item Nicht mehr mit regulären Ausdrücken lösbar
-		\item \enquote{Offensichtliche} Grammatik oft nicht einfach zu Parsen
-	\end{itemize}
+    \begin{itemize}
+      \item Zu beachten: Punkt-vor-Strich (Präzedenz), Klammerung, etc.
+      \item Nicht mehr mit regulären Ausdrücken lösbar
+      \item Beispielgrammatik:
+    \end{itemize}
+
+    \begin{columns}
+      \begin{column}{0.5\textwidth}
+        \begin{align*}
+          E \to & \; E \;\; \texttt{+} \;\; E \\
+           \mid & \; E \;\; \texttt{*} \;\; E \\
+           \mid & \; \texttt{(} \;\; E \;\; \texttt{)} \\
+           \mid & \; \texttt{id}
+        \end{align*}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \only<1>{
+          \begin{tikzpicture}[level distance=10mm, sibling distance=10mm]
+            \node {E}
+              child {
+                node {E}
+                  child {
+                    node {E}
+                      child {node {\texttt{id[a]}}}
+                  }
+                  child {node {\texttt{+}}}
+                  child {
+                    node {E}
+                      child {node {\texttt{id[a]}}}
+                  }
+              }
+              child {
+                node {\texttt{+}}
+              }
+              child {
+                node {E}
+                  child {
+                    node {\texttt{id[b]}}
+                  }
+              }
+            ;
+          \end{tikzpicture}
+        }
+        \only<2>{
+          \begin{tikzpicture}[level distance=10mm, sibling distance=10mm]
+            \node {E}
+              child {
+                node {E}
+                  child {
+                    node {E}
+                      child {node {\texttt{id[a]}}}
+                  }
+                  child {node {\texttt{*}}}
+                  child {
+                    node {E}
+                      child {node {\texttt{id[c]}}}
+                  }
+              }
+              child {
+                node {\texttt{+}}
+              }
+              child {
+                node {E}
+                  child {
+                    node {\texttt{id[b]}}
+                  }
+              }
+            ;
+          \end{tikzpicture}
+        }
+        \only<3>{
+          \begin{tikzpicture}[level distance=7.5mm, sibling distance=10mm]
+            \node {E}
+              child {
+                node {E}
+                  child {
+                    node {E}
+                      child {node {\texttt{id[a]}}}
+                  }
+                  child {node {\texttt{*}}}
+                  child {
+                    node {E}
+                      child {node {E}
+                        child {node {\texttt{id[c]}}}
+                      }
+                      child {node {\texttt{+}}}
+                      child {node {E}
+                        child {node {\texttt{id[b]}}}
+                      }
+                  }
+              }
+              child {
+                node {\texttt{*}}
+              }
+              child {
+                node {E}
+                  child {
+                    node {\texttt{id[d]}}
+                  }
+              }
+            ;
+          \end{tikzpicture}
+        }
+      \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}{Beispiel: Mathematische Ausdrücke}
 	\begin{equation*}
-		E \to \;\; \textrm{\texttt{num}} \mid \textrm{\texttt{(}} \;\; E \;\; \textrm{\texttt{)}}
-		 \mid E \;\; \textrm{\texttt{+}} \;\; E
-		 \mid E \;\; \textrm{\texttt{*}} \;\; E
+          E \to \; E \;\; \texttt{+} \;\; E \;
+           \mid \; E \;\; \texttt{*} \;\; E \;
+           \mid \; \texttt{(} \;\; E \;\; \texttt{)} \;
+           \mid \; \texttt{id}
 	\end{equation*}
 
-	\pause
-
-	\begin{columns}
-		\begin{column}{0.5\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.65\textwidth]{images/baumstruktur2.png}
-			\end{figure}
-		\end{column}
-		\begin{column}{0.5\textwidth}
-			\begin{figure}
-				\includegraphics[width=0.65\textwidth]{images/baumstruktur.png}
-			\end{figure}
-		\end{column}
-	\end{columns}
+        \begin{center}
+          \texttt{a*c+b}
+        \end{center}
 
 	\pause
+
+        \begin{columns}
+          \begin{column}{0.5\textwidth}
+            \begin{tikzpicture}[level distance=7.5mm, sibling distance=10mm]
+              \node {E}
+                child {
+                  node {E}
+                    child {
+                      node {E}
+                        child {node {\texttt{id[a]}}}
+                    }
+                    child {node {\texttt{*}}}
+                    child {
+                      node {E}
+                        child {node {\texttt{id[c]}}}
+                    }
+                }
+                child {
+                  node {\texttt{+}}
+                }
+                child {
+                  node {E}
+                    child {
+                      node {\texttt{id[b]}}
+                    }
+                }
+              ;
+            \end{tikzpicture}
+          \end{column}
+          \begin{column}{0.5\textwidth}
+            \begin{tikzpicture}[level distance=7.5mm, sibling distance=10mm]
+              \node {E}
+                child {
+                  node {E}
+                    child {
+                      node {\texttt{id[a]}}
+                    }
+                }
+                child {
+                  node {\texttt{*}}
+                }
+                child {
+                  node {E}
+                    child {
+                      node {E}
+                        child {node {\texttt{id[c]}}}
+                    }
+                    child {node {\texttt{+}}}
+                    child {
+                      node {E}
+                        child {node {\texttt{id[b]}}}
+                    }
+                }
+              ;
+            \end{tikzpicture}
+          \end{column}
+        \end{columns}
 
 	\begin{itemize}
-		\item Ableitungsbaum nicht eindeutig $\leadsto$ schlecht
-		\item Ableitungsbaum garantiert nicht Punkt-vor-Strich $\leadsto$ schlecht
+          \item Grammatik nicht eindeutig $\leadsto$ schlecht
+          \item Grammatik garantiert nicht Punkt-vor-Strich $\leadsto$ schlecht
+          \item Grammatik ist linksrekursiv $\leadsto$ nicht einfach zu parsen $\leadsto$ schlecht
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Präzedenz, Linksfaktorisierung}
-	Wie zeichnen sich \enquote{gute} Grammatiken aus?
-	\pause
+\begin{frame}{Grammar Engineering 1 --- Präzedenz}
+  \begin{equation*}
+    E \to \; E \;\; \texttt{+} \;\; E \;
+     \mid \; E \;\; \texttt{*} \;\; E \;
+     \mid \; \texttt{(} \;\; E \;\; \texttt{)} \;
+     \mid \; \texttt{id}
+  \end{equation*}
 
-	Operatorpräzedenz schon in Grammatik definiert:
-	\begin{align*}
-		E \to & \;\; E \;\; \textrm{\texttt{+}} \;\; T \mid E \;\; \textrm{\texttt{-}} \;\; T \mid T\\
-		T \to & \;\; T \;\; \textrm{\texttt{*}} \;\; F \mid T \;\; \textrm{\texttt{/}} \;\; F \mid F\\
-		F \to & \;\; \textrm{\texttt{num}} \; | \; \textrm{\texttt{(}} \;\; E \;\; \textrm{\texttt{)}}
-	\end{align*}
+  \begin{itemize}
+    \item Punkt-vor-Strich (\enquote{Operatorpräzedenz}) wird von dieser naiven Grammatik nicht beachtet.
+    \item Lösung: Ein Nichtterminal pro Präzedenzstufe:
+    \begin{itemize}
+      \item \emph{Summen} von \emph{Produkten} von \emph{Atomen}.
+      \item Herkömmliche Begriffe: Ausdruck, Term und Faktor.
+    \end{itemize}
+  \end{itemize}
 
-	\pause
+  \begin{alignat*}{2}
+    & Expr   & \; \to \; & Expr \; \texttt{+} \; Term \\
+          && \mid \;\; & Term \\
+    & Term   & \; \to \; & Term \; \texttt{+} \; Factor \\
+            && \mid \;\; & Factor \\
+    & Factor & \; \to \; & \texttt{(} \; Expr \; \texttt{)} \; \mid \; \texttt{id}
+  \end{alignat*}
+\end{frame}
 
-	Vermeidung von Linksrekursion (Linksfaktorisierung):
-	\begin{align*}
-		E     \to & \;\; T \;\; EList\\
-		EList \to & \;\; \epsilon \mid \textrm{\texttt{+}} \;\; T \;\; EList \mid \textrm{\texttt{-}} \;\; T \;\; EList\\
-		T     \to & \;\; F \;\; TList\\
-		TList \to & \;\; \epsilon \mid \textrm{\texttt{*}} \;\; F \;\; TList \mid \textrm{\texttt{/}} \;\; F \;\; TList\\
-		F \to & \;\; \textrm{\texttt{num}} \; | \; \textrm{\texttt{(}} \;\; E \;\; \textrm{\texttt{)}}
-	\end{align*}
+\begin{frame}{Welche Art von Grammatik wollen wir denn genau?}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{tikzpicture}[
+        box/.style={
+          draw=black,
+          rounded corners
+        },
+        every fit/.style={
+          inner sep=2mm
+        },
+        node distance=3mm
+      ]
+        \node[box] (rg) {RG};
+        \node[below=of rg] (sll) {SLL(1)};
+        \node[box,fit=(rg) (sll),draw=blue] (b1) {};
+
+        \node[below=of b1] (ll) {LL(1)};
+        \node[box,fit=(b1) (ll)] (b2) {};
+
+        \node[right=of b2] (lr) {LR(1)};
+        \node[box,fit=(b2) (lr)] (b3) {};
+
+        \node[below=of b3] (dcfg) {DCFG};
+        \node[box,fit=(b3) (dcfg)] (b4) {};
+
+        \node[below=of b4] (cfg) {CFG};
+        \node[box,fit=(b4) (cfg)] {};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \footnotesize
+
+      \begin{itemize}
+        \item Parsen kontextfreier Grammatiken (CFGs) ist i.A. in $O(n^3)$, bspw. Earley-Algorithmus.
+        \item Reguläre Grammatiken ($\approx$ reg. Sprachen) sind uns nicht mächtig genug.
+        \item \textcolor{red}{L}\textcolor{blue}{R}: \textcolor{red}{Left-to-right}, \textcolor{blue}{Rightmost}
+        \item \textcolor{red}{L}\textcolor{blue}{L}: \textcolor{red}{Left-to-right}, \textcolor{blue}{Leftmost}
+        \item LL und LR haben immer noch einen schlechten Worst-Case wegen Backtracking :(
+        \item SLL-Grammatiken: LL, aber parsebar ohne Backtracking
+        \begin{itemize}
+          \item $\leadsto$ SLL-Parsing $\in O(n)$
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Grammar Engineering 2 --- Linksrekursion eliminieren}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{alignat*}{2}
+        & Expr   & \; \to \; & Expr \; \texttt{+} \; Term \\
+              && \mid \;\; & Term \\
+        & Term   & \; \to \; & Term \; \texttt{+} \; Factor \\
+                && \mid \;\; & Factor \\
+        & Factor & \; \to \; & \texttt{(} \; Expr \; \texttt{)} \; \mid \; \texttt{id}
+      \end{alignat*}
+
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \begin{tikzpicture}[
+          level distance=7.5mm,
+          sibling distance=15mm
+        ]
+          \node {Expr}
+            child {
+              node {Expr}
+                child {
+                  node {Expr}
+                    child {
+                      node {...}
+                    }
+                    child {node {Term}}
+                }
+                child {node {Term}}
+            }
+            child {node {Term}}
+          ;
+        \end{tikzpicture}
+      \end{figure}
+    \end{column}
+  \end{columns}
+
+  \vfill
+
+  Problem: Die Linksableitung des Symbols $Expr$ in dieser Grammatik ist eine endlose Schleife.
+\end{frame}
+
+\begin{frame}{Grammar Engineering 2 --- Linksrekursion eliminieren}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{alignat*}{2}
+        & Expr   & \; \to \; & Expr \; \texttt{+} \; Term \\
+              && \mid \;\; & Term \\
+        & Term   & \; \to \; & Term \; \texttt{+} \; Factor \\
+                && \mid \;\; & Factor \\
+        & Factor & \; \to \; & \texttt{(} \; Expr \; \texttt{)} \; \mid \; \texttt{id}
+      \end{alignat*}
+
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alignat*}{2}
+        & Expr   & \; \to \; & \; Term \; Expr' \\
+        & Expr'  & \; \to \; & \; \texttt{+} \; Term \; Expr' \\
+                && \mid \;\; & \; \epsilon \\
+        & Term   & \; \to \; & \; Term \; Expr' \\
+        & Term'  & \; \to \; & \; \texttt{*} \; Factor \; Term' \\
+                && \mid \;\; & \; \epsilon \\
+        & Factor & \; \to \; & \texttt{(} \; Expr \; \texttt{)} \; \mid \; \texttt{id}
+      \end{alignat*}
+    \end{column}
+  \end{columns}
+
+  \vfill
+
+  \only<1>{
+    Lösung: Linksrekursion eliminieren, durch folgendes Umschreiben der Grammatik:
+  }
+
+  \only<2>{
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{alignat*}{2}
+        & Sym   & \; \to \; & Sym \; \alpha \\
+               && \mid \;\; & \beta
+      \end{alignat*}
+
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{alignat*}{2}
+        & Sym   & \; \to \; & \beta \; Sym' \\
+        & Sym'  & \; \to \; & \alpha \; Sym' \\
+               && \mid \;\; & \epsilon
+      \end{alignat*}
+    \end{column}
+  \end{columns}
+  }
+\end{frame}
+
+\begin{frame}{Verbesserte Grammatik}
+  \begin{alignat*}{2}
+    & E      & \; \to \; & \; T \; EList \\
+    & EList  & \; \to \; & \; \texttt{+} \; T \; EList \\
+            && \mid \;\; & \; \epsilon \\
+    & T      & \; \to \; & \; T \; EList \\
+    & TList  & \; \to \; & \; \texttt{*} \; F \; TList \\
+            && \mid \;\; & \; \epsilon \\
+    & F      & \; \to \; & \texttt{(} \; E \; \texttt{)} \; \mid \; \texttt{id}
+  \end{alignat*}
+
+  \begin{itemize}
+    \item Grammatik ist eindeutig \true
+    \item Grammatik erzeugt nur korrekte Terme \true
+    \item Grammatik enthält keine Linksrekursion \true
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{First-/Followmenge, Indizmenge}

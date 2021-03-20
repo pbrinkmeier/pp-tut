@@ -2,6 +2,8 @@
 
 Enthält Aufgaben aller Klausuren auf der ProPa-Website (https://pp.ipd.kit.edu/lehre/WS201920/paradigmen/).
 
+**Die Relevanz einzelner Themen ändert sich von Jahr zu Jahr.**
+
 ## Haskell
 
 - [ ] SS14/Aufgabe 1 (11 P.): Listen
@@ -95,6 +97,11 @@ Enthält Aufgaben aller Klausuren auf der ProPa-Website (https://pp.ipd.kit.edu/
 - [ ] SS18/Aufgabe 5 (15 P.): Allgemeinster Unifikator, Herleitungsbaum
 - [ ] WS18/Aufgabe 4ac (12 P.): Constraint-System, Typabstraktion
 
+### Aktoren
+
+- [ ] SS17/Aufgabe 8 (8 P.): Aktoren in Java (Akka)
+- [ ] SS17/Aufgabe 9 (8 P.): Petri-Netze in Java
+
 ## Design by Contract
 
 - [ ] SS17/Aufgabe 10 (6 P.): Informelles DbC
@@ -117,7 +124,7 @@ Enthält Aufgaben aller Klausuren auf der ProPa-Website (https://pp.ipd.kit.edu/
 - [ ] WS18/Aufgabe 7abc (10 P.): Synchronisierte Queue, Deadlocks, Race Conditions
 - [ ] SS19/Aufgabe 7abc (10 P.): Reduktion mit Fork-Join
 
-## C, (wahrscheinlich) nicht relevant
+## C, nicht relevant
 
 - [ ] SS14/Aufgabe 9 (5,5 P.): Precedence-Regel (Typen lesen)
 
@@ -131,8 +138,3 @@ Enthält Aufgaben aller Klausuren auf der ProPa-Website (https://pp.ipd.kit.edu/
 - [ ] WS14/Aufgabe 8 (4 P.): Scala-Code-Lückentext
 - [ ] SS15/Aufgabe 6 (7 P.): Verständnis
 - [ ] SS15/Aufgabe 7 (8 P.): Aktoren
-
-### Aktoren, nicht relevant
-
-- [ ] SS17/Aufgabe 8 (8 P.): Aktoren in Java (Akka)
-- [ ] SS17/Aufgabe 9 (8 P.): Petri-Netze in Java

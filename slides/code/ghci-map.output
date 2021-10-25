@@ -1,6 +1,0 @@
-Prelude> :t map not
-map not :: [Bool] -> [Bool]
-Prelude> :t map head
-map head :: [[b]] -> [b]
-Prelude> :t map sqrt
-map sqrt :: [Float] -> [Float]

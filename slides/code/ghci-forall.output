@@ -1,5 +1,0 @@
-Prelude> :t map
-map :: (a -> b) -> [a] -> [b]
-Prelude> :set -fprint-explicit-foralls
-Prelude> :t map
-map :: forall {a} {b}. (a -> b) -> [a] -> [b]

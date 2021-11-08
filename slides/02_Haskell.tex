@@ -106,15 +106,18 @@
 	Schreibt ein Modul \texttt{Tut02} mit:
 
 	\begin{itemize}
-          \item \texttt{import Prelude (foldl, foldr)}
+		\item \texttt{import Prelude hiding (foldl, foldr, map, filter, scanl, zip, zipWith)}
 		\item \texttt{map} --- Einmal von Hand, einmal per Fold
 		\item \texttt{filter} --- Einmal von Hand, einmal per Fold
 		\item \texttt{squares l} --- Liste der Quadrate der Elemente von \texttt{l}
-		\item \texttt{odd, even} --- Prüft ob eine Zahl (un-)gerade ist
-		\item \texttt{odds, evens} --- Liste aller (un-)geraden Zahlen \texttt{>= 0}
+		\item \texttt{zip as bs} --- Erstellt Tupel der Elemente von \texttt{as} und \texttt{bs}
+		\item \texttt{zipWith as bs} --- Wendet komponentenweise \texttt{f} auf die Elemente von \texttt{as} und \texttt{bs} an
+		\begin{itemize}
+			\item Bspw. \texttt{zipWith (+) [1, 1, 2, 3] [1, 2, 3, 5] == [2, 3, 5, 8]}
+		\end{itemize}
    		\pause
 		\item \texttt{foldl}
-		\item \texttt{scanl f l} --- Wie \texttt{foldl}, gibt aber eine Liste aller Akkumulatorwerte zurück
+		\item \texttt{scanl f i l} --- Wie \texttt{foldl}, gibt aber eine Liste aller Akkumulatorwerte zurück
 		\begin{itemize}
 			\item Bspw. \texttt{scanl (*) 1 [1, 3, 5] == [1, 3, 15]}
 		\end{itemize}
@@ -150,28 +153,21 @@
 	\end{itemize}
 \end{frame}
 
-\section{Digits}
-
-\begin{frame}{Digits}
-  Schreibt ein Modul \texttt{Digits} mit:
-
-  \begin{itemize}
-    \item \texttt{digits :: Int -> [Int]} --- Liste der Stellen einer positiven Zahl.
-  \end{itemize}
-
-  Bspw.:
-
-  \code{code/digits.txt}
-\end{frame}
-
 \section{Hangman}
 
 \begin{frame}{Hangman}
+        Schreibt folgende Funktionen:
 	\begin{itemize}
-          \item \href{https://pbrinkmeier.de/Hangman.hs}{pbrinkmeier.de/Hangman.hs}
 		\item \texttt{showHangman} --- Zeigt aktuellen Spielstand als \texttt{String}
+		\begin{itemize}
+			\item Definition: \texttt{showHangman word guesses = ...}
+			\item Typ: \texttt{showHangman :: String -> [Char] -> String}
+		\end{itemize}
 		\item \texttt{updateHangman} --- Bildet Usereingabe (als \texttt{String}) und alten Zustand auf neuen Zustand ab
-		\item \texttt{initHangman} --- Anfangszustand, leere Liste
+		\begin{itemize}
+			\item Definition: \texttt{updateHangman inputLine guesses}
+			\item Beispiel: \texttt{updateHangman "h" "aske" == "haske"}
+		\end{itemize}
 	\end{itemize}
 \end{frame}
 
@@ -182,7 +178,9 @@
 		\item \texttt{s} ist der Typ des Spielzustands
 		\item Anfänglicher Zustand: \texttt{[]} --- leere Liste an Rateversuchen
                 \item \texttt{showHangman :: [Char] -> String}
+		\pause
                 \item \texttt{updateHangman :: String -> [Char] -> [Char]}
+		\pause
                 \item \texttt{initHangman :: [Char]}
 	\end{itemize}
 \end{frame}

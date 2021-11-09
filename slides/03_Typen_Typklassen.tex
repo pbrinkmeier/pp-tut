@@ -109,6 +109,59 @@
   \code{../demos/Truthy2.hs}
 \end{frame}
 
+\begin{frame}{\texttt{type}: Namen für Typen}
+    \begin{alignat*}{2}
+        & \texttt{type} \quad \texttt{String} \quad && \texttt{=} \quad \texttt{[Char]} \\
+        & \texttt{type} \quad \texttt{Rational} \quad && \texttt{=} \quad \texttt{Ratio Integer} \\
+        & \texttt{type} \quad \texttt{FilePath} \quad && \texttt{=} \quad \texttt{String} \\
+        & \texttt{type} \quad \texttt{IOError} \quad && \texttt{=} \quad \texttt{IOException}
+    \end{alignat*}
+
+    \begin{itemize}
+        \item \texttt{type N = T} definiert einen neuen Typnamen \texttt{N} für den Typen \texttt{T}
+        \item \texttt{N} kann nun überall verwendet werden wo auch \texttt{T} es kann
+        \item $\leadsto$ Bessere Lesbarkeit\\
+              (bspw. \texttt{readFile :: FilePath -> IO String})
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{\texttt{data}: Neue Typen}
+    \texttt{data} definiert einen neuen Typen $t$ durch die Aufzählung aller seiner \enquote{Konstruktoren} $c_i$:
+
+    \begin{alignat*}{2}
+        & \texttt{data} \quad \texttt{Bool} \quad && \texttt{=} \quad \texttt{False} \\
+        &               \quad               \quad && \texttt{|} \quad \texttt{True}  \\
+        \\
+        & \texttt{data} \quad t             \quad && \texttt{=} \quad c_1            \\
+        &               \quad               \quad && \texttt{|} \quad c_2            \\
+        &               \quad               \quad && \texttt{|} \quad ...            \\
+        &               \quad               \quad && \texttt{|} \quad c_n            \\
+    \end{alignat*}
+
+    Jeder Konstruktur $c_i$ hat einen Namen und ggf. Parameter.
+\end{frame}
+
+\begin{frame}{\texttt{data}: Beispiel Bruchzahlen}
+    \code{../demos/Fraction.hs}
+
+    \begin{itemize}
+        \item Bruch ist ein Tupel von Ganzzahlen
+        \item Definition von \texttt{Fraction} gibt uns Typsicherheit:\\
+              Ein Bruch bleibt ein Bruch
+        \item Konvention: Hat ein Typ nur einen Konstruktor, benennen wir diesen nach dem Typen.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{\texttt{data}: Beispiel komplexe Zahlen}
+    \code{../demos/Complex.hs}
+
+    \begin{itemize}
+        \item Zwei Darstellungen: $z = a + b\text{i} = r * (\cos \phi + \text{i} \sin \phi)$
+        \item Beide Darstellungen bestehen aus zwei reellen Zahlen
+        \item $\leadsto$ Durch unterschiedliche Konstruktornamen unterscheiden
+    \end{itemize}
+\end{frame}
+
 \section{Typen selbst definieren}
 
 \begin{frame}{Typen selbst definieren}
@@ -121,8 +174,8 @@
     \item Spielkarten
     \item Monopolykarten
     \item Boolesche Ausdrücke
-    \item (Typen in Haskell)
     \item MiMa-Instruktionen
+    \item (Typen in Haskell)
   \end{itemize}
 
   \vfill

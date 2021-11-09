@@ -3,3 +3,4 @@ build
 notes.md
 sheets
 oj
+*.DS_Store

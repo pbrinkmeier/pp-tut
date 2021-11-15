@@ -1,0 +1,6 @@
+*Fibs> :sprint fibs
+fibs = _
+*Fibs> take 10 fibs
+[0,1,1,2,3,5,8,13,21,34]
+*Fibs> :sprint fibs
+fibs = 0 : 1 : 1 : 2 : 3 : 5 : 8 : 13 : 21 : 34 : _

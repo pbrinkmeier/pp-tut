@@ -320,8 +320,7 @@
 \begin{frame}{$\lambda$-Kalkül}
 	\begin{itemize}
                 \item \enquote{Funktionales Gegenstück zur Turingmaschine}
-		\item Wurde u.a. genutzt um Unlösbarkeit des Halteproblems zu zeigen
-		\item Gibt saftig Punkte in der Klausur
+		\item Gönnt Punkte in der Klausur
 		\begin{itemize}
 			\item 13P. im 19SS
 			\item 10P. (+15P.) im 18WS
@@ -363,10 +362,11 @@
 \begin{frame}{$\lambda$-Terme in Haskell}
 	\code{../demos/Lambda.hs}
 
-	\begin{itemize}
-                \item \href{https://github.com/pbrinkmeier/pp-tut}{github.com/pbrinkmeier/pp-tut}
-		\item Modul \texttt{x} liegt in \texttt{demos/x.hs}
-	\end{itemize}
+    \begin{itemize}
+        \item Variable $x$ hat einen Variablennamen $x$
+        \item Funktionsanwendung $\app{f}{a}$ hat zwei $\lambda$-Terme: Funktion $f$ und Argument $a$
+        \item Abstraktion $\lam{p}{b}$ hat Variablennamen $p$ als Parameter und $\lambda$-Term $b$ als Körper (Body)
+    \end{itemize}
 \end{frame}
 
 \newcommand{\aeq}{\stackrel{\alpha}{=}}
@@ -415,6 +415,7 @@
 		\item Implementiert \texttt{fv :: LambdaTerm -> Set String}
 		\begin{itemize}
 			\item Benutzt \texttt{Set}, \texttt{union}, \texttt{delete} und \texttt{fromList} aus \texttt{Data.Set}
+            \item Bspw. \texttt{fv (Abs "p" (Var "b")) == fromList ["b"]}
 		\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -437,7 +438,7 @@
 		      \texttt{substitute :: (String, Term) -> Term -> Term}
 		\begin{itemize}
 			\item \texttt{type Term = LambdaTerm}
-			\item \texttt{fv} braucht ihr dafür nicht
+			\item Tipp: Dafür braucht ihr \texttt{fv}
 		\end{itemize}
 	\end{itemize}
 \end{frame}

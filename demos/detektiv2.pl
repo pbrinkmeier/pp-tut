@@ -1,5 +1,5 @@
 taeter(T) :-
-  delete([alice, bob, carl], T, Rest),
+  select(T, [alice, bob, carl], Rest),
   not(inkonsistent(Rest)).
 
 inkonsistent(Zeugen) :- ...

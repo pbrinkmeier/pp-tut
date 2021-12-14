@@ -1,0 +1,2 @@
+?- fv(abs(x, app(f, x)), Vars).
+Vars = [f].

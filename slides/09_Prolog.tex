@@ -1,0 +1,156 @@
+\documentclass{beamer}
+
+\input{common.tex}
+
+\title{Tutorium 08: Typisierung, Prolog}
+% \subtitle{}
+\author{Paul Brinkmeier}
+\institute{Tutorium Programmierparadigmen am KIT}
+\date{21. Dezember 2021}
+
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\section{Rückblick}
+
+\begin{frame}{Rückblick}
+    Bisherige Themen:
+
+    \begin{itemize}
+        \item Haskell: Funktionale Programmierung
+        \item Lambda-Kalkül: Beta-Reduktion, Church-Encodings
+        \item Typisierung: Lambda-Typen, Let, Typinferenz
+        \item Prolog: Logische Programmierung
+    \end{itemize}
+
+    Nach den Ferien:
+
+    \begin{itemize}
+        \item Parallelprogrammierung: MPI, Java
+        \item Design by Contract: OpenJML
+        \item Compiler: Parser + Java ByteCode
+    \end{itemize}
+\end{frame}
+
+\section{ÜB 7}
+
+\section{Prolog}
+
+\subsection{Kleine Aufgaben}
+
+\begin{frame}{Maximum-Funktion}
+    Schreibt ein Prädikat \texttt{max/3}, das das Maximum bestimmt:
+
+    \code{code/max.out}
+
+    \begin{itemize}
+        \item Schreibt die Funktion zuerst in Haskell
+        \begin{itemize}
+            \item Verwendet die Guard-Notation
+            \item Wie viele Vergleiche benötigt man?
+        \end{itemize}
+        \item Lässt sich die Haskell-Version 1:1 übersetzen?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Einteilen in Gruppen}
+    Schreibt ein Prädikat \texttt{classify/2}, das Zahlen in folgende Gruppen einteilt:
+
+    \begin{itemize}
+        \item \texttt{negativ}: Zahlen kleiner als 0
+        \item \texttt{interessant}: Zahlen von 0 bis 42 (inklusiv)
+        \item \texttt{zugross}: Zahlen über 42
+    \end{itemize}
+
+    \code{code/classify.out}
+\end{frame}
+
+\subsection{Cut}
+
+\begin{frame}{Cut!}
+    \only<1>{
+        \code{../demos/classify1.pro}
+
+        \begin{itemize}
+            \item Wenn die Zahl \texttt{negativ} ist, können \texttt{X >= 0} und \texttt{X > 42} nicht stimmen
+            \item $\leadsto$ Prolog sollte diese eigentlich überspringen
+            \item Prolog macht aber keine Arithmetik für uns
+            \item Aushilfe: Der Cut\texttt{!}
+        \end{itemize}
+    }
+
+    \only<2>{
+        \code{../demos/classify2.pro}
+
+        \begin{itemize}
+            \item Vermeidung redundanter Berechnungen: Cut, geschrieben \texttt{!}
+            \item Cut kann immer einmal erfüllt werden
+            \item Reerfüllung lässt aber die ganze Regel fehlschlagen
+            \item Verschiedene Erklärungen:
+            \begin{itemize}
+                \item Cut \enquote{schneidet Reerfüllungsbaum ab}
+                \item Cut entfernt Choice Points
+                \item Cut \enquote{verpflichtet} Prolog zur Erfüllung einer bestimmten Regel
+            \end{itemize}
+        \end{itemize}
+    }
+
+    \only<3>{
+        \code{../demos/classify2.pro}
+
+        \begin{itemize}
+            \item Schließen sich die Tests einzelner Fälle gegenseitig aus, kann man nach ihnen gefahrlos Cuts einfügen
+            \item \enquote{Grüner} Cut: Ändert nicht Verhalten, nur Laufzeit des Programms
+            \item Hier:
+            \begin{itemize}
+                \item \texttt{X < 0} $\leadsto$ \texttt{X >= 0} und \texttt{X > 42} unmöglich
+                \item \texttt{X =< 42} $\leadsto$ \texttt{X > 42} unmöglich
+                \item \texttt{!} $\Leftrightarrow$ \enquote{Ab hier kann kein anderer Fall mehr eintreten, fertig}
+            \end{itemize}
+        \end{itemize}
+    }
+
+    \only<4>{
+        \code{../demos/classify3.pro}
+
+        \begin{itemize}
+            \item Einige Tests lassen sich \emph{durch Cuts ersetzen}
+            \item \enquote{Roter} Cut: Ändert Verhalten \emph{und} Laufzeit des Programms
+            \item Fehleranfällig! Wenn möglich vermeiden.
+            \item Programme ohne rote Cuts sind
+            \begin{itemize}
+                \item einfacher zu verstehen.
+                \item etwa genauso performant.
+            \end{itemize}
+            \item Faustregel: Reihenfolge der Regeln sollte austauschbar sein
+        \end{itemize}
+    }
+\end{frame}
+
+\begin{frame}{Summe Vorwärts und Rückwärts}
+    Schreibt ein Prädikat \texttt{sum/3}, sodass \texttt{sum(A, B, C)} die Gleichung
+
+    \begin{equation*}
+        \texttt{A} + \texttt{B} = \texttt{C}
+    \end{equation*}
+
+    löst, wenn \emph{zwei oder mehr Variablen belegt sind}.
+
+    \begin{itemize}
+        \item 3 Fälle.
+        \item Verwendet \texttt{number}, um zu Prüfen ob eine Variable mit einer Zahl belegt ist.
+    \end{itemize}
+\end{frame}
+
+\subsection{Klausuraufgabe}
+
+\begin{frame}{Klausur SS15: Haus vom Nikolaus}
+\end{frame}
+
+\section{Ein Haskell-Projekt}
+
+\end{document}

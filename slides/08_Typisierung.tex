@@ -2,7 +2,7 @@
 
 \input{common.tex}
 
-\title{Tutorium 08: Typisierung, Prolog}
+\title{Tutorium 08: Typisierung}
 % \subtitle{}
 \author{Paul Brinkmeier}
 \institute{Tutorium Programmierparadigmen am KIT}
@@ -1016,41 +1016,6 @@ f : \alpha_2 \vdash \app{f}{(\lam{x}{x})} : \alpha_3
           C_{body} &= \{ \alpha_6 = \alpha_7 \to \alpha_3, \alpha_6 = \alpha_8 \to \alpha_8, \alpha_7 = \alpha_9 \to \alpha_9 \} \\
                  C &= C'_{let} \cup C_{body} \cup \{ \alpha_3 = \alpha_1 \}
     \end{align*}
-\end{frame}
-
-\section{Prolog-Aufgaben}
-
-\begin{frame}{Freie Variablen in $\lambda$-Termen}
-    Schreibt ein Prädikat \texttt{fv/2}, das die freien Variablen eines Lambda-Terms generiert. Beispiel:
-
-    \code{code/fv.out}
-
-    \begin{itemize}
-        \item Ein Variablenterm $x$ enthält genau die freie Variable $x$
-        \item Eine Funktionsanwendung enthält die freien Variablen der Funktion und des Argument
-        \item Ein Lambda enthält die freien Variablen seines Funktionskörpers außer der gebundenen Variable
-    \end{itemize}
-
-    Nützlich: \texttt{atom/1}, \texttt{append/3}, \texttt{subtract/3} bzw. \texttt{delete/3}
-\end{frame}
-
-\begin{frame}{Maximum-Funktion}
-    Schreibt ein Prädikat \texttt{max/3}, das die größere von zwei Zahlen auswählt:
-
-    \code{code/max.out}
-
-    \begin{itemize}
-        \item Schreibt die Funktion zuerst in Haskell
-        \begin{itemize}
-            \item Verwendet die Guard-Notation
-            \item Wie viele Vergleiche benötigt man?
-        \end{itemize}
-        \item Lässt sich die Haskell-Version 1:1 übersetzen?
-        \item Wenn nein, wieso? Wie kann man das Problem lösen?
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Klausur SS15: Haus vom Nikolaus}
 \end{frame}
 
 \end{document}

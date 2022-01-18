@@ -1,0 +1,4 @@
+?- klasse(12, K).
+K = interessant.
+?- klasse(1000, K).
+K = zugross.

@@ -18,9 +18,9 @@ int main(int argc, char** args) {
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 	printf("Hello world, I have rank %d out of %d\n", rank, size);
-        // Ten billion
-        long N = 10L * 1000L * 1000L * 1000L;
-        task(N / size);
+  // Ten billion
+  long N = 10L * 1000L * 1000L * 1000L;
+  task(N / size);
 
 	MPI_Finalize();
 

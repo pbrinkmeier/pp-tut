@@ -140,6 +140,7 @@
   \begin{itemize}
     \item \emph{real}: Tatsächlich vergangene Zeit
     \item \emph{user}/\emph{sys}: Auf Prozessoren vergangene Zeit {\tiny (Im User- bzw. Kernelmode)}
+	\pause
     \item Prozessor: 4 $\times$ Intel Core i5-7600K @ 3,8GHz
   \end{itemize}
 \end{frame}
@@ -482,7 +483,7 @@
 			\hline
 		\end{tabular}};
 
-		\draw[->, thick] (lhs) -- node[above] {\texttt{Reduce(root=0,op=+)}} (rhs);
+		\draw[->, thick] (lhs) -- node[above] {\footnotesize{\texttt{Allreduce(root=0,op=+)}}} (rhs);
 	\end{tikzpicture}
 	\end{figure}
 
@@ -498,9 +499,9 @@
 \begin{frame}{Ende}
   % TODO
 	\begin{itemize}
-		\item Im Campus-System könnt ihr euch bis zum 23.03. für die PP-Klausur anmelden
+		\item Im Campus-System könnt ihr euch bis zum 22.03. für die PP-Klausur anmelden
                 \begin{itemize}
-                  \item Termin: 09.04.2020 um 17:00, Zelt auf dem Forum :(
+                  \item Termin: 08.04.2020 von 12:00 bis 14:00
                 \end{itemize}
 		\item Bis zum 15.02. könnt ihr euch \href{https://campus.studium.kit.edu/renewal/payment.php}{Rückmelden}
 		\item Schöne Woche!

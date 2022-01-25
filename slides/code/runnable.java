@@ -1,5 +1,5 @@
 Runnable r = ...; (new Thread(r)).start();
-// Runnable is ein functional interface:
+// Runnable ist ein functional interface:
 Thread t = new Thread(() -> {
   calculate999999thPrime();
 });

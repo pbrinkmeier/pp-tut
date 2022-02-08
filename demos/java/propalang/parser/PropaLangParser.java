@@ -2,6 +2,7 @@ package parser;
 
 import ast.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PropaLangParser {
@@ -87,14 +88,20 @@ public class PropaLangParser {
         return new Block(statements);
     }
 
+    public AssignStatement parseAssigment() {
+        String name = this.expect(TokenType.IDENTIFIER).getText();
+        this.expect(TokenType.ASSIGN);
+        Expression expression = this.parseExpression();
+
+        return new AssignStatement(name, expression);
+    }
+
     public Statement parseStatement() {
         switch (this.token.getType()) {
             case IDENTIFIER:
-                String name = this.expect(TokenType.IDENTIFIER).getText();
-                this.expect(TokenType.ASSIGN);
-                Expression expression = this.parseExpression();
+                Statement statement = this.parseAssigment();
                 this.expect(TokenType.SEMICOLON);
-                return new AssignStatement(name, expression);
+                return statement;
             
             case START_BLOCK:
                 return new BlockStatement(this.parseBlock());
@@ -125,12 +132,32 @@ public class PropaLangParser {
                 return new ReturnStatement(returnExpr);
 
             case WHILE:
-                // TOOD: Parse while (condition) loopStmt;
-                throw this.lexer.error("While not implemented");
+                this.expect(TokenType.WHILE);
+                this.expect(TokenType.LEFT_PAREN);
+                Expression loopCondition = this.parseExpression();
+                this.expect(TokenType.RIGHT_PAREN);
+                Statement loopBody = this.parseStatement();
+
+                return new WhileStatement(loopCondition, loopBody);
 
             case FOR:
-                // TODO: Parse for (init; condition; post) loopStmt;
-                throw this.lexer.error("For not implemented");
+                this.expect(TokenType.FOR);
+                this.expect(TokenType.LEFT_PAREN);
+                Statement init = this.parseAssigment();
+                this.expect(TokenType.SEMICOLON);
+                Expression forCondition = this.parseExpression();
+                this.expect(TokenType.SEMICOLON);
+                Statement post = this.parseAssigment();
+                this.expect(TokenType.RIGHT_PAREN);
+                Statement forBody = this.parseStatement();
+
+                return new BlockStatement(new Block(Arrays.asList(
+                    init,
+                    new WhileStatement(forCondition, new BlockStatement(new Block(Arrays.asList(
+                        forBody,
+                        post
+                    ))))
+                )));
 
             default:
                 throw this.lexer.error(String.format("Statement expected at token %s", this.token));
@@ -187,6 +214,9 @@ public class PropaLangParser {
             if (this.check(TokenType.STAR)) {
                 this.expect(TokenType.STAR);
                 lhs = new OperatorExpression(Operator.MULTIPLY, lhs, this.parseFactor());
+            } else if (this.check(TokenType.SLASH)) {
+                this.expect(TokenType.SLASH);
+                lhs = new OperatorExpression(Operator.DIVIDE, lhs, this.parseFactor());
             } else {
                 break;
             }

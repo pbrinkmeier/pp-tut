@@ -131,33 +131,14 @@ public class PropaLangParser {
 
                 return new ReturnStatement(returnExpr);
 
+            // TODO: Parse while (condition) statement
             case WHILE:
-                this.expect(TokenType.WHILE);
-                this.expect(TokenType.LEFT_PAREN);
-                Expression loopCondition = this.parseExpression();
-                this.expect(TokenType.RIGHT_PAREN);
-                Statement loopBody = this.parseStatement();
+                throw this.lexer.error("While not implemented");
 
-                return new WhileStatement(loopCondition, loopBody);
-
+            // TODO: Parse for (assign; condition; assign) statement
+            // Check cases IF and IDENTIIER above for hints :)
             case FOR:
-                this.expect(TokenType.FOR);
-                this.expect(TokenType.LEFT_PAREN);
-                Statement init = this.parseAssigment();
-                this.expect(TokenType.SEMICOLON);
-                Expression forCondition = this.parseExpression();
-                this.expect(TokenType.SEMICOLON);
-                Statement post = this.parseAssigment();
-                this.expect(TokenType.RIGHT_PAREN);
-                Statement forBody = this.parseStatement();
-
-                return new BlockStatement(new Block(Arrays.asList(
-                    init,
-                    new WhileStatement(forCondition, new BlockStatement(new Block(Arrays.asList(
-                        forBody,
-                        post
-                    ))))
-                )));
+                throw this.lexer.error("For not implemented");
 
             default:
                 throw this.lexer.error(String.format("Statement expected at token %s", this.token));
@@ -214,9 +195,6 @@ public class PropaLangParser {
             if (this.check(TokenType.STAR)) {
                 this.expect(TokenType.STAR);
                 lhs = new OperatorExpression(Operator.MULTIPLY, lhs, this.parseFactor());
-            } else if (this.check(TokenType.SLASH)) {
-                this.expect(TokenType.SLASH);
-                lhs = new OperatorExpression(Operator.DIVIDE, lhs, this.parseFactor());
             } else {
                 break;
             }

@@ -1,5 +1,6 @@
 package set;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Set<T> {
@@ -12,25 +13,33 @@ public class Set<T> {
             System.out.println(String.format("%d", i));
         }
     }
+    
+    private List elements = new ArrayList<>();
 
-    public int size() {
-        return -1;
+    //@ ensures \result >= 0;
+    /*@ pure @*/ public int size() {
+        return elements.size();
     }
 
-    //@ ensures size() == 0 ==> \result;
-    public boolean isEmpty() {
-        return false;
+    //@ ensures size() == 0 <==> \result;
+    /*@ pure @*/ public boolean isEmpty() {
+        return size() == 0;
     }
 
     //@ ensures \old(getElements()).contains(element) ==> size() == \old(size());
     public void add(T element) {
+        if (contains(element)) return;
+        elements.add(element);
+        // Da sollte es eigentlich eine Methode geben, die neue Elemente nur dann hinzufügt, wenn sie bereits in der Liste nicht vorkommen
     }
 
-    public boolean contains(T element) {
-        return false;
+    // @ ensures getElements().contains(element) ==> \result;
+    /*@ pure @*/ public boolean contains(T element) {
+        return elements.contains(element);
     }
 
-    public List<T> getElements() {
-        return null;
+    //@ ensures \forall int i; i >= 0 && i < \result.size(); contains(\result.get(i));
+    /*@ pure @*/ public List<T> getElements() {
+        return elements;
     }
-}
+} 

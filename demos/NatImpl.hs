@@ -6,6 +6,8 @@ module NatImpl where
 -- dec :: Nat -> Nat
 import Nat
 
--- Verwendet nur 'isZero' und 'add'
+add :: Nat -> Nat -> Nat
+add x y = error "Not implemented!"
+
 mul :: Nat -> Nat -> Nat
 mul x y = error "Not implemented!"

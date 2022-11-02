@@ -6,7 +6,7 @@
 % \subtitle{}
 \author{Paul Brinkmeier}
 \institute{Tutorium Programmierparadigmen am KIT}
-\date{26. Oktober 2021}
+\date{2. November 2022}
 
 \begin{document}
 
@@ -30,8 +30,8 @@
                 \end{itemize}
                 \item Bitte Laptop o.Ä. mitbringen
                 \begin{itemize}
-                    \item Für Mitarbeit im Tutorium: \url{https://codi.pbrinkmeier.de/s/wq88qbGYy}
-                    \item ... und natürlich zum selber Rumspielen
+                    \item Für Mitarbeit im Tutorium: \url{https://pad.pbrinkmeier.de/pp-tut}
+                    \item ... und natürlich zum Experimentieren
                 \end{itemize}
         \end{itemize}
 \end{frame}
@@ -42,7 +42,7 @@
                 \item $\leadsto$ ÜBs zur eigenen Übung!
                 \item Abgabe:
                 \begin{itemize}
-                  \item \url{https://praktomat.cs.kit.edu/pp_2021_WS/tasks}
+                  \item \url{https://praktomat.cs.kit.edu/pp_2022_WS/tasks}
                   \item Kasten im Infobau-UG
                   \item Wenn ihr die Abgabe verpasst habt auch per Mail
                 \end{itemize}
@@ -51,7 +51,7 @@
 
 \begin{frame}{Klausur}
         \begin{itemize}
-                \item Termin: ??.??.2022, normalerweise April/Mai
+                \item Termin: 31.03.2022
                 \item Papier-Materialien dürfen mitgebracht werden!
                 \item $\leadsto$ Skript, Mitschriebe, \enquote{Formelsammlung}
         \end{itemize}
@@ -93,13 +93,7 @@
         \begin{itemize}
                 \item Von der VL verwendeter Haskell-Compiler: GHC
                 \item Interaktive Haskell-Shell: \texttt{ghci}
-                \item Installation:
-                \begin{itemize}
-                  \item \sout{Windows: Installer von Haskell-Website}
-                  \item \sout{Linux: Je nach Distro \texttt{haskell-platform} oder \texttt{ghc} installieren}
-                  \item \sout{macOS: \texttt{ghcup}}
-                  \item Verwendet am besten \texttt{stack} (\href{https://www.haskellstack.org}{www.haskellstack.org})
-                \end{itemize}
+                \item Installation via \texttt{ghcup} (\href{https://www.haskell.org/ghcup/}{haskell.org/ghcup})
         \end{itemize}
 \end{frame}
 
@@ -107,8 +101,10 @@
         \code{../demos/Maths.hs}
 
         \begin{itemize}
-                \item Ein Haskell-Programm ist eine Folge von Funktionsdefinitionen.
-                \item Funktionen müssen keine Argumente haben.
+                \item Ein Haskell-Programm ist eine Auflistung von Definitionen
+                \item Definitionen können Konstanten (\texttt{tau}) oder Funktionen sein
+                \item Funktionsargument schreibt man in Haskell \emph{ohne Klammern}: \\
+                      $\texttt{f x y z} \equiv f(x, y, z)$
         \end{itemize}
 \end{frame}
 
@@ -144,6 +140,11 @@
                 3.141592653589793 & \texttt{double} & \pause \texttt{Double} \\
                 \texttt{[Tt]rue}, \texttt{[Ff]alse} & \texttt{boolean} & \pause \texttt{Bool} \\
         \end{tabular}
+
+        \begin{itemize}
+                \item In Haskell haben nur Variablen kleingeschriebene Identifier.
+                \item Großgeschriebene Identifier: Module, Typen, Konstruktoren.
+        \end{itemize}
 \end{frame}
 
 \begin{frame}{Basistypen}

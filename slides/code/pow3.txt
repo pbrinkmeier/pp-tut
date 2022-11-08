@@ -1,0 +1,8 @@
+pow3 b e
+    | e < 0 = error "Negativer Exponent"
+    | otherwise = pow3Acc 1 b e
+
+pow3Acc acc b e
+    | e == 0 = acc
+    | even e = pow3Acc acc (b * b) (e `div` 2)
+    | odd e  = pow3Acc (b*acc) (b * b) (e `div` 2)

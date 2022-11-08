@@ -7,7 +7,7 @@
 % \subtitle{}
 \author{Paul Brinkmeier}
 \institute{Tutorium Programmierparadigmen am KIT}
-\date{02. November 2021}
+\date{08. November 2022}
 
 \begin{document}
 
@@ -29,7 +29,7 @@
 \section{Heutiges Programm}
 \begin{frame}{Programm}
 	\begin{itemize}
-		\item Übungsblatt 1/Aufgabe 1
+		\item Übungsblatt 1
 		\item Wiederholung der Vorlesung
 		\item Aufgaben zu Haskell
 	\end{itemize}
@@ -37,26 +37,32 @@
 
 \section{Übungsblatt 1}
 
-\begin{frame}{1.1, 1.2 --- \texttt{pow1} und \texttt{pow2}}
-	\code{../demos/Arithmetik1.hs}
+\begin{frame}{Basisfälle und Spezialfälle}
+	\code{code/pow3.txt}
+
+	\begin{itemize}
+		\item Spezial- und Fehlerfälle in den \enquote{Rumpf}
+		\item Basisfälle für Iteration in die Endrekursion\\
+			  $\leadsto$ Vermeidung von Codedopplung
+	\end{itemize}
 \end{frame}
 
-\begin{frame}{1.3 --- \texttt{pow3}}
-	\code{../demos/Arithmetik2.hs}
+\begin{frame}{Endrekursion}
+	\code{code/pow3acc.txt}
 \end{frame}
 
-\begin{frame}{1.4 --- \texttt{root}}
-	\code{../demos/Arithmetik3.hs}
-\end{frame}
+\begin{frame}{Sortierung}
+	\begin{align*}
+		\texttt{sort} \left[ 5, 2_1, 2_2, 2_3, 1 \right]
+		&= \left[ 1, 2_1, 2_2, 2_3, 5 \right] \text{\true} \\
+		&= \left[ 1, 2_3, 2_1, 2_2, 5 \right] \text{\false}
+	\end{align*}
 
-\begin{frame}{1.5 --- \texttt{isPrime}}
-	\code{../demos/Arithmetik4.hs}
-\end{frame}
-
-\begin{frame}{Aufgaben 2 und 3}
-  Teilaufgaben 2 und 3 sind noch nicht korrigiert.
-
-  $\leadsto$ nächste Woche
+	\begin{itemize}
+		\item Bei Aufgabe 2 war implizit gefordert, dass die Sortierfunktionen stabil sind.
+		\item Originalreihenfolge soll nicht geändert werden.
+		\item $\implies$ Bei \texttt{merge} nicht tauschen, \texttt{>=} vs. \texttt{>}, ...
+	\end{itemize}
 \end{frame}
 
 \section{Wiederholung: Funktionen}
@@ -191,6 +197,77 @@
           \item \texttt{showHangman "{}test"{} "{}sf"{}} $\Rightarrow$ \texttt{"{}. . s . | s f"{}}
           \item \texttt{updateHangman "{}f"{} "{}abc"{}} $\Rightarrow$ \texttt{"{}fabc"{}}
 	\end{itemize}
+\end{frame}
+
+\section{Übungsblatt 2}
+
+\begin{frame}{\texttt{where} vs. \texttt{let}}
+	\begin{center}
+	\texttt{f = let y = 21 in y where y = 50}\\
+	Zu was wertet \texttt{f} aus?
+	\end{center}
+
+	\pause	
+
+	\begin{figure}
+	\begin{tikzpicture}[level distance=0.8cm, sibling distance=1.2cm, every node/.style={scale=0.8}]
+		\node (root) {Def}
+		child {
+			node {\texttt{f x}}
+		}
+		child {
+			node {\texttt{=}}
+		}
+		child {
+			node {Expr}
+			child {
+				node {\texttt{let}}
+			}
+			child {
+				node {Def}
+				child {
+					node (def) {\texttt{y}}
+				}
+				child {
+					node {\texttt{=}}
+				}
+				child {
+					node {Expr}
+					child { node {\texttt{21}} }
+				}
+			}
+			child {
+				node {\texttt{in}}
+			}
+			child {
+				node {Expr}
+				child {
+					node[draw] (usage) {\texttt{y}}
+				}
+			}
+		}
+		child {
+			node {\texttt{where}}
+		}
+		child [sibling distance=2cm] {
+			node {Def}
+			child [sibling distance=1cm] {
+				node {\texttt{y}}
+			}
+			child [sibling distance=1cm] {
+				node {\texttt{=}}
+			}
+			child [sibling distance=1cm] {
+				node {Expr}
+				child {
+					node {\texttt{50}}
+				}
+			}
+		}
+	;
+	\draw[->] (usage) edge [bend left=90] (def);
+	\end{tikzpicture}
+	\end{figure}
 \end{frame}
 
 \end{document}

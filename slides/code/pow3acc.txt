@@ -1,0 +1,12 @@
+   pow3 2 8                while (e != 0) {
+=> pow3Acc   1   2 8         b = b * b;
+=> pow3Acc   1   4 4         e = e / 2;
+=> pow3Acc   1  16 2         if (e % 2 == 1) {
+=> pow3Acc   1 256 1           acc = b * acc;
+=> pow3Acc 256   _ 0 .       }
+=> 256                     }
+
+pow3Acc acc b e
+    | e == 0 = acc
+    | even e = pow3Acc acc (b * b) (e `div` 2)
+    | odd e  = pow3Acc (b*acc) (b * b) (e `div` 2)

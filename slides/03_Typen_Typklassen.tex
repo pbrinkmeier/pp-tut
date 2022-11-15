@@ -82,6 +82,16 @@
   \code{../demos/Truthy2.hs}
 \end{frame}
 
+\begin{frame}{Cheatsheet: \texttt{deriving}}
+  Instanzen von \texttt{Show}, \texttt{Eq}, \texttt{Ord} und \texttt{Enum} kann GHC für uns generieren:
+
+  \code{code/deriving.hs}
+
+  Mit der Flag \texttt{-ddump-deriv} gibt GHC den generierten Code aus, bspw.
+
+  \tiny \texttt{ghc -ddump-deriv -dsuppress-all -dsuppress-uniques -fforce-recomp Foo.hs}
+\end{frame}
+
 \begin{frame}{\texttt{type}: Namen für Typen}
     \begin{alignat*}{2}
         & \texttt{type} \quad \texttt{String} \quad && \texttt{=} \quad \texttt{[Char]} \\

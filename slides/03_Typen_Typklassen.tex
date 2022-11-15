@@ -7,34 +7,13 @@
 % \subtitle{}
 \author{Paul Brinkmeier}
 \institute{Tutorium Programmierparadigmen am KIT}
-\date{09. November 2020}
+\date{15. November 2022}
 
 \begin{document}
 
 \begin{frame}
 	\titlepage
 \end{frame}
-
-\section{Heutiges Programm}
-\begin{frame}{Programm}
-	\begin{itemize}
-        \item Übungsblätter 1 und 2
-		\item Wiederholung der Vorlesung: Typen und Typklassen
-		\item Datentypen selbst definieren
-	\end{itemize}
-\end{frame}
-
-\section{Übungsblatt 1}
-
-\begin{frame}{1.2.\{1,2\} -- Insertionsort}
-  \code{../demos/InsertSort.hs}
-\end{frame}
-
-\begin{frame}{1.2.\{3,4\} -- Mergesort}
-  \code{../demos/MergeSort.hs}
-\end{frame}
-
-\section{Übungsblatt 2}
 
 \begin{frame}{2.1 -- Bindung und Gültigkeitsbereiche}
     \begin{figure}
@@ -46,12 +25,6 @@
         \item Beide zeigen auf Definition im selben \texttt{let}-Block
         \item $\leadsto$ Allgemein: Variablen zeigen möglicherweise auf eine Definition im selben \texttt{let}-Block, selbst wenn es ihre eigene ist.
     \end{itemize}
-\end{frame}
-
-\begin{frame}{2.2.\{1,2,3\} -- Polynome}
-  \code{../demos/Polynom.hs}
-
-  \texttt{(\$) :: (a -> b) -> a -> b} -- Funktionsanwendung als Operator.
 \end{frame}
 
 \section{Wiederholung:\\Typen und Typklassen}
@@ -170,6 +143,7 @@
   \vfill
 
   \begin{itemize}
+    \item Brüche
     \item Führerschein
     \item Spielkarten
     \item Monopolykarten
@@ -180,7 +154,7 @@
 
   \vfill
 
-  Vorlagen: \href{https://codi.pbrinkmeier.de/s/wq88qbGYy}{codi.pbrinkmeier.de/s/wq88qbGYy}
+  Vorlagen: \href{https://pad.pbrinkmeier.de/pp-tut}{pad.pbrinkmeier.de/pp-tut}
 \end{frame}
 
 \begin{frame}{Führerschein}
@@ -252,6 +226,36 @@
   \code{../demos/PlayingCard3.hs}
 
   \texttt{Enum} ermöglicht es, bspw. \texttt{[Hearts .. Spades]} zu schreiben.
+\end{frame}
+
+\begin{frame}{Hangman 2.0}
+  \code{code/hangman2.hs}
+
+  \vfill
+  
+  \begin{columns}
+    \column{0.3\textwidth}
+    \begin{figure}
+      \begin{tikzpicture}[every node/.style={draw, rounded corners}]
+        \node (init) {in game};
+        \node [above=of init] (won) {game won};
+        \node [below=of init] (lost) {game lost};
+        \node [left=of init, fill] (inv) {};
+
+        \draw[->] (inv) edge (init)
+                  (init) edge (won)
+                  (init) edge (lost)
+                  (init) edge[loop right] (init);
+      \end{tikzpicture}
+    \end{figure}
+    \column{0.7\textwidth}
+    \begin{itemize}
+      \item Summentypen eignen sich für Automaten
+      \item \texttt{demos/Hangman.hs}
+      \item Baut die Vorlage so um, dass der Typ \texttt{Hangman} einen Konstruktor pro Zustand hat
+      \item $\leadsto$ Verlagerung von Fallunterscheidungen auf die Typebene (vgl. dynamische Bindung bei OOP)
+    \end{itemize}
+  \end{columns}
 \end{frame}
 
 \end{document}

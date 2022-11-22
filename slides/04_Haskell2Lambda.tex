@@ -3,11 +3,11 @@
 
 \input{common.tex}
 
-\title{Tutorium 04: $\lambda$-Kalkül}
+\title{Tutorium 04: $\lambda$-Kalkül und Haskell}
 % \subtitle{}
 \author{Paul Brinkmeier}
 \institute{Tutorium Programmierparadigmen am KIT}
-\date{16. November 2021}
+\date{22. November 2022}
 
 \begin{document}
 
@@ -16,6 +16,21 @@
 \end{frame}
 
 \section{Übungsblatt 3}
+
+\begin{frame}{Wiederholung: \texttt{zipWith}}
+    \code{code/zipwith.eval}
+
+    \begin{itemize}
+        \item \texttt{zipWith op xs ys} wendet \texttt{op} paarweise auf die Elemente von \texttt{xs} und \texttt{ys} an.
+        \item Typisches Beispiel: \texttt{\texttt{zipWith (*)}} (Hadamard-Produkt)
+        \pause
+        \item Wie die meisten Listenkombinatoren funktioniert \texttt{zipWith} auch mit unendlichen Listen:
+        \begin{itemize}
+            \item Beide Eingaben unendlich $\implies$ Ausgabe unendlich
+            \item Anderenfalls hat die Ausgabe die Länge der kürzeren Eingabe
+        \end{itemize}
+    \end{itemize}
+\end{frame}
 
 \begin{frame}{1 --- Streams}
     \only<1>{
@@ -231,6 +246,65 @@
 	\end{itemize}
 \end{frame}
 
+\begin{frame}{3 --- Stream-Kombinatoren}
+    \only<1>{
+    Gesucht für $n \in \mathbb{N}$:
+
+    \begin{equation*}
+        \{p^i | p\;\text{Primzahl}, 1 \leq i \leq n \}
+    \end{equation*}
+
+    Gegeben:
+
+    \code{code/primes.hs}
+    }
+    \only<2>{
+        Schematisch sehen (für $n = 3$) unsere Eingabedaten so aus:
+
+        \begin{figure}
+            \begin{tabular}{c | c c c c c c c c c c c}
+                i & \multicolumn{10}{c}{\texttt{map (\string^i) primes}} \\
+                \hline
+                1 & 2 & 3 & 5 & 7 & 11 & 13 & 17 & 19 & 23 & ... \\
+                2 & 4 & 9 & 25 & 49 & 121 & 169 & 289 & 361 & 529 & ... \\
+                3 & 8 & 27 & 125 & 343 & 1331 & 2197 & 4913 & 6859 & 12167 & ... \\
+            \end{tabular}
+        \end{figure}
+
+        \begin{itemize}
+            \item \texttt{foldr} funktioniert auch mit unendlichen Listen\\
+                  $\leadsto$ Aber weiß nicht, dass \texttt{primes}/\texttt{merge xs ys} monoton.
+            \pause
+            \item \texttt{foldl} funktioniert nur mit endlichen Listen\\
+                  $\implies$ \texttt{foldl merge} über \texttt{map (\string^i) primes}
+        \end{itemize}
+    }
+
+    \only<3>{
+        \begin{equation*}
+            \underbrace{
+            \texttt{merge}
+            \begin{cases}
+            \texttt{[2\string^1, 3\string^1, 5\string^1, 7\string^1, 11\string^1, ...} \\
+            \underbrace{
+            \texttt{merge}
+            \begin{cases}
+            \texttt{[2\string^2, 3\string^2, 5\string^2, 7\string^2, 11\string^2, ...} \\
+            \underbrace{
+            \texttt{merge}
+            \begin{cases}
+            \texttt{[2\string^3, 3\string^3, 5\string^3, 7\string^3, 11\string^3, ...} \\
+            \texttt{[]}
+            \end{cases}
+            }_{\Rightarrow^\ast \texttt{[8, 27, 64, 125, ...}}
+            \end{cases}
+            }_{\Rightarrow^\ast \texttt{[4, 8, 9, 25, 27, ...}}
+            \end{cases}
+            }_{\Rightarrow^\ast \texttt{[2, 3, 4, 5, 8, 9, 11, 13, 17, 19, 23, 25, 27, ...}}
+        \end{equation*}
+    }
+\end{frame}
+
 \section{Wiederholung: Algebraische Datentypen}
 
 \begin{frame}{Cheatsheet: Algebraische Datentypen in Haskell}
@@ -415,7 +489,7 @@
 		      \texttt{substitute :: (String, Term) -> Term -> Term}
 		\begin{itemize}
 			\item \texttt{type Term = LambdaTerm}
-			\item Tipp: Dafür braucht ihr \texttt{fv}
+			\item Annahme: Einzusetzender Term hat keine freien Variablen.
 		\end{itemize}
 	\end{itemize}
 \end{frame}

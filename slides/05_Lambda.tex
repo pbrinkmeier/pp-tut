@@ -6,7 +6,7 @@
 % \subtitle{}
 \author{Paul Brinkmeier}
 \institute{Tutorium Programmierparadigmen am KIT}
-\date{23. November 2021}
+\date{29. November 2022}
 
 \begin{document}
 
@@ -14,33 +14,7 @@
 	\titlepage
 \end{frame}
 
-\section{Übungsblatt 3}
-
-\begin{frame}{2 --- Collatz-Vermutung}
-	\code{../demos/Collatz.hs}
-\end{frame}
-
-\begin{frame}{2 --- Collatz-Vermutung}
-	\code{../demos/CollatzAlt.hs}
-
-	\begin{itemize}
-		\item \enquote{eleganter}
-		\item In der Klausur aber eher nur Funktionen aus der Prelude verwenden
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{3 --- Stream-Kombinatoren}
-	\code{../demos/Merge.hs}
-
-	\begin{itemize}
-		\item Für \texttt{i} in \texttt{1..n} unendliche Liste der Primzahlen hoch \texttt{i} erstellen
-		\item Dann: Alle miteinander vereinigen
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{\texttt{primepowers}-Visualisierung}
-    
-\end{frame}
+\section{Übungsblätter}
 
 \section{Wiederholung}
 
@@ -168,11 +142,157 @@
     \end{columns}
 \end{frame}
 
+\begin{frame}{Klammerung von Lambda-Termen}
+  \begin{columns}
+    \column{0.5\textwidth}
+    \begin{figure}
+      \begin{tikzpicture}[node font=\ttfamily, level distance=0.8cm, sibling distance=1.2cm, every node/.style={scale=0.8}, level 5/.style={sibling distance=0.6cm}]
+          \node (root) {@}
+            child { node {@}
+              child { node {f} }
+              child { node {x} }
+            }
+            child { node {y} }
+          ;
+      \end{tikzpicture}
+    \end{figure}
+
+    \column{0.5\textwidth}
+    \begin{figure}
+      \begin{tikzpicture}[node font=\ttfamily, level distance=0.8cm, sibling distance=1.2cm, every node/.style={scale=0.8}, level 5/.style={sibling distance=0.6cm}]
+          \node (root) {@}
+            child { node {f} }
+            child { node {@}
+              child { node {x} }
+              child { node {y} }
+            }
+          ;
+      \end{tikzpicture}
+    \end{figure}
+  \end{columns}
+  \begin{columns}
+    \column{0.5\textwidth}
+    \pause
+    \center
+    $$
+    \app{(\app{f}{x})}{y} = \appp{f}{x}{y}
+    $$
+    \small
+    \enquote{$f$ angewendet auf $x$ und $y$}
+
+    \column{0.5\textwidth}
+    \pause
+    \center
+    $$
+    \app{f}{(\app{x}{y})} \neq \appp{f}{x}{y}
+    $$
+    \small
+    \enquote{$f$ angewendet auf das Ergebnis von $\app{x}{y}$}
+  \end{columns}
+  \vfill
+  \pause
+  \begin{itemize}
+    \item \emph{Funktionsanwendung} ist linksassoziativ (linksgeklammert)
+    \item $\leadsto$ Wie bei Haskell!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Klammerungsbeispiel}
+  \code{code/sum.hs}
+  \small
+  \begin{align*}
+    sum = \lam{a}{\lam{b}{\lam{f}{\apppp{ifZero}{&(\appp{sub}{b}{(\app{succ}{a})})\\}{&\cn{0}\\}{&(\appp{add}{(\app{f}{a})}}{(\apppp{sum}{(\app{succ}{a})}{b}{f})})}}}
+  \end{align*}
+  \begin{columns}
+    \column{0.5\textwidth}
+    \begin{figure}
+      \begin{tikzpicture}[node font=\ttfamily, level distance=0.5cm, sibling distance=1.2cm, every node/.style={scale=0.8}]
+        \node (root) {@}
+          child { node {@}
+            child { node {@}
+              child { node {sum} }
+              child { node {@}
+                child { node {succ} }
+                child { node {a} }
+              }
+            }
+            child { node {b} }
+          }
+          child { node {f} };
+      \end{tikzpicture}
+    \end{figure}
+
+    \column{0.5\textwidth}
+    \begin{figure}
+      \begin{tikzpicture}[node font=\ttfamily, level distance=0.5cm, sibling distance=2cm, every node/.style={scale=0.8}, level 1/.style={sibling distance=2.4cm}, level 2/.style={sibling distance=1.2cm}]
+        \node (root) {@}
+          child { node {@}
+            child { node {sub} }
+            child { node {b} }
+          }
+          child { node {@}
+            child { node {succ} }
+            child { node {a} }
+          };
+      \end{tikzpicture}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Klammerung von Funktionstypen}
+  \code{code/sum.hs}
+
+  \center
+  \texttt{sum :: Int -> Int -> (Int -> Int) -> Int}\\
+  \texttt{sum :: Int -> (Int -> ((Int -> Int) -> Int))}
+
+  \begin{columns}
+    \column{0.5\textwidth}
+    \begin{figure}
+      \begin{tikzpicture}[node font=\ttfamily, level distance=0.5cm, sibling distance=1.2cm, every node/.style={scale=0.8}]
+        \node (root) {@}
+          child { node {@}
+            child { node {@}
+              child { node {sum} }
+              child { node {a+1} }
+            }
+            child { node {b} }
+          }
+          child { node {f} };
+      \end{tikzpicture}
+    \end{figure}
+
+    \column{0.5\textwidth}
+    \begin{figure}
+      \begin{tikzpicture}[node font=\ttfamily, level distance=0.5cm, sibling distance=1.2cm, every node/.style={scale=0.8}]
+        \node (root) {->}
+          child { node {Int} }
+          child { node {->}
+            child { node {Int} }
+            child { node {->}
+              child {node {->}
+                child { node {Int} }
+                child { node {Int} }
+              }
+              child {node {Int} }
+            }
+          };
+      \end{tikzpicture}
+    \end{figure}
+  \end{columns}
+
+  \pause
+  \begin{itemize}
+    \item Auch Typterme sind Bäume
+    \item \emph{Funktionstypen} sind rechtsassoziativ
+  \end{itemize}
+\end{frame}
+
 \section{Church-Zahlen}
 
 \begin{frame}{Peano-Axiome}
 	\begin{eqnarray*}
-		c_0 &= ?\\
+		c_0 &= c_0\\
 		c_1 &= s (c_0)\\
 		c_2 &= s (s (c_0))\\
 		c_3 &= s (s (s (c_0)))\\

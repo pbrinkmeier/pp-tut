@@ -1,4 +1,4 @@
-module Tut05 where
+module Tut05 (Exp(..), eval, Env) where
 
 import Data.Function (on)
 import Data.List (maximumBy)
@@ -41,6 +41,9 @@ fun6 x y = succ (toEnum (last [fromEnum x..fromEnum y]))
 fun7 x = if show x /= [] then x else error
 
 -- 4.2
+
+b2i True = 1
+b2i False = 0
 
 data Exp t
     = Var t

@@ -6,7 +6,7 @@
 % \subtitle{}
 \author{Paul Brinkmeier}
 \institute{Tutorium Programmierparadigmen am KIT}
-\date{30. November 2021}
+\date{06. Dezember 2022}
 
 \begin{document}
 
@@ -14,16 +14,19 @@
 	\titlepage
 \end{frame}
 
+% Blatt 4 Ropes, Blatt 5.1
+\section{Übungsblätter}
+
 \section{Wiederholung}
 
 \begin{frame}{Cheatsheet: Lambda-Kalkül/Basics}
   \begin{itemize}
-    \item Terme $t$: Variable ($x$), Funktion ($\lambda x . t$), Anwendung ($t \; t$)
+    \item Terme $t$: Variable ($\var{x}$), Funktion ($\lam{x}{t}$), Anwendung ($t \; t$)
     \item \emph{$\alpha$-Äquivalenz}: Gleiche Struktur
     \item \emph{$\eta$-Äquivalenz}: Unterversorgung
     \item \emph{Freie Variablen}, \emph{Substitution}, \emph{RedEx}
     \item \emph{$\beta$-Reduktion}: \\
-          $(\lambda{}p.b)$ $t \Rightarrow b\left[p\rightarrow{}t\right]$
+          $(\lam{p}{b})$ $t \Rightarrow b\left[\var{p}\rightarrow{}t\right]$
   \end{itemize}
 \end{frame}
 
@@ -50,6 +53,46 @@
 \section{Übungsblatt 4}
 
 \section{Y-Kombinator}
+
+\begin{frame}{Globale Definitionen im $\lambda$-Kalkül}
+	\begin{align*}
+		fibAcc = \lam{a}{\lam{b}{\lam{n}{\apppp{isZero}{\var{n}}{\var{a}}{(\apppp{fibAcc}{\var{b}}{(\appp{add}{\var{a}}{\var{b}})}{(\app{pred}{\var{n}})})}}}} \\
+		\tiny\texttt{fibAcc a b n = if n == 0 then a else fibAcc b (a+b) (n-1)}
+	\end{align*}
+
+	\begin{itemize}
+		\item Definition von $fibAcc$ ist nicht Teil des $\lambda$-Kalküls \\
+		      ($\lambda$ enthält \emph{nur} Variablen, Funktionsanwendung, Abstraktion)
+		\item $\implies$ $fibAcc$ \enquote{sieht} sich selbst nicht \\
+			  \enquote{$fibAcc$ ist frei in $\lam{a}{\lam{b}{\dots}}$}
+	\end{itemize}
+
+	\begin{equation*}
+		\underbrace{\apppp{fibAcc}{c_0}{c_1}{c_7} \stackrel{\ast}{\implies}}_{\text{Aus Definition}} \underbrace{\apppp{fibAcc}{c_1}{c_1}{c_6} \centernot\implies}_{\text{$fibAcc$ frei}}
+	\end{equation*}
+\end{frame}
+
+\begin{frame}{Rekursive Funktionen}
+	\begin{itemize}
+		\item Damit $fibAcc$ nicht frei ist, müssen wir es \emph{binden}.\\
+		      Im $\lambda$-Kalkül gibt es dafür nur ein mögliches Konstrukt:
+		\item Ein $\lambda$, das $fibAcc$ als Parameter nimmt!
+	\end{itemize}
+
+	\begin{align*}
+		& \lam{a}{\lam{b}{\lam{n}{\apppp{isZero}{\var{n}}{\var{a}}{(\apppp{fibAcc}{\var{b}}{(\appp{add}{\var{a}}{\var{b}})}{(\app{pred}{\var{n}})})}}}} \\
+		\leadsto \lam{fibAcc}{&\lam{a}{\lam{b}{\lam{n}{\apppp{isZero}{\var{n}}{\var{a}}{(\apppp{\var{fibAcc}}{\var{b}}{(\appp{add}{\var{a}}{\var{b}})}{(\app{pred}{\var{n}})})}}}}}
+	\end{align*}
+
+	\begin{itemize}
+		\item Um auf unsere ursprünglich gewollte Funktion zu kommen, wenden wir $Y$ an:
+	\end{itemize}
+
+	\begin{align*}
+		Y &= \lam{f}{\app{(\lam{x}{\app{\var{f}}{(\app{\var{x}}{\var{x}})}})}{(\lam{x}{\app{\var{f}}{(\app{\var{x}}{\var{x}})}})}} \\
+		fibAcc2 &= \app{Y}{(\lam{fibAcc}{\lam{a}{\lam{b}{\dots \var{fibAcc} \dots}}})}
+	\end{align*}
+\end{frame}
 
 \section{Einführung in Prolog}
 
@@ -286,16 +329,16 @@
 		\begin{itemize}
 			\item Die fünf werden im Kreis aufgestellt
 			\item Der Wärter stellt sich in die Mitte
-			\item Beginnend bei 12 Uhr dreht er sich im Uhrzeigersinn und teilt jeden $k$-ten (bspw. $k = 2$) Insassen zum Putzdienst ein
+			\item Beginnend bei 12 Uhr dreht er sich im Uhrzeigersinn und teilt jeden zweiten Insassen zum Putzdienst ein
 			\begin{itemize}
-				\item D.h. es werden immer $k - 1$ Insassen übersprungen
+				\item D.h. es wird immer ein Insasse übersprungen
 			\end{itemize}
 		\end{itemize}
 	\end{itemize}
 
 	An welcher Stelle muss Bob stehen, um nicht putzen zu müssen?\\
 	\pause
-	An welcher Stelle muss Bob bei 41 Insassen und $k = 3$ stehen?
+	An welcher Stelle muss Bob bei 41 Insassen stehen, wenn immer jeder \emph{dritte} Insasse eingeteilt wird?
 \end{frame}
 
 \begin{frame}{Putzdienst}

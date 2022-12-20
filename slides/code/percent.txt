@@ -1,0 +1,3 @@
+int percent(float x) {
+    return truncate(div(x, 100.0));
+}

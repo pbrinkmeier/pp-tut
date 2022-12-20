@@ -1,4 +1,4 @@
-% mathematiker_wg.pl
+% mathematiker_wg.pro
 
 alice(2).
 alice(4).

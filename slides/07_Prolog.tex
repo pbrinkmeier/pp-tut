@@ -6,7 +6,7 @@
 % \subtitle{}
 \author{Paul Brinkmeier}
 \institute{Tutorium Programmierparadigmen am KIT}
-\date{07. Dezember 2021}
+\date{13. Dezember 2022}
 
 \begin{document}
 
@@ -137,7 +137,7 @@
       \item Wir ersetzen in $C'$ dann $Y$ durch $\theta_r$.
       \item Substitution $\unifier{\su{Y}{\theta_r}}$ wird als Ergebnis vorgemerkt.
       \item Beispiel: $\theta_l = X$ \true, $X \not\in FV(\theta_r) = FV(\pa{a}) = \emptyset$ \true, d.h.\\
-            Ergebnis: $\texttt{unify}(\{ Y \plsunify \functor{f}{\pa{a}}, \functor{f}{Z} \plsunify Y \}) \circ \unifier{\su{A}{\pa{a}}}$
+            Ergebnis: $\texttt{unify}(\{ Y \plsunify \functor{f}{\pa{a}}, \functor{f}{Z} \plsunify Y \}) \circ \unifier{\su{X}{\pa{a}}}$
     \end{itemize}
   }
 
@@ -149,7 +149,7 @@
 
     \begin{itemize}
       \item Auch wenn rechts eine Variable steht muss sie ersetzt werden.
-      \item Beispiel: $\theta_r = Y$ \true, $X \not\in FV(\theta_l) = FV(\functor{f}{Z}) = \{ Z \}$ \true, d.h.\\
+      \item Beispiel: $\theta_r = Y$ \true, $Y \not\in FV(\theta_l) = FV(\functor{f}{Z}) = \{ Z \}$ \true, d.h.\\
         Ergebnis: $\texttt{unify}(\{ \functor{f}{Z} \plsunify \functor{f}{\pa{a}} \}) \circ \unifier{\su{Y}{f(Z)}}$
     \end{itemize}
   }

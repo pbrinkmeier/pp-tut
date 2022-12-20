@@ -1,12 +1,14 @@
+% TODO: Teilaufgaben Klausur
+
 \documentclass{beamer}
 
 \input{common.tex}
 
-\title{Tutorium 08: Typisierung}
+\title{Tutorium 08: Typisierung \& Typinferenz}
 % \subtitle{}
 \author{Paul Brinkmeier}
 \institute{Tutorium Programmierparadigmen am KIT}
-\date{14. Dezember 2021}
+\date{20. Dezember 2022}
 
 \begin{document}
 
@@ -14,310 +16,16 @@
     \titlepage
 \end{frame}
 
-\section{ÜB 5, 6}
-
-\subsection{ÜB 5}
-
-\newcommand{\E}{\;}
-
-\newcommand{\liin}[2]{#1\E{}#2}
-\newcommand{\liiin}[3]{#1\E{}#2\E{}#3}
-\newcommand{\livn}[4]{#1\E{}#2\E{}#3\E{}#4}
-\newcommand{\lvn}[5]{#1\E{}#2\E{}#3\E{}#4\E{}#5}
-
-\newcommand{\lii}[2]{(#1\E{}#2)}
-\newcommand{\liii}[3]{(#1\E{}#2\E{}#3)}
-
-\newcommand{\liir}[2]{\textcolor{red}{\underline{(}}#1\E{}#2\textcolor{red}{\underline{)}}}
-\newcommand{\liiir}[3]{\textcolor{red}{\underline{(}}#1\E{}#2\E{}#3\textcolor{red}{\underline{)}}}
-
-\newcommand{\abs}[2]{\lambda{}#1.#2}
-
-\begin{frame}{5.1 --- Klammerung im $\lambda$-Kalkül}
-	\footnotesize
-	\begin{eqnarray}
-		\liiin{c_0}{c_1}{\liii{c_2}{c_3}{c_4}}{c_5}                   =& \pause \liin{\liir{\liir{c_0}{c_1}}{\lii{\liir{c_2}{c_3}}{c_4}}}{c_5}             \\
-		\liin{\liii{c_0}{c_1}{c_2}}{\liii{c_3}{c_4}{c_5}}             =& \pause \liin{\lii{\liir{c_0}{c_1}}{c_2}}{\lii{\liir{c_3}{c_4}}{c_5}}              \\
-		\livn{c_0}{c_1}{\liii{c_2}{c_3}{c_4}}{\lii{c_5}{c_6}}         =& \pause \liin{\liir{\liir{c_0}{c_1}}{\lii{\liir{c_2}{c_3}}{c_4}}}{\lii{c_5}{c_6}}  \\
-		\lvn{c_0}{c_1}{\liii{c_2}{c_3}{c_4}}{c_5}{c_6}                =& \pause \liin{\liir{\liir{\liir{c_0}{c_1}}{\lii{\liir{c_2}{c_3}}{c_4}}}{c_5}}{c_6} \\
-		\livn{c_0}{\lii{c_1}{\liii{c_2}{c_3}{c_4}}}{c_5}{c_6}         =& \pause \liin{\liir{\liir{c_0}{\lii{c_1}{\lii{\liir{c_2}{c_3}}{c_4}}}}{c_5}}{c_6}  \\
-		\liin{(\abs{y}{\liiin{c_0}{c_1}{c_2}})}{\liii{c_3}{c_4}{c_5}} =& \pause \liin{(\abs{y}{\liin{\lii{c_0}{c_1}}{c_2}})}{\lii{\liir{c_3}{c_4}}{c_5}}  \\
-                \liin{(\abs{y}{\lii{c_0}{(\abs{z}{\liin{c_1}{c_2}})}})}{\liii{c_3}{c_4}{c_5}} =& \pause \liin{(\abs{y}{\liir{c_0}{(\abs{z}{\liir{c_1}{c_2}})}})}{\lii{\liir{c_3}{c_4}}{c_5}}
-	\end{eqnarray}
-
-	\normalsize
-	\begin{itemize}
-		\item Funktionsanwendungen sind linksassoziativ, wie in Haskell
-		\item Eigentlich: In Haskell sind Funktionsanwendungen linksassoziativ, wie im $\lambda$-Kalkül
-	\end{itemize}
-\end{frame}
-
-\setcounter{equation}{0}
-
-\begin{frame}{5.1 --- Klammerung im $\lambda$-Kalkül}
-	\begin{eqnarray}
-		\liin{(\abs{y}{y})}{c_0} \stackrel{?}{=} \abs{y}{\liin{y}{c_0}} \\
-		\abs{y}{\lii{y}{c_0}} \stackrel{?}{=} \abs{y}{\liin{y}{c_0}}
-	\end{eqnarray}
-
-      \only<1>{
-        \begin{itemize}
-                \item Term 1 $\approx$ \texttt{App (Abs "{}y"{} (Var "{}y"{})) (Var "{}c0"{})}
-                \item Term 2 $\approx$ \texttt{Abs "{}y"{} (App (Var "{}y"{}) (Var "{}c0"{}))}
-                \item Funktionsanwendung bindet am stärkesten $\leadsto$ (2)
-        \end{itemize}
-      }
-      \only<2>{
-        \begin{itemize}
-          \item Term 1 $\approx$ \texttt{app(abs(y, y), c0)}
-          \item Term 2 $\approx$ \texttt{abs(y, app(y, c0))}
-          \item Funktionsanwendung bindet am stärkesten $\leadsto$ (2)
-        \end{itemize}
-      }
-
-\end{frame}
-
-\setcounter{equation}{0}
-
-\begin{frame}{1.3 --- Klammerung im $\lambda$-Kalkül}
-	\begin{eqnarray}
-		\subst{\liin{(x)}{c_0}}{x}{\abs{y}{y}} =& \liin{(\abs{y}{y})}{c_0} \\
-		\subst{\liin{x}{c_0}}{x}{(\abs{y}{y})} =& \liin{(\abs{y}{y})}{c_0} \\
-		\subst{\liin{x}{c_0}}{x}{\abs{y}{y}} =& \liin{(\abs{y}{y})}{c_0}
-	\end{eqnarray}
-
-	\begin{itemize}
-		\item Alle drei Substitutionen führen zum selben Ergebnis
-		\item Klammern auf der rechten Seite haben nichts mit der Substution zu tun
-		\item \enquote{Für beliebiges $t$ repräsentieren $t$ und $(t)$ den gleichen $\lambda$-Term} stimmt
-	\end{itemize}
-\end{frame}
-
-\setcounter{equation}{0}
-
-\begin{frame}{1.4 --- Klammerung im $\lambda$-Kalkül}
-	Angenommen, $x = \liin{c_0}{c_1}$.\\
-	Welche der folgenden Aussagen gelten?
-
-	\begin{eqnarray}
-		\liiin{c_0}{c_1}{c_2}                 =& \liin{x}{c_2} \\
-		\liiin{c_2}{c_0}{c_1}                 =& \liin{c_2}{x} \\
-		\livn{c_2}{\lii{c_3}{c_4}}{c_0}{c_1}  =& \liiin{c_2}{\lii{c_3}{c_4}}{x} \\
-		\liin{c_2}{\liii{c_0}{c_1}{c_3}}{c_4} =& \liiin{c_2}{\lii{x}{c_3}}{c_4}
-	\end{eqnarray}
-
-	\pause
-
-	\begin{itemize}
-		\item 1 und 4 gelten
-		\item $\liiin{c_2}{c_0}{c_1} = \liin{\liir{c_2}{c_0}}{c_1} \neq \liin{c_2}{\liir{c_0}{c_1}} = \liin{c_2}{x}$
-		\item $\livn{c_2}{\lii{c_3}{c_4}}{c_0}{c_1} \stackrel{*}{\neq} \liiin{c_2}{\lii{c_3}{c_4}}{x}$
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{1.4 --- Klammerung im $\lambda$-Kalkül}
-    \begin{equation*}
-        \app{\app{\app{\app{\uline{(\lam{a}{a})}}{(\lam{b}{b})}}{(\app{\uline{(\lam{c}{c})}}{(\appp{\uline{(\lam{d}{d})}}{(\lam{e}{e})}{(\lam{f}{f})})})}}{(\lam{g}{g})}}{(\app{\uline{(\lam{h}{h})}}{(\lam{i}{i})})}
-    \end{equation*}
-
-    \begin{itemize}
-        \item Gute Übung um Redex zu finden
-        \item Warum ist $\lam{g}{g}$ nicht die linke Seite eines Redex?
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Wiederholung: Auswertungsstrategien}
-    \begin{equation*}
-      \overbrace{\app{
-          \uline{\csucc}
-        }{
-          \overbrace{(\app{\uline{\csucc}}{\cn{0}})}^{\text{Redex 2}}
-        }}^{\text{Redex 1}}
-    \end{equation*}
-
-    mit
-
-    \begin{eqnarray*}
-      \cn{0} =& \lam{s}{\lam{z}{z}} \\
-      \csucc =& \lam{n}{\lam{s}{\lam{z}{\app{s}{(\app{\app{n}{s}}{z})}}}}
-    \end{eqnarray*}
-
-\begin{itemize}
-    \item Welcher Redex soll zuerst ausgewertet werden?
-    \item $\leadsto$ verschiedene Auswertungsstrategien
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Wiederholung: Normalreihenfolge}
-    \begin{eqnarray*}
-      &
-      \app{
-        \uline{\csucc}
-      }{
-        (\app{\uline{\csucc}}{\cn{0}})
-      } \\
-      \Rightarrow_\beta&
-      \lam{s}{\lam{z}{\app{s}{(\app{\app{(\app{\uline{\csucc}}{\cn{0}})}{s}}{z})}}} \\
-      \Rightarrow_\beta&
-      \lam{s}{\lam{z}{
-        \app{s}{
-          (\app{\app{\uline{(\lam{s}{\lam{z}{
-            \app{s}{(\app{\app{\uline{\cn{0}}}{s}}{z})}
-          }})}}{s}}{z})
-        }
-      }} \\
-      \Rightarrow_\beta^2&
-      \lam{s}{\lam{z}{
-        \app{s}{(\app{s}{(\app{\app{\uline{\cn{0}}}{s}}{z})})}
-      }} \\
-      \Rightarrow_\beta^2&
-      \lam{s}{\lam{z}{
-        \app{s}{(\app{s}{z})}
-      }} \centernot\implies
-    \end{eqnarray*}
-
-    \vfill
-
-    Normalreihenfolge: Linkester Redex zuerst.
-\end{frame}
-
-\begin{frame}{Wiederholung: Call-by-Name}
-    \begin{eqnarray*}
-      &
-      \app{
-        \uline{\csucc}
-      }{
-        (\app{\uline{\csucc}}{\cn{0}})
-      } \\
-      \Rightarrow_\beta&
-      \lam{s}{\lam{z}{\app{s}{(\app{\app{(\app{\uline{\csucc}}{\cn{0}})}{s}}{z})}}} \centernot\implies_{\text{CbN}}
-    \end{eqnarray*}
-
-    \vfill
-
-    Call-by-Name: Linkester Redex zuerst, aber:
-
-    \begin{itemize}
-      \item Funktions\emph{inhalte} werden nicht weiter reduziert
-      \item $\leadsto$ Betrachte nur Redexe, die nicht von einem $\lambda$ umgeben sind
-      \item So (ähnlich) funktioniert auch Laziness in Haskell
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Wiederholung: Call-by-Value}
-    \begin{eqnarray*}
-      &
-      \app{
-        \uline{\csucc}
-      }{
-        (\app{\uline{\csucc}}{\cn{0}})
-      } \\
-      \Rightarrow_\beta&
-      \app{
-        \uline{\csucc}
-      }{
-        (\lam{s}{\lam{z}{
-          \app{s}{
-            (\app{\app{\uline{\cn{0}}}{s}}{z})
-          }
-        }})
-      } \\
-      \Rightarrow_\beta&
-      \lam{s}{\lam{z}{
-      \app{\app{
-        \uline{(\lam{s}{\lam{z}{
-          \app{s}{
-            (\app{\app{\uline{\cn{0}}}{s}}{z})
-          }
-        }})}
-      }{s}}{z}
-      }} \centernot\implies_\text{CbV}
-    \end{eqnarray*}
-    \vfill
-
-    Call-by-Value: Linkester Redex zuerst, aber:
-
-    \begin{itemize}
-      \item Funktionsinhalte werden nicht weiter reduziert
-      \item $\leadsto$ Betrachte nur Redexe, die nicht von einem $\lambda$ umgeben sind
-      \item Berechne \emph{Argumente vor dem Einsetzen}
-      \item $\leadsto$ Betrachte nur Redexe, deren Argument \emph{unter CbV} nicht weiter reduziert werden muss
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{5.2 --- Redexe, Auswertungsstrategie}
-    \only<1>{
-        \begin{equation*}
-            \app{\overbrace{\appr{
-                (\lam{t}{\lam{f}{f}})
-            }{
-                (\appr{(
-                    \lam{y}{\appr{(\lam{x}{\app{x}{x}})}{(\lam{x}{\app{x}{x}})}}
-                )}{
-                    (\overbrace{\appr{(\lam{x}{x})}{(\lam{x}{x})}}^{\text{CbV}})
-                })
-            }}^{\text{NRF, CbN}}}{
-                (\lam{t}{\lam{f}{f}})
-            }
-        \end{equation*}
-    }
-    \only<2>{
-        \begin{equation*}
-            \lam{y}{\overbrace{\appr{(
-                \lam{z}{\app{\appr{(\lam{x}{x})}{(\lam{x}{x})}}{z}}
-            )}{
-                y
-            }}^{\text{NRF}}}
-        \end{equation*}
-    }
-
-    \begin{itemize}
-        \item NRF: Linkester Redex
-        \item CbN: Linkester Redex, nicht in Lambda
-        \item CbV: Linkester Redex, nicht in Lambda, Argumente zuerst
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{5.3 --- Church-Zahlen in Haskell}
-    \code{../demos/ChurchNumbers.hs}
-
-    \begin{itemize}
-        \item Alte Klausuraufgabe
-        \item Typisch: Lambda-Wissen hilft beim Lösen
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{5.4 --- Church-Paare}
-    \begin{align*}
-        pair &= \lam{a}{\lam{b}{\lam{p}{\appp{p}{a}{b}}}} \\
-        (3, 5) &\approx \appp{pair}{c_3}{c_5} \Rightarrow^2_\beta \lam{p}{\appp{p}{c_3}{c_5}} \\
-        fst &= \lam{p}{\app{p}{(\lam{a}{\lam{b}{a}})}}
-    \end{align*}
-
-    \only<1>{
-        \begin{itemize}
-            \item \enquote{Fertiges} Paar nimmt Funktion $p$ als Argument
-            \item $p$ wählt ersten oder zweiten Eintrag
-        \end{itemize}
-    }
-    \only<2>{
-        \begin{itemize}
-            \item $snd = \lam{p}{\app{p}{(\lam{a}{\lam{b}{b}})}}$
-            \item $next$: Berechne zu $(n, m)$: $(m, m+1)$
-            \item $next = \lam{p}{\appp{pair}{(\app{snd}{p})}{(\app{succ}{(\app{snd}{p})})}}$
-            \item $pred = \lam{n}{\app{fst}{(\appp{n}{next}{(\appp{pair}{c_0}{c_0})})}}$
-            \item $sub = \lam{m}{\lam{n}{\appp{n}{pred}{m}}}$
-        \end{itemize}
-    }
-\end{frame}
-
-\subsection{ÜB 6}
-
 \section{Typisierung}
+
+{
+\setbeamercolor{background canvas}{bg=}
+\includepdf{robinson2.pdf}
+}
 
 \subsection{Klausuraufgabe WS16/17 A3 a)}
 
-\begin{frame}{Klausuraufgabe WS16/18 A3 a) (6P.)}
+\begin{frame}{Klausuraufgabe WS16/17 A3 a) (6P.)}
   \begin{align*}
     C_1 &= \{ \alpha_9 = \alpha_{10} \to \alpha_8, \alpha_9 = \alpha_4, \alpha_{10} = \texttt{bool} \} \\
     C_2 &= \{ \alpha_{12} = \alpha_{13} \to \alpha_{11}, \alpha_{12} = \alpha_4, \alpha_{13} = \texttt{int} \}
@@ -329,7 +37,7 @@
     \item Geben Sie allgemeinste Unifikatoren $\sigma_1$ für $C_1$ und $\sigma_2$ für $C_2$ an.
     \item Ist auch $C_1 \cup C_2$ unifizierbar?
     \item Ist der Ausdruck\\
-      \begin{equation*}\lam{a}{\lam{f}{\app{\app{f}{(\app{a}{\pa{true}})}}{(\app{a}{17})}}}\end{equation*}\\
+      \begin{equation*}\lam{a}{\lam{f}{\app{\app{\var{f}}{(\app{\var{a}}{true})}}{(\app{\var{a}}{17})}}}\end{equation*}\\
         typisierbar? Begründen Sie ihre Antwort \emph{kurz}.
   \end{enumerate}
   }
@@ -358,12 +66,12 @@
 
   \only<4>{
     Ist der Ausdruck\\
-      \begin{equation*}\lam{a}{\lam{f}{\app{\app{f}{(\app{a}{\pa{true}})}}{(\app{a}{\pa{17}})}}}\end{equation*}\\
+      \begin{equation*}\lam{a}{\lam{f}{\app{\app{\var{f}}{(\app{\var{a}}{true})}}{(\app{\var{a}}{17})}}}\end{equation*}\\
     typisierbar? Begründen Sie ihre Antwort \emph{kurz}.
 
     \vfill
 
-    A: Nein, da $a$ mit zwei verschiedenen Typen verwendet wird.
+    A: Nein, da $\var{a}$ mit zwei verschiedenen Typen verwendet wird.
   }
 \end{frame}
 
@@ -374,7 +82,7 @@
 \begin{frame}{Cheatsheet: Typisierter Lambda-Kalkül}
   \begin{mathpar}
     \inferrule{
-      \Gamma{}, p : \pi \vdash b : \rho
+      \Gamma{}, \var{p} : \pi \vdash b : \rho
     }{
       \Gamma \vdash \lam{p}{b} : \pi \to \rho
     } \textrm{\textsc{Abs}}
@@ -387,9 +95,9 @@
     } \textrm{\textsc{App}}
     \and
     \inferrule{
-      \Gamma{}(t) = \tau
+      \Gamma{}(\var{t}) = \tau
     }{
-      \Gamma \vdash t : \tau
+      \Gamma \vdash \var{t} : \tau
     } \textrm{\textsc{Var}}
     \and
     \inferrule{
@@ -408,36 +116,37 @@
 
 \begin{frame}{Was bedeuten eigentlich $\vdash$, $\Gamma$ und $:$?}
   \begin{equation*}
-    \lam{a}{\lam{f}{\app{f}{(\app{a}{\pa{true}})}}}
+    \lam{a}{\lam{f}{\app{\var{f}}{(\app{\var{a}}{true})}}}
   \end{equation*}
 
   Um zu einem solchen Term ein Typisierungsproblem zu beschreiben, notieren wir:
 
   \begin{equation*}
-    \Gamma \vdash \lam{a}{\lam{f}{\app{f}{(\app{a}{\pa{true}})}}} : \tau
+    \Gamma \vdash \lam{a}{\lam{f}{\app{\var{f}}{(\app{\var{a}}{true})}}} : \tau
   \end{equation*}
 
   \enquote{Im \emph{Typkontext} $\Gamma$ hat der Term den Typen $\tau$.}
 
   \begin{itemize}
     \item $\Gamma$: Enthält Typen für freie Variablen.
-    \item $... \vdash ... : ...$ --- Notation für Typisierungsproblem.
+    \item Liste von Paaren aus Variablen und deren Typen
+    \item Liste $\leadsto$ Reihenfolge ist wichtig
   \end{itemize}
 \end{frame}
 
 \begin{frame}{$\Gamma$ in Aktion}
   \begin{align*}
-    &\Gamma \vdash a + 42 : \pa{int} \\
+    &\Gamma \vdash \var{a} + 42 : \pa{int} \\
     &\textsc{Const} = \{ 42 \}, \tau_{42} = \texttt{int}
   \end{align*}
 
-  Damit die Aussage \enquote{$a + 42$ hat in $\Gamma$ den Typen \texttt{int}} stimmt, müssen wir für $\Gamma$ wählen:
+  Damit die Aussage \enquote{$\var{a} + 42$ hat in $\Gamma$ den Typen \texttt{int}} stimmt, müssen wir für $\Gamma$ wählen:
   
   \begin{itemize}
     \pause
-    \item $\Gamma = a : \texttt{int}, + : \texttt{int} \to \texttt{int} \to \texttt{int}$
+    \item $\Gamma = \var{a} : \texttt{int}, + : \texttt{int} \to \texttt{int} \to \texttt{int}$
     \pause
-    \item Allgemeiner: $\Gamma = a : \alpha, + : \alpha \to \texttt{int} \to \texttt{int}$
+    \item Allgemeiner: $\Gamma = \var{a} : \alpha, + : \alpha \to \texttt{int} \to \texttt{int}$
   \end{itemize}
 \end{frame}
 
@@ -445,8 +154,8 @@
 
 \begin{frame}{Typisierungsregel für Lambdas}
 	\begin{itemize}
-		\item \tikzmark{green!20}{contextL}{\enquote{Unter Einfügung des Typs $\pi$ von $p$ in den Kontext...}}
-		\item \tikzmark{red!20}{bodyTypeL}{\enquote{... ist $b$ als Funktion von $p$ typisierbar.}}
+		\item \tikzmark{green!20}{contextL}{\enquote{Unter Einfügung des Typs $\pi$ von $\var{p}$ in den Kontext...}}
+		\item \tikzmark{red!20}{bodyTypeL}{\enquote{... ist $b$ als Funktion von $\var{p}$ typisierbar.}}
 	\end{itemize}
 
 	\begin{mathpar}
@@ -498,22 +207,22 @@
 
 \begin{frame}{Einfache Typisierungsregel für Variablen}
 	\begin{itemize}
-		\item \tikz[baseline, remember picture]{\node [fill=green!20,draw] (varRetL) {\enquote{Der Typkontext $\Gamma$ enthält einen Typ $\tau$ für $t$.}};}
+		\item \tikz[baseline, remember picture]{\node [fill=green!20,draw] (varRetL) {\enquote{Der Typkontext $\Gamma$ enthält einen Typ $\tau$ für $\var{t}$.}};}
 	\end{itemize}
 
 	\begin{mathpar}
 		\inferrule{
-			\tikz[baseline, remember picture]{\node[fill=green!20,draw] (varRet) {$\Gamma{}(t) = \tau$};}
+			\tikz[baseline, remember picture]{\node[fill=green!20,draw] (varRet) {$\Gamma{}(\var{t}) = \tau$};}
 		}{
 			\tikz[baseline, remember picture]{\node[fill=blue!20,draw] (varShow) {
-				$\Gamma \vdash t : \tau$
+				$\Gamma \vdash \var{t} : \tau$
 			};}
 		} \textrm{\textsc{Var}}
 	\end{mathpar}
 
 	\begin{itemize}
 		\item Daraus folgt:
-		\item \tikz[baseline, remember picture]{\node [fill=blue!20,draw] (varShowL) {\enquote{Variable $t$ hat im Kontext $\Gamma$ den Typ $\tau$.}};}
+		\item \tikz[baseline, remember picture]{\node [fill=blue!20,draw] (varShowL) {\enquote{Variable $\var{t}$ hat im Kontext $\Gamma$ den Typ $\tau$.}};}
 	\end{itemize}
 
 	\tikz[overlay, remember picture]{
@@ -528,30 +237,30 @@
 \begin{frame}{Typisierung: Beispiel}
   \only<1>{
     \begin{mathpar}
-      x : \texttt{bool} \vdash \lam{f}{\app{f}{x}} : (\texttt{bool} \to \alpha) \to \alpha
+      \var{x} : \texttt{bool} \vdash \lam{f}{\app{\var{f}}{\var{x}}} : (\texttt{bool} \to \alpha) \to \alpha
     \end{mathpar}
 
-    \enquote{Unter der Annahme, dass $x$ den Typ \texttt{bool} hat, hat $\lam{f}{\app{f}{x}}$ den Typ $(\texttt{bool} \to \alpha) \to \alpha$.}
+    \enquote{Unter der Annahme, dass $\var{x}$ den Typ \texttt{bool} hat, hat $\lam{f}{\app{\var{f}}{\var{x}}}$ den Typ $(\texttt{bool} \to \alpha) \to \alpha$.}
   }
 
   \only<2>{
     \begin{mathpar}
       \inferrule{
-        \mathunderline{red}{x : \texttt{bool}}, \mathunderline{blue}{f} : \mathunderline{yellow}{\texttt{bool} \to \alpha} \vdash
-        \mathunderline{green}{\app{f}{x}} :
+        \mathunderline{red}{\var{x} : \texttt{bool}}, \mathunderline{blue}{\var{f}} : \mathunderline{yellow}{\texttt{bool} \to \alpha} \vdash
+        \mathunderline{green}{\app{\var{f}}{\var{x}}} :
         \mathunderline{orange}{\alpha}
       }{
-        \mathunderline{red}{x : \texttt{bool}} \vdash \lam{\mathunderline{blue}{f}}{\mathunderline{green}{\app{f}{x}}} : (\mathunderline{yellow}{\texttt{bool} \to \alpha}) \to \mathunderline{orange}{\alpha}
+        \mathunderline{red}{\var{x} : \texttt{bool}} \vdash \lam{\mathunderline{blue}{\var{f}}}{\mathunderline{green}{\app{\var{f}}{\var{x}}}} : (\mathunderline{yellow}{\texttt{bool} \to \alpha}) \to \mathunderline{orange}{\alpha}
       } \textsc{Abs}
     \end{mathpar}
 
-    Pattern-Matching: Der äußerste Term ist ein Lambda, also wenden wir die $\textsc{Abs}$-Regel an.
+    \enquote{Pattern-Matching}: Der äußerste Term ist ein Lambda, also wenden wir die $\textsc{Abs}$-Regel an.
 
     \begin{columns}
         \begin{column}{0.5\textwidth}
     \begin{align*}
-      \mathunderline{red}{\Gamma} &= \mathunderline{red}{x : \texttt{bool}} \\
-      \mathunderline{blue}{p} &= \mathunderline{blue}{f}, \mathunderline{green}{b} = \mathunderline{green}{\app{f}{x}} \\
+      \mathunderline{red}{\Gamma} &= \mathunderline{red}{\var{x} : \texttt{bool}} \\
+      \mathunderline{blue}{p} &= \mathunderline{blue}{\var{f}}, \mathunderline{green}{\var{b}} = \mathunderline{green}{\app{\var{f}}{\var{x}}} \\
       \mathunderline{yellow}{\pi} &= \mathunderline{yellow}{\texttt{bool} \to \alpha} \\
       \mathunderline{orange}{\rho} &= \mathunderline{orange}{\alpha}
     \end{align*}
@@ -560,7 +269,7 @@
 
     \begin{mathpar}
       \inferrule{
-        \mathunderline{red}{\Gamma{}}, \mathunderline{blue}{p} : \mathunderline{yellow}{\pi} \vdash \mathunderline{green}{b} : \mathunderline{orange}{\rho}
+        \mathunderline{red}{\Gamma{}}, \mathunderline{blue}{\var{p}} : \mathunderline{yellow}{\pi} \vdash \mathunderline{green}{b} : \mathunderline{orange}{\rho}
       }{
         \mathunderline{red}{\Gamma} \vdash \lam{\mathunderline{blue}{p}}{\mathunderline{green}{b}} : \mathunderline{yellow}{\pi} \to \mathunderline{orange}{\rho}
       } \textrm{\textsc{Abs}}
@@ -573,13 +282,13 @@
     \begin{mathpar}
       \inferrule{
         \inferrule{
-          \inferrule{\Gamma(f) = \texttt{bool} \to \alpha}{\Gamma \vdash f : \texttt{bool} \to \alpha} \textsc{Var} \\
-          \inferrule{\Gamma(x) = \texttt{bool}           }{\Gamma \vdash x : \texttt{bool}           } \textsc{Var}
+          \inferrule{\Gamma(\var{f}) = \texttt{bool} \to \alpha}{\Gamma \vdash \var{f} : \texttt{bool} \to \alpha} \textsc{Var} \\
+          \inferrule{\Gamma(\var{x}) = \texttt{bool}           }{\Gamma \vdash \var{x} : \texttt{bool}           } \textsc{Var}
         }{
-          x : \pa{bool}, f : \texttt{bool} \to \alpha \vdash \app{f}{x} : \alpha
+          \var{x} : \texttt{bool}, \var{f} : \texttt{bool} \to \alpha \vdash \app{\var{f}}{\var{x}} : \alpha
         } \textsc{App}
       }{
-        x : \texttt{bool} \vdash \lam{f}{\app{f}{x}} : (\texttt{bool} \to \alpha) \to \alpha
+        \var{x} : \texttt{bool} \vdash \lam{f}{\app{\var{f}}{\var{x}}} : (\texttt{bool} \to \alpha) \to \alpha
       } \textsc{Abs}
     \end{mathpar}
 
@@ -591,11 +300,11 @@
       \begin{column}{0.5\textwidth}
         \begin{figure}
           \begin{tikzpicture}
-            \node {$\lambda f$}
+            \node {$\lambda \texttt{f}$}
               [level distance=10mm]
               child {node {@}
-                child {node {f}}
-                child {node {x}}
+                child {node {\var{f}}}
+                child {node {\var{x}}}
               }
             ;
           \end{tikzpicture}
@@ -629,13 +338,13 @@
 \subsection{Von Typisierungsregeln zu Typinferenz}
 
 \begin{frame}{Von Typisierungsregeln zu Typinferenz}
-  Beim inferieren wird das Pattern-matching der Typen durch die \emph{Unifikation} übernommen.
+  Beim Inferieren wird das Pattern-matching der Typen durch die \emph{Unifikation} übernommen.
   Deswegen schreiben wir anstelle von konkreten Typen immer $\alpha_i$ und merken uns die Gleichungen für später:
 
   \only<1>{
     \begin{equation*}
       \inferrule{
-        \Gamma{}, p : \pi \vdash b : \rho
+        \Gamma{}, \texttt{p} : \pi \vdash b : \rho
       }{
         \Gamma \vdash \lam{p}{b} : \pi \to \rho
       } \textrm{\textsc{Abs}}
@@ -643,7 +352,7 @@
       \leadsto
       \;\;
       {\inferrule{
-        \Gamma{}, p : \alpha_j \vdash b : \alpha_k
+        \Gamma{}, \texttt{p} : \alpha_j \vdash b : \alpha_k
       }{
         \Gamma \vdash \lam{p}{b} : \alpha_i
       } \textrm{\textsc{Abs}} \atop
@@ -675,17 +384,17 @@
   \only<3>{
     \begin{equation*}
       \inferrule{
-        \Gamma{}(t) = \tau
+        \Gamma{}(\var{t}) = \tau
       }{
-        \Gamma \vdash t : \tau
+        \Gamma \vdash \var{t} : \tau
       } \textrm{\textsc{Var}}
       \;\;
       \leadsto
       \;\;
       {\inferrule{
-        \Gamma{}(t) = \alpha_j
+        \Gamma{}(\var{t}) = \alpha_j
       }{
-        \Gamma \vdash t : \alpha_i
+        \Gamma \vdash \var{t} : \alpha_i
       } \textrm{\textsc{Var}} \atop
       \{ \alpha_i = \alpha_j \}}
     \end{equation*}
@@ -704,7 +413,7 @@
 		\item Unifiziere Constraint-System zu einem Unifikator
 		\begin{itemize}
 			\item Robinson-Algorithmus, im Grunde wie bei Prolog
-                        \item I.d.R.: Allgemeinster Unifikator (mgu)
+      \item Allgemeinster Unifikator (mgu)
 		\end{itemize}
 	\end{itemize}
 
@@ -713,9 +422,9 @@
 		\begin{column}{0.3\textwidth}
                   \begin{mathpar}
     \inferrule{
-      \Gamma{}(t) = \alpha_j
+      \Gamma{}(\var{t}) = \alpha_j
     }{
-      \Gamma \vdash t : \alpha_i
+      \Gamma \vdash \var{t} : \alpha_i
     } \textrm{\textsc{Var}}
                   \end{mathpar}
 
@@ -737,7 +446,7 @@
 		\begin{column}{0.3\textwidth}
                   \begin{mathpar}
     \inferrule{
-      \Gamma{}, p : \alpha_j \vdash b : \alpha_k
+      \Gamma{}, \var{p} : \alpha_j \vdash b : \alpha_k
     }{
       \Gamma \vdash \lam{p}{b} : \alpha_i
     } \textrm{\textsc{Abs}}
@@ -751,7 +460,7 @@
 \begin{frame}{Herleitungsbaum: Beispiel}
   \only<1>{
     \begin{mathpar}
-      \vdash \lam{x}{\lam{y}{x}} : \alpha_1
+      \vdash \lam{x}{\lam{y}{\texttt{x}}} : \alpha_1
     \end{mathpar}
 
     Beispielhafte Aufgabenstellung: Finde den Typen $\alpha_1$.
@@ -760,7 +469,7 @@
   \only<2>{
     \begin{mathpar}
       \inferrule{
-        \mathunderline{red}{x} : \alpha_2 \vdash \mathunderline{blue}{\lam{y}{x}} : \alpha_3
+        \mathunderline{red}{\texttt{x}} : \alpha_2 \vdash \mathunderline{blue}{\lam{y}{x}} : \alpha_3
       }{
         \vdash \lam{\mathunderline{red}{x}}{\mathunderline{blue}{\lam{y}{x}}} : \alpha_1
       } \textsc{Abs}
@@ -777,12 +486,12 @@
     \begin{mathpar}
       \inferrule{
         \inferrule{
-          \mathunderline{red}{x : \alpha_2}, \mathunderline{blue}{y} : \alpha_4 \vdash \mathunderline{orange}{x} : \alpha_5
+          \mathunderline{red}{\var{x} : \alpha_2}, \mathunderline{blue}{\texttt{y}} : \alpha_4 \vdash \mathunderline{orange}{\var{x}} : \alpha_5
         }{
-          \mathunderline{red}{x : \alpha_2} \vdash \lam{\mathunderline{blue}{y}}{\mathunderline{orange}{x}} : \alpha_3
+          \mathunderline{red}{\var{x} : \alpha_2} \vdash \lam{\mathunderline{blue}{y}}{\mathunderline{orange}{\var{x}}} : \alpha_3
         } \textsc{Abs}
       }{
-        \vdash \lam{x}{\lam{y}{x}} : \alpha_1
+        \vdash \lam{x}{\lam{y}{\var{x}}} : \alpha_1
       } \textsc{Abs}
     \end{mathpar}
 
@@ -799,15 +508,15 @@
       \inferrule{
         \inferrule{
           \inferrule{
-            (\mathunderline{red}{x : \alpha_2, y : \alpha_4})(\mathunderline{blue}{x}) = \alpha_2
+            (\mathunderline{red}{\var{x} : \alpha_2, \var{y} : \alpha_4})(\mathunderline{blue}{\var{x}}) = \alpha_2
           }{
-            \mathunderline{red}{x : \alpha_2, y : \alpha_4} \vdash \mathunderline{blue}{x} : \alpha_5
+            \mathunderline{red}{\var{x} : \alpha_2, \var{y} : \alpha_4} \vdash \mathunderline{blue}{\var{x}} : \alpha_5
           } \textsc{Var}
         }{
-          x : \alpha_2 \vdash \lam{y}{x} : \alpha_3
+          \var{x} : \alpha_2 \vdash \lam{y}{\var{x}} : \alpha_3
         } \textsc{Abs}
       }{
-        \vdash \lam{x}{\lam{y}{x}} : \alpha_1
+        \vdash \lam{x}{\lam{y}{\var{x}}} : \alpha_1
       } \textsc{Abs}
     \end{mathpar}
 
@@ -826,7 +535,7 @@
     \inferrule{
       ...
     }{
-      \vdash \lam{f}{\app{f}{(\lam{x}{x})}} : \alpha_1
+      \vdash \lam{f}{\app{\var{f}}{(\lam{x}{\var{x}})}} : \alpha_1
     } \textsc{Abs}
   \end{mathpar}
 
@@ -844,27 +553,27 @@
 \inferrule{
 \inferrule{
 \inferrule{
-(f : \alpha_2)(f) = \alpha_2
+(\var{f} : \alpha_2)(\var{f}) = \alpha_2
 }{
-f : \alpha_2 \vdash f : \alpha_4
+\var{f} : \alpha_2 \vdash \var{f} : \alpha_4
 } \textsc{Var}
 \\
 \inferrule{
 \inferrule{
-\Gamma(x) = \alpha_6
+\Gamma(\var{x}) = \alpha_6
 }{
-\Gamma \vdash x : \alpha_7
+\Gamma \vdash \var{x} : \alpha_7
 } \textsc{Var}
 }{
-f : \alpha_2 \vdash \lam{x}{x} : \alpha_5
+\var{f} : \alpha_2 \vdash \lam{x}{\var{x}} : \alpha_5
 } \textsc{Abs}
 }{
-f : \alpha_2 \vdash \app{f}{(\lam{x}{x})} : \alpha_3
+\var{f} : \alpha_2 \vdash \app{\var{f}}{(\lam{x}{\var{x}})} : \alpha_3
 } \textsc{App}
 }{
-\vdash \lam{f}{\app{f}{(\lam{x}{x})}} : \alpha_1
+\vdash \lam{f}{\app{\var{f}}{(\lam{x}{\var{x}})}} : \alpha_1
 } \textsc{Abs}\\
-\Gamma = f : \alpha_2, x : \alpha_6
+\Gamma = \var{f} : \alpha_2, \var{x} : \alpha_6
 \end{mathpar}
 
 \begin{align*}
@@ -878,19 +587,19 @@ f : \alpha_2 \vdash \app{f}{(\lam{x}{x})} : \alpha_3
 
 \begin{frame}{\textsc{Let}-Polymorphismus: Motivation}
   \begin{equation*}
-    \lam{f}{\app{f}{f}}
+    \lam{f}{\app{\var{f}}{\var{f}}}
   \end{equation*}
 
   \begin{itemize}
-    \item Diese Funktion verwendet $f$ auf zwei Arten:
+    \item Diese Funktion verwendet $\var{f}$ auf zwei Arten:
     \begin{itemize}
       \item $\alpha \to \alpha$: Rechte Seite.
-      \item $(\alpha \to \alpha) \to (\alpha \to \alpha)$: Linke Seite, nimmt $f$ als Argument und gibt es zurück.
+      \item $(\alpha \to \alpha) \to (\alpha \to \alpha)$: Linke Seite, nimmt $\var{f} : \alpha \to \alpha$ als Argument und gibt es zurück.
     \end{itemize}
     \pause
     \item Problem: $\alpha \to \alpha$ und $(\alpha \to \alpha) \to (\alpha \to \alpha)$ sind nicht unifizierbar!
     \begin{itemize}
-      \item \enquote{occurs check}: $\alpha$ darf sich nicht selbst einsetzen.
+      \item \textbf{occurs check}: $\alpha$ darf sich nicht selbst einsetzen.
     \end{itemize}
   \item Idee: Bei jeder Verwendung eines polymorphen Typen erzeugen wir \emph{neue Typvariablen}, um diese Beschränkung zu umgehen.
   \end{itemize}
@@ -940,10 +649,10 @@ f : \alpha_2 \vdash \app{f}{(\lam{x}{x})} : \alpha_3
 
     \begin{mathpar}
       \inferrule{
-        \Gamma(x) = \phi \\
+        \Gamma(\var{x}) = \phi \\
         \phi \succeq_{\text{frische $\alpha_i$}} \tau
       }{
-        \Gamma \vdash x : \alpha_j
+        \Gamma \vdash \var{x} : \alpha_j
       } \textsc{Var} \\
       \text{Constraint:} \; \{ \alpha_j = \tau \}
     \end{mathpar}
@@ -955,14 +664,14 @@ f : \alpha_2 \vdash \app{f}{(\lam{x}{x})} : \alpha_3
   }
 
   \only<2>{
-    Mit einen \textsc{Let}-Term wird ein Typschema eingeführt:
+    Mit einem \textsc{Let}-Term wird ein Typschema eingeführt:  
 
     \begin{mathpar}
       \inferrule{
         \Gamma \vdash t_1 : \alpha_i \\
         \Gamma' \vdash t_2 : \alpha_j
       }{ 
-        \Gamma \vdash \texttt{let} \;\; x = t_1 \;\; \texttt{in} \;\; t_2 : \alpha_k
+        \Gamma \vdash \texttt{let} \;\; \var{x} = t_1 \;\; \texttt{in} \;\; t_2 : \alpha_k
       } \textsc{Let}
     \end{mathpar}
 
@@ -970,7 +679,8 @@ f : \alpha_2 \vdash \app{f}{(\lam{x}{x})} : \alpha_3
 
     \begin{align*}
       \sigma_{let} &= mgu(C_{let}) \\
-           \Gamma' &= \sigma_{let}(\Gamma), x : ta(\sigma_{let}(\alpha_i), \sigma_{let}(\Gamma)) \\
+           \Gamma' &= \sigma_{let}(\Gamma), \var{x} : ta(\sigma_{let}(\alpha_i), \sigma_{let}(\Gamma)) \\
+  ta(\tau, \Gamma) &= \forall \alpha_1 . \; ... \; \forall \alpha_n . \tau \qquad \{ \alpha_1, ..., \alpha_n \} = FV(\tau) \setminus FV(\Gamma) \\
           C'_{let} &= \{ \alpha_n = \sigma_{let}(\alpha_n) \mid \sigma_{let}(\alpha_n) \;\; \text{ist definiert} \}
     \end{align*}
 
@@ -985,37 +695,132 @@ f : \alpha_2 \vdash \app{f}{(\lam{x}{x})} : \alpha_3
         \inferrule{
           ...
         }{
-          \vdash \lam{x}{x} : \alpha_2
+          \vdash \lam{x}{\var{x}} : \alpha_2
         } \textsc{Abs} \\
         \inferrule{
           \inferrule{
-            \Gamma'(f) = \forall \alpha_5 . \alpha_5 \to \alpha_5 \\\\
+            \Gamma'(\var{f}) = \forall \alpha_5 . \alpha_5 \to \alpha_5 \\\\
             \succeq \alpha_8 \to \alpha_8
           }{
-            \Gamma' \vdash f : \alpha_6
+            \Gamma' \vdash \var{f} : \alpha_6
           } \textsc{Var} \\
           \inferrule{
-            \Gamma'(f) = \forall \alpha_5 . \alpha_5 \to \alpha_5 \\\\
+            \Gamma'(\var{f}) = \forall \alpha_5 . \alpha_5 \to \alpha_5 \\\\
             \succeq \alpha_9 \to \alpha_9
           }{
-            \Gamma' \vdash f : \alpha_7
+            \Gamma' \vdash \var{f} : \alpha_7
           } \textsc{Var}
         }{
-          \Gamma' \vdash \app{f}{f} : \alpha_3
+          \Gamma' \vdash \app{\var{f}}{\var{f}} : \alpha_3
         } \textsc{App}
       }{ 
-        \vdash \texttt{let} \;\; f = \lam{x}{x} \;\; \texttt{in} \;\; \app{f}{f} : \alpha_1
+        \vdash \texttt{let} \;\; \var{f} = \lam{x}{\var{x}} \;\; \texttt{in} \;\; \app{\var{f}}{\var{f}} : \alpha_1
       } \textsc{Let}
     \end{mathpar}
 
     \begin{align*}
            C_{let} &= \{ \alpha_2 = \alpha_4 \to \alpha_5, \alpha_4 \to \alpha_5 \} \\
       \sigma_{let} &= \unifier{\su{\alpha_2}{\alpha_5 \to \alpha_5}, \su{\alpha_4}{\alpha_5}} \\
-      \Gamma'      &= x : \forall \alpha_5 . \alpha_5 \to \alpha_5 \\
+      \Gamma'      &= \var{x} : \forall \alpha_5 . \alpha_5 \to \alpha_5 \\
           C'_{let} &= \{ \alpha_2 = \alpha_5 \to \alpha_5, \alpha_4 = \alpha_5 \} \\
           C_{body} &= \{ \alpha_6 = \alpha_7 \to \alpha_3, \alpha_6 = \alpha_8 \to \alpha_8, \alpha_7 = \alpha_9 \to \alpha_9 \} \\
                  C &= C'_{let} \cup C_{body} \cup \{ \alpha_3 = \alpha_1 \}
     \end{align*}
+\end{frame}
+
+\begin{frame}{\texttt{flip flip}}
+  \begin{mathpar}
+    \inferrule{
+      \Gamma \vdash \lam{f}{\lam{x}{\lam{y}{\appp{\var{f}}{\var{y}}{\var{x}}}}} : \alpha_2
+      \qquad
+      \Gamma' \vdash \appppp{\var{flip}}{\var{flip}}{17}{\var{(+)}}{25} : \alpha_3
+    }{
+      \Gamma \vdash
+      \lamlet{flip}{\lam{f}{\lam{x}{\lam{y}{\appp{\var{f}}{\var{y}}{\var{x}}}}}}{\appppp{\var{flip}}{\var{flip}}{17}{\var{(+)}}{25}}
+      : \alpha_1
+    }\textsc{Let}
+  \end{mathpar}
+
+  $$
+  \tau_{17}, \tau_{25} = \texttt{int}, \Gamma = \texttt{(+)} : \texttt{int} \to \texttt{int} \to \texttt{int}
+  $$
+
+  \begin{itemize}
+    \item Aus \texttt{Prelude}: \texttt{flip f x y = f y x}
+    \item Welchen Typ hat \texttt{flip}?
+    \item Welchen Typ hat \texttt{flip flip}?
+    \pause
+    \item Überlegt euch den Typ von \texttt{flip} und überprüft ihn in GHCi.
+    \item Was ist $\Gamma'$?
+    \item Führt Typinferenz für den rechten Teilbaum durch.
+  \end{itemize}
+\end{frame}
+
+\section{Prolog}
+
+\subsection{UPN-Taschenrechner}
+
+{
+\usebackgroundtemplate{\includegraphics[height=\paperheight]{images/Sinclair_Scientific.jpg}}
+\begin{frame}[plain]
+\begin{columns}
+  \column{0.4\textwidth}
+  \column{0.6\textwidth}
+  \begin{itemize}
+    \item Welche Taste fehlt hier?
+    \onslide<2>{
+    \item Eingegebene Zahlen landen auf einem Stack
+    \item $\times / \div / + / -$ wenden ihre Operation auf die obersten Stackelemente an
+    \item Ergebnis landet wieder auf dem Stack
+    \item Beispiel:\\
+          $2 \times (7 + 14) \leadsto 2 \; 7 \; 14 + \times$
+    \item \emph{Umgekehrte Polnische Notation}
+    }
+  \end{itemize}
+  \vspace{1cm}
+  {\small Sinclair Scientific (1974)}
+\end{columns}
+\end{frame}
+}
+
+\begin{frame}{UPN-Rechner}
+  \code{../demos/rpn.pro}
+
+  \begin{itemize}
+    \item Beispiel: \texttt{eval([15, 27, plus], [42]).}
+    \item Erweitert \texttt{evalOp} um $\times / \div / -$!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Übersetzung in UPN}
+  \code{../demos/rpn2.pro}
+
+  \begin{itemize}
+    \item Vervollständigt \texttt{compile/2}!
+    \item Beispiel:\\
+          \texttt{compile(2 * (7 + 14), [2, 7, 14, plus, mul])}
+  \end{itemize}
+\end{frame}
+
+\section{Haskell}
+
+\begin{frame}{Pixelflut}
+  Mit dem Pixelflut-Protokoll können wir einzelne Pixel per TCP auf eine Leinwand malen.
+  Es gibt zwei einfache Befehle:
+
+  \begin{itemize}
+    \item \texttt{SIZE}: Fragt die Größe der Leinwand ab
+    \item \texttt{PX x y rrggbb}: Zeichnet einen Pixel der Farbe \texttt{rrggbb}
+  \end{itemize}
+
+  Mit \texttt{nc} oder \texttt{telnet} könnt ihr euch mit meinem Pixelflut-Server verbinden:
+
+  \begin{itemize}
+    \item \texttt{nc XXX.XXX.XXX.XXX 3000}
+    \item \texttt{telnet XXX.XXX.XXX.XXX:3000}
+  \end{itemize}
+
+  Verwendet die Vorlage in \texttt{demos/Pixelflut.hs} um per Haskell Pixel zu malen!
 \end{frame}
 
 \end{document}

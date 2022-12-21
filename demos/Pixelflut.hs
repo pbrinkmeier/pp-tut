@@ -10,13 +10,13 @@ import Network.Socket.ByteString (recv, sendAll)
 
 main :: IO ()
 main = runTCPClient "127.0.0.1" "3000" $ \s -> do
-    fillRect s 0 0 100 100 "ffffff"
+    fillRect s 0 0 1440 900 "ff0000"
 
 -- fill a rectangular area with a single RRGGBB color
 fillRect s originX originY width height color =
     forInt 0 width $ \x ->
         forInt 0 height $ \y ->
-            sendString s $ "PX " ++ show (originX + x) ++ " " ++ show (originY + y) ++ " ffffff\n"
+            sendString s $ "PX " ++ show (originX + x) ++ " " ++ show (originY + y) ++ " " ++ color ++ "\n"
 
 -- Utility stuff
 

@@ -721,7 +721,7 @@
     \begin{align*}
            C_{let} &= \{ \alpha_2 = \alpha_4 \to \alpha_5, \alpha_4 \to \alpha_5 \} \\
       \sigma_{let} &= \unifier{\su{\alpha_2}{\alpha_5 \to \alpha_5}, \su{\alpha_4}{\alpha_5}} \\
-      \Gamma'      &= \var{x} : \forall \alpha_5 . \alpha_5 \to \alpha_5 \\
+      \Gamma'      &= \var{f} : \forall \alpha_5 . \alpha_5 \to \alpha_5 \\
           C'_{let} &= \{ \alpha_2 = \alpha_5 \to \alpha_5, \alpha_4 = \alpha_5 \} \\
           C_{body} &= \{ \alpha_6 = \alpha_7 \to \alpha_3, \alpha_6 = \alpha_8 \to \alpha_8, \alpha_7 = \alpha_9 \to \alpha_9 \} \\
                  C &= C'_{let} \cup C_{body} \cup \{ \alpha_3 = \alpha_1 \}
@@ -816,8 +816,8 @@
   Mit \texttt{nc} oder \texttt{telnet} könnt ihr euch mit meinem Pixelflut-Server verbinden:
 
   \begin{itemize}
-    \item \texttt{nc XXX.XXX.XXX.XXX 3000}
-    \item \texttt{telnet XXX.XXX.XXX.XXX:3000}
+    \item \texttt{nc 172.XXX.XXX.XXX 3000}
+    \item \texttt{telnet 172.XXX.XXX.XXX 3000}
   \end{itemize}
 
   Verwendet die Vorlage in \texttt{demos/Pixelflut.hs} um per Haskell Pixel zu malen!

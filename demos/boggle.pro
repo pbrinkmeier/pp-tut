@@ -1,9 +1,54 @@
+/*
 board([
     [s, o, n, w],
     [a, h, e, j],
     [k, n, a, i],
     [t, o, d, w]
 ]).
+*/
+
+board([
+	[B11, B21, B31, B41],
+    [B12, B22, B32, B42],
+    [B13, B23, B33, B43],
+    [B14, B24, B34, B44]
+]) :-
+    Dice = [
+        [a, e, a, n, e, g],
+        [w, n, g, e, e, h],
+        [a, h, s, p, c, o],
+        [l, n, h, n, r, z],
+        [a, s, p, f, f, k],
+        [t, s, t, i, y, d],
+        [o, b, j, o, a, b],
+        [o, w, t, o, a, t],
+        [i, o, t, m, u, c],
+        [e, r, t, t, y, l],
+        [r, y, v, d, e, l],
+        [t, o, e, s, s, i],
+        [l, r, e, i, x, d],
+        [t, e, r, w, h, v],
+        [e, i, u, n, e, s],
+        [n, u, i, h, m, q]
+    ],
+    random_permutation(Dice, DiceShuf),
+    DiceShuf = [D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16],
+    random_member(B11, D1),
+    random_member(B21, D2),
+    random_member(B31, D3),
+    random_member(B41, D4),
+    random_member(B12, D5),
+    random_member(B22, D6),
+    random_member(B32, D7),
+    random_member(B42, D8),
+    random_member(B13, D9),
+    random_member(B23, D10),
+    random_member(B33, D11),
+    random_member(B43, D12),
+    random_member(B14, D13),
+    random_member(B24, D14),
+    random_member(B34, D15),
+    random_member(B44, D16).
 
 % Unfiziert C mit Wert in Zeile Y, Spalte X
 % Nützlich: nth1(Index, Liste, Eintrag)

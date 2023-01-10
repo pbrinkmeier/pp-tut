@@ -55,7 +55,8 @@ random_board([
 % X = 3, Y = 1 ;
 % X = 2, Y = 3.
 matchCharAt(B, X, Y, C) :-
-    ...
+    nth1(Y, B, Row),
+    nth1(X, Row, C).
 
 % Belegt (X1, Y1) mit den direkten und diagonalen Nachbarn von (X, Y).
 % Beispiel:
@@ -69,7 +70,11 @@ matchCharAt(B, X, Y, C) :-
 % X1 = 4, Y1 = 3 ;
 % X1 = 4, Y1 = 4.
 neighbor((X, Y), (X1, Y1)) :-
-    ...
+    member(DeltaX, [-1, 0, 1]),
+    member(DeltaY, [-1, 0, 1]),
+    X1 is X + DeltaX,
+    Y1 is Y + DeltaY,
+    (X, Y) \== (X1, Y1).
 
 % Finde alle *unterschiedlichen* Listen von Positionen, an denen Word vorkommt.
 % Beispiel:
@@ -91,7 +96,10 @@ solve(Board, Word, Positions) :-
 search(B, [C], (X, Y), _, [(X, Y)]) :-
     matchCharAt(B, X, Y, C).
 search(B, [C|Cs], (X, Y), Visited, [(X, Y) | Positions]) :-
-    ...
+    matchCharAt(B, X, Y, C),
+    neighbor((X, Y), (X1, Y1)),
+    not(member((X1, Y1), Visited)),
+    search(B, Cs, (X1, Y1), [(X, Y) | Visited], Positions).
 
 % Schamlos kopiert
 % von http://www.scrabble3d.info/t286f21-Liste-fast-aller-Woerter-mit-drei-Buchstaben.html

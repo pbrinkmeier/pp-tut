@@ -2,11 +2,11 @@
 
 \input{common.tex}
 
-\title{Tutorium 08: Typisierung, Prolog}
+\title{Tutorium 09: Prolog}
 % \subtitle{}
 \author{Paul Brinkmeier}
 \institute{Tutorium Programmierparadigmen am KIT}
-\date{21. Dezember 2021}
+\date{10. Januar 2023}
 
 
 \begin{document}
@@ -27,7 +27,7 @@
         \item Prolog: Logische Programmierung
     \end{itemize}
 
-    Nach den Ferien:
+    Ab nächster Woche:
 
     \begin{itemize}
         \item Parallelprogrammierung: MPI, Java
@@ -36,7 +36,16 @@
     \end{itemize}
 \end{frame}
 
-\section{ÜB 7}
+\begin{frame}{Klausuranmeldung}
+    \begin{itemize}
+        \item Klausur: 31.03.2023 um 11:30
+        \item Anmeldung ab Montag bis 24.02.2023 im \href{https://campus.studium.kit.edu/exams/registration.php?pguid=0x87BA4E33FD4947E8ADAB43370BDFA852}{CAS}
+        \item Dauer: 2 Stunden
+        \item Erlaubtes Hilfsmaterial: Alle Drucksachen
+    \end{itemize}
+\end{frame}
+
+\section{Übungsblätter}
 
 \section{Prolog}
 
@@ -151,6 +160,38 @@
 \begin{frame}{Klausur SS15: Haus vom Nikolaus}
 \end{frame}
 
-\section{Ein Haskell-Projekt}
+\section{Boggle}
+
+{
+\usebackgroundtemplate{\includegraphics[width=\paperwidth]{images/boggle.jpg}}
+\begin{frame}[plain]
+\end{frame}
+}
+
+\begin{frame}{Boggle}
+    \begin{figure}
+        \includegraphics[width=0.6\textwidth]{images/boggle.jpg}
+    \end{figure}
+    \only<1>{
+    \begin{itemize}
+        \item 16 Buchstabenwürfel werden gleichzeitig gewürfelt
+        \item Jedes gefundene Wort gibt Punkte
+        \begin{itemize}
+            \item Wort: \emph{Mindestens drei zusammenhängende Würfel}
+            \item Regeln ähnlich wie Scrabble: Wörterbuch, keine Abkürzungen/Eigennamen, etc.
+        \end{itemize}
+    \end{itemize}
+    }
+    \only<2>{
+        \begin{itemize}
+            \item Schreibt ein Programm in Prolog, das ein Boggle löst
+            \item Vorlage: \texttt{demos/boggle.pro}
+            \begin{itemize}
+                \item Implementiert: \texttt{matchCharAt}, \texttt{neighbor} und \texttt{search}
+                \item Das vorgegeben Prädikat \texttt{word} definiert unsere Wortliste
+            \end{itemize}
+        \end{itemize}
+    }
+\end{frame}
 
 \end{document}

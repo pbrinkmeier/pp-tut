@@ -47,7 +47,7 @@
 % \subtitle{}
 \author{Paul Brinkmeier}
 \institute{Tutorium Programmierparadigmen am KIT}
-\date{25. Januar 2022}
+\date{24. Januar 2023}
 
 \begin{document}
 
@@ -67,7 +67,8 @@
 		\begin{itemize}
                   \item In Java, mit ein paar Details zur JVM \textcolor{red}{$\leftarrow$ wir sind hier}
 		\end{itemize}
-              \item Dieses Jahr: \emph{Manuelles Threading und Monitore in Java (siehe bspw. auch SWT1) sind nicht Bestandteil der VL.}
+    %
+    %          \item Dieses Jahr: \emph{Manuelles Threading und Monitore in Java (siehe bspw. auch SWT1) sind nicht Bestandteil der VL.}
 	\end{itemize}
 \end{frame}
 
@@ -237,9 +238,9 @@
 
   \only<3>{
     \begin{align*}
-      P &= \frac{7s}{7s + 3s} = 0,7 \\
-      T(n) &= 0.3 + \frac{0,7}{n} \\
-      S(4) &= \frac{1}{0,3 + 0,175} \approx 2,1
+      p &= \frac{7s}{7s + 3s} = 0,7 \\
+      T(n) &= (1 - p) + \frac{p}{n} = 0.3 + \frac{0,7}{n} \\
+      S(4) &= \frac{T(1)}{T(4)} = \frac{1}{0,3 + 0,175} \approx 2,1
     \end{align*}
   }
 \end{frame}
@@ -251,7 +252,7 @@
 
   \code{code/funcinterface.java}
 
-  Ein Lambda ist hier Syntaxzucker für eine anonyme Klassendeklaration (gabs auch schon vor Java 8):
+  Ein Lambda ist hier Syntaxzucker für eine anonyme Klassendeklaration (gab es auch schon vor Java 8):
 
   \code{code/anonymousclass.java}
 \end{frame}
@@ -260,7 +261,7 @@
   \code{code/function.java}
 
   \begin{itemize}
-    \item \text{java.util.function} enthält alle möglichen solchen Interfaces (ziemlicher Clusterfuck)
+    \item \text{java.util.function} enthält einige solcher Interfaces
     \item Eigene Typen für Lambdas?
   \end{itemize}
 \end{frame}
@@ -316,7 +317,7 @@
 \end{frame}
 
 \begin{frame}{Aufgabe: Thread-Programmierung II}
-    Parallelisiert ein Programm \texttt{SumFutures}, das $\sum^{50 \cdot 10^9}_{i = 0} i$ berechnet.
+    Parallelisiert ein Programm \texttt{SumFutures}, das $\sum^{50 \cdot 10^9}_{i = 0} 1$ berechnet.
 
     \begin{itemize}
         \item Sequentielle Vorlage in \texttt{demos/java/sum/Sum.java}
@@ -362,12 +363,12 @@
 \begin{frame}{Ende}
   % TODO
 	\begin{itemize}
-		\item Im Campus-System könnt ihr euch bis zum 22.03. für die PP-Klausur anmelden
-                \begin{itemize}
-                  \item Termin: 08.04.2022 von 12:00 bis 14:00
-                \end{itemize}
+		\item Im \href{https://campus.studium.kit.edu/exams/registration.php?pguid=0x87BA4E33FD4947E8ADAB43370BDFA852}{CAS} könnt ihr euch bis zum 24.03. für die PP-Klausur anmelden
+		\begin{itemize}
+			\item Termin: 31.03.2023
+		\end{itemize}
 		\item Bis zum 15.02. könnt ihr euch \href{https://campus.studium.kit.edu/renewal/payment.php}{Rückmelden}
-		\item Schöne Woche!
+		\item Noch eine gute Woche :)
 	\end{itemize}
 \end{frame}
 

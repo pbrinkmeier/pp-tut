@@ -1,6 +1,6 @@
 @FunctionalInterface
 interface PixelTransformation {
-  byte transform(byte input);
+  int transform(int input);
 }
 
 PixelTransformation bw =

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <mpi.h>
 
-#define x 1000
+#define x 250000
 
 int main(int argc, char** args) {
 	int size;
@@ -22,6 +22,7 @@ int main(int argc, char** args) {
     }
 
     // TODO: Verteile an jeden Prozess jeweils x Elemente (in all_xs)
+    MPI_Scatter(all_xs, x, MPI_LONG, all_xs, x, MPI_LONG, 0, MPI_COMM_WORLD);
 
     printf("First element in %d: %ld\n", rank, all_xs[0]);
 
@@ -29,12 +30,10 @@ int main(int argc, char** args) {
     for (int i = 0; i < x; i++) {
         local_sum += all_xs[i];
     }
-
-    long sums[size];
-    // TODO: Sammle alle local_sum im Array sums
-
+    
     long sum;
     // TODO: Summiere alle Einträge von sums in sum
+    MPI_Reduce(&local_sum, &sum, 1, MPI_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
 
     if (rank == 0) {
         printf("Total: %ld\n", sum);

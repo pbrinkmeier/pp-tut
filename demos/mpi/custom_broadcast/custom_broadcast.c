@@ -6,7 +6,18 @@ void custom_Bcast(void *buf, int count, MPI_Datatype type, int root, MPI_Comm co
 	int unique_tag = 100;
 
     int rank, size;
-	// Implementierung hier einfügen
+	MPI_Comm_rank(comm, &rank);
+	MPI_Comm_size(comm, &size);
+
+	if (rank == root) {
+		for (int i = 0; i < size; i++) {
+			if (i != root) {
+				MPI_Send(buf, count, type, i, unique_tag, comm);
+			}
+		}
+	} else {
+		MPI_Recv(buf, count, type, root, unique_tag, comm, NULL);
+	}
 }
 
 int main(int argc, char** args) {

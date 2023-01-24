@@ -18,7 +18,6 @@ int main(int argc, char** args) {
 		MPI_Recv(&msg, 1, MPI_INT, rank - 1, TAG, MPI_COMM_WORLD, &status);
 		printf("I, %d, have received message %d\n", rank, msg);
 	}
-
 	if (rank != size - 1) {
 		msg = msg * 2;
 		MPI_Send(&msg, 1, MPI_INT, rank + 1, TAG, MPI_COMM_WORLD);

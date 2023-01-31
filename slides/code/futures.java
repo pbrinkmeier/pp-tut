@@ -1,4 +1,4 @@
-Executor e = Executor.newFixedThreadPool(N);
+ExecutorService e = Executors.newFixedThreadPool(N);
 
 Future<Long> f = e.submit(() -> {
   return calculate999999thPrime();

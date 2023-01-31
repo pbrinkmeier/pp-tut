@@ -1,5 +1,5 @@
 public class HappensBefore {
-    public static boolean ping = false;
+    public static volatile boolean ping = false;
     public static final int maxRuns = 100;
 
     public static void main(String[] args) {

@@ -5,41 +5,36 @@ import java.util.List;
 
 public class Set<T> {
     public static void main(String[] args) {
-        Set<Integer> s = new Set<>();
-        s.add(42);
-        s.add(100);
-        s.add(42);
-        for (Integer i: s.getElements()) {
-            System.out.println(String.format("%d", i));
+        Set<String> s = new Set<>();
+        s.add("abc");
+        s.add("xyz");
+        s.add("abc");
+        
+        for (String str: s.getElements()) {
+            System.out.println(str);
         }
     }
-    
-    private List elements = new ArrayList<>();
+
+    private List<T> elements = new ArrayList<>();
 
     //@ ensures \result >= 0;
     /*@ pure @*/ public int size() {
-        return elements.size();
+        return 0;
     }
 
-    //@ ensures size() == 0 <==> \result;
-    /*@ pure @*/ public boolean isEmpty() {
-        return size() == 0;
+    public boolean isEmpty() {
+        return true;
     }
 
-    //@ ensures \old(getElements()).contains(element) ==> size() == \old(size());
-    public void add(T element) {
-        if (contains(element)) return;
-        elements.add(element);
-        // Da sollte es eigentlich eine Methode geben, die neue Elemente nur dann hinzufügt, wenn sie bereits in der Liste nicht vorkommen
+    public boolean add(T element) {
+        return false;
     }
 
-    // @ ensures getElements().contains(element) ==> \result;
-    /*@ pure @*/ public boolean contains(T element) {
-        return elements.contains(element);
+    public boolean contains(T element) {
+        return false;
     }
 
-    //@ ensures \forall int i; i >= 0 && i < \result.size(); contains(\result.get(i));
-    /*@ pure @*/ public List<T> getElements() {
+    public List<T> getElements() {
         return elements;
     }
 } 
